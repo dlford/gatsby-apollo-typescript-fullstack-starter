@@ -1,2 +1,2 @@
-export const header: string
-export const h1: string
+export const topBar: string;
+export const titleText: string;

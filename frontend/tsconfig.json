@@ -1,8 +1,5 @@
 {
   "compilerOptions": {
-    "sourceMap": true,
-    "allowSyntheticDefaultImports": true,
-    "moduleResolution": "node",
     "module": "commonjs",
     "target": "esnext",
     "jsx": "preserve",
