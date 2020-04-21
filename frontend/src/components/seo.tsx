@@ -2,11 +2,18 @@ import React from "react"
 import { Helmet } from "react-helmet"
 import { useStaticQuery, graphql } from "gatsby"
 
-export interface SEOProps {
-  description: string
-  lang: string
-  meta: any
+interface SEOProps {
   title: string
+  description?: string
+  lang?: string
+  meta?: MetaTag[]
+}
+
+interface MetaTag {
+  name?: string
+  property?: string
+  content?: string
+  value?: string
 }
 
 const SEO: React.FC<SEOProps> = ({ description, lang = 'en', meta, title }) => {
@@ -25,6 +32,7 @@ const SEO: React.FC<SEOProps> = ({ description, lang = 'en', meta, title }) => {
   )
 
   const metaDescription = description || site.siteMetadata.description
+	const metaTags: MetaTag[] = meta || []
 
   return (
     <Helmet
@@ -66,7 +74,8 @@ const SEO: React.FC<SEOProps> = ({ description, lang = 'en', meta, title }) => {
           name: `twitter:description`,
           content: metaDescription,
         },
-      ].concat(meta)}
+        ...metaTags,
+      ]}
     />
   )
 }
