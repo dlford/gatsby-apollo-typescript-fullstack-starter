@@ -1,9 +1,8 @@
 import React from 'react'
 
-import Header from '~/components/header'
-import './reset.css'
-import './layout.css'
-import * as css from './layout.module.css'
+import Header from './header'
+import '~/styles/reset.css'
+import '~/styles/layout.css'
 
 export interface LayoutProps {
   children: JSX.Element[] | JSX.Element
@@ -11,7 +10,7 @@ export interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className={css.wrapper}>
+    <div className='page-wrapper'>
       <Header />
       <main>{children}</main>
     </div>

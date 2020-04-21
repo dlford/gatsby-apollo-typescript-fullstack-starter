@@ -1,7 +1,7 @@
 import React from 'react'
 import { graphql, useStaticQuery } from 'gatsby'
 
-import LogoImage from '~/images/logo-image'
+import LogoImage from '~/images/logo'
 import * as css from './header.module.css'
 
 const HEADER_QUERY = graphql`
@@ -22,9 +22,11 @@ const Header: React.FC = () => {
   } = useStaticQuery(HEADER_QUERY)
 
   return (
-    <header className={css.topBar}>
-      <h1 className={css.titleText}>{title}</h1>
-      <LogoImage />
+    <header className={css.bigHeader}>
+      <div className={css.logoImage}>
+        <LogoImage width='30vmin' />
+      </div>
+      <h1 className={css.logoText}>{title}</h1>
     </header>
   )
 }

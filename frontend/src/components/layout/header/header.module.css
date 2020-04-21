@@ -1,18 +1,22 @@
-.topBar {
+.bigHeader{
   background: var(--primary_mid_light);
   background: linear-gradient(
     -10deg,
-    var(--primary_mid_light) 0%,
-    var(--pastel) 100%
+    var(--primary) 0%,
+    var(--pastel_dark) 100%
   );
-  min-height: 50vh;
   margin-bottom: 4rem;
 }
 
-.titleText {
+.logoText {
   text-align: center;
   font-size: 4vw;
   line-height: 4vw;
   margin: 0;
-  padding: 1rem;
+  padding: 2rem;
+}
+
+.logoImage {
+  padding-top: 2rem;
+  text-align: center;
 }
