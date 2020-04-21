@@ -8,4 +8,4 @@
 
 import '@openfonts/open-sans_latin-ext'
 import 'typeface-montserrat'
-import './styles/reset.css'
+import '~/styles/reset.css'
