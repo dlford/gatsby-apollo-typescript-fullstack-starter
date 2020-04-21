@@ -1,9 +1,7 @@
 import React from 'react'
 import { graphql, useStaticQuery } from 'gatsby'
 
-import fonts from '~/styles/fonts'
 import * as css from './header.module.css'
-
 
 const HEADER_QUERY = graphql`
   query {
@@ -18,10 +16,8 @@ const HEADER_QUERY = graphql`
 const Header: React.FC = () => {
   const {
     site: {
-      siteMetadata: {
-        title
-      }
-    }
+      siteMetadata: { title },
+    },
   } = useStaticQuery(HEADER_QUERY)
 
   return (

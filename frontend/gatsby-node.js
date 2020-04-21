@@ -15,5 +15,3 @@ exports.onCreateWebpackConfig = ({ actions }) => {
     },
   })
 }
-
-

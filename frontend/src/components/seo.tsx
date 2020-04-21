@@ -1,6 +1,6 @@
-import React from "react"
-import { Helmet } from "react-helmet"
-import { useStaticQuery, graphql } from "gatsby"
+import React from 'react'
+import { Helmet } from 'react-helmet'
+import { useStaticQuery, graphql } from 'gatsby'
 
 interface SEOProps {
   title: string
@@ -16,7 +16,12 @@ interface MetaTag {
   value?: string
 }
 
-const SEO: React.FC<SEOProps> = ({ description, lang = 'en', meta, title }) => {
+const SEO: React.FC<SEOProps> = ({
+  description,
+  lang = 'en',
+  meta,
+  title,
+}) => {
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -28,11 +33,11 @@ const SEO: React.FC<SEOProps> = ({ description, lang = 'en', meta, title }) => {
           }
         }
       }
-    `
+    `,
   )
 
   const metaDescription = description || site.siteMetadata.description
-	const metaTags: MetaTag[] = meta || []
+  const metaTags: MetaTag[] = meta || []
 
   return (
     <Helmet
