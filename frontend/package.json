@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
+    "@openfonts/open-sans_latin-ext": "^1.44.1",
     "gatsby": "^2.20.25",
     "gatsby-image": "^2.3.4",
     "gatsby-plugin-manifest": "^2.3.5",
@@ -14,10 +15,13 @@
     "gatsby-plugin-typescript": "^2.3.3",
     "gatsby-source-filesystem": "^2.2.4",
     "gatsby-transformer-sharp": "^2.4.6",
+    "gatsby-transformer-typescript-css-modules": "^1.0.14",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-helmet": "^6.0.0"
+    "react-helmet": "^6.0.0",
+    "tsconfig-paths-webpack-plugin": "^3.2.0",
+    "typeface-montserrat": "0.0.75"
   },
   "devDependencies": {
     "@types/react-helmet": "^5.0.15",
