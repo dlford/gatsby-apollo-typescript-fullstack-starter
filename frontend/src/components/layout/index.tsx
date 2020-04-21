@@ -1,7 +1,7 @@
 import React from 'react'
 
-import fonts from '~/styles/fonts'
 import Header from '~/components/header'
+import './reset.css'
 import './layout.css'
 
 export interface LayoutProps {
