@@ -4,9 +4,6 @@ import { graphql, useStaticQuery } from 'gatsby'
 import fonts from '~/styles/fonts'
 import * as css from './header.module.css'
 
-interface HeaderCSS {
-  header: any
-}
 
 const HEADER_QUERY = graphql`
   query {
@@ -29,7 +26,7 @@ const Header: React.FC = () => {
 
   return (
     <header className={css.header}>
-      <h1 style={{ fontFamily: fonts.montserrat }}>{title}</h1>
+      <h1 className={css.h1}>{title}</h1>
     </header>
   )
 }
