@@ -1,1 +1,1 @@
-export const pageWrapper: string;
+export const pageWrapper: string

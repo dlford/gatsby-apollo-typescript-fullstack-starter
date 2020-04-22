@@ -1,2 +1,2 @@
-export const navWrapper: string;
-export const navItem: string;
+export const navWrapper: string
+export const navItem: string
