@@ -39,8 +39,8 @@ const LogoImage: React.FC<LogoImageProps> = ({ width }) => (
         id='prefix__path2462'
         fill='#007acc'
         fillOpacity={1}
-        stroke='#007acc'
-        strokeWidth={5.38}
+        stroke='#fff'
+        strokeWidth={1}
         strokeMiterlimit={4}
         strokeDasharray='none'
         strokeOpacity={1}

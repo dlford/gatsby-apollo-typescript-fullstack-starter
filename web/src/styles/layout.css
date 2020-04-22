@@ -34,13 +34,13 @@ body {
   --deep: #672e00;
   --deep_mid_dark: #4f2400;
   --deep_dark: #411e02;
-  --fonts_montserrat: Montserrat, helvetica, Arial, sans-serif;
-  --fonts_open_sans: "Open Sans", helvetica, Arial, sans-serif;
-  --fonts_monospace: Consolas, "Lucida Console", Monaco, monospace;
+  --montserrat: Montserrat, helvetica, Arial, sans-serif;
+  --open_sans: "Open Sans", helvetica, Arial, sans-serif;
+  --monospace: Consolas, "Lucida Console", Monaco, monospace;
   background-color: var(--pastel_light);
   overflow-x: hidden;
   overflow-y: auto;
-  font-family: var(--fonts_open_sans);
+  font-family: var(--open_sans);
   font-size: 0.9rem;
   line-height: 1.325rem;
 }
@@ -52,7 +52,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--fonts_montserrat);
+  font-family: var(--montserrat);
   font-weight: 900;
   color: var(--deep_dark);
 }
@@ -74,7 +74,7 @@ article {
 }
 
 pre {
-  font-family: var(--fonts_monospace);
+  font-family: var(--monospace);
   overflow-x: auto;
   overflow-y: hidden;
   margin: 1rem 0.5rem;

@@ -1,8 +1,20 @@
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Apollo Typescript Starter`,
-    description: `Front-end for Gatsby Apollo Typescript Starter`,
+    title: `Gatsby Typescript Starter`,
+    description: `By DL Ford`,
     author: `@dlford`,
+    navItems: [
+      {
+        title: `Home`,
+        url: `/`,
+        isRelative: true,
+      },
+      {
+        title: `Style Builder`,
+        url: `/style-builder`,
+        isRelative: true,
+      },
+    ],
   },
   plugins: [
     `gatsby-plugin-typescript`,
@@ -20,7 +32,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Gatsby Apollo Typescript Starter`,
+        name: `Gatsby Typescript Starter`,
         /* eslint-disable @typescript-eslint/camelcase */
         short_name: `Gatsby`,
         start_url: `/`,

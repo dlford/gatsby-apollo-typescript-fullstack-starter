@@ -2,31 +2,41 @@ import React from 'react'
 import { graphql, useStaticQuery } from 'gatsby'
 
 import LogoImage from '~/images/logo'
+import Nav from '~/components/layout/nav'
 import * as css from './header.module.css'
+
+export interface HeaderProps {
+  site: {
+    siteMetadata: {
+      title: string
+      description: string
+    }
+  }
+}
 
 const HEADER_QUERY = graphql`
   query {
     site {
       siteMetadata {
         title
+        description
       }
     }
   }
 `
 
 const Header: React.FC = () => {
-  const {
-    site: {
-      siteMetadata: { title },
-    },
-  } = useStaticQuery(HEADER_QUERY)
+  const data: HeaderProps = useStaticQuery(HEADER_QUERY)
+  const { title, description } = data.site.siteMetadata
 
   return (
     <header className={css.bigHeader}>
+      <Nav />
       <div className={css.logoImage}>
         <LogoImage width='30vmin' />
       </div>
       <h1 className={css.logoText}>{title}</h1>
+      <h1 className={css.logoSubtext}>{description}</h1>
     </header>
   )
 }
