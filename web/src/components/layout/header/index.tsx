@@ -5,13 +5,17 @@ import LogoImage from '~/images/logo'
 import Nav from '~/components/layout/nav'
 import * as css from './header.module.css'
 
-export interface HeaderProps {
+export interface SiteMetadata {
   site: {
     siteMetadata: {
       title: string
       description: string
     }
   }
+}
+
+export interface HeaderProps {
+  shouldShowBigHeader: boolean
 }
 
 const HEADER_QUERY = graphql`
@@ -25,16 +29,18 @@ const HEADER_QUERY = graphql`
   }
 `
 
-const Header: React.FC = () => {
-  const data: HeaderProps = useStaticQuery(HEADER_QUERY)
+const Header: React.FC<HeaderProps> = ({ shouldShowBigHeader }) => {
+  const data: SiteMetadata = useStaticQuery(HEADER_QUERY)
   const { title, description } = data.site.siteMetadata
 
   return (
     <header className={css.bigHeader}>
       <Nav />
-      <div className={css.logoImage}>
-        <LogoImage width='30vmin' />
-      </div>
+      {shouldShowBigHeader && (
+        <div className={css.logoImage}>
+          <LogoImage width='30vmin' />
+        </div>
+      )}
       <h1 className={css.logoText}>{title}</h1>
       <h1 className={css.logoSubtext}>{description}</h1>
     </header>

@@ -6,12 +6,17 @@ import '~/styles/layout.css'
 
 export interface LayoutProps {
   children: JSX.Element[] | JSX.Element
+  location: Location
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = ({ children, location }) => {
+  const shouldShowBigHeader: boolean = (() => {
+    return location.pathname === '/'
+  })()
+
   return (
     <div className='page-wrapper'>
-      <Header />
+      <Header {...{ shouldShowBigHeader }} />
       <main>{children}</main>
     </div>
   )

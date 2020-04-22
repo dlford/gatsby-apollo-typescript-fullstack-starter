@@ -3,8 +3,12 @@ import React from 'react'
 import Layout from '../components/layout'
 import SEO from '../components/seo'
 
-const NotFoundPage: React.FC = () => (
-  <Layout>
+export interface NotFoundPageProps {
+  location: Location
+}
+
+const NotFoundPage: React.FC<NotFoundPageProps> = ({ location }) => (
+  <Layout {...{ location }}>
     <SEO title='404: Not found' />
     <article>
       <h1>NOT FOUND</h1>

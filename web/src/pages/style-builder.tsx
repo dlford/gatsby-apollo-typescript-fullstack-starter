@@ -2,8 +2,12 @@ import React from 'react'
 
 import Layout from '~/components/layout'
 
-const ThemeBuilder: React.FC = () => (
-  <Layout>
+export interface ThemeBuilderProps {
+  location: Location
+}
+
+const ThemeBuilder: React.FC<ThemeBuilderProps> = ({ location }) => (
+  <Layout {...{ location }}>
     <section>
       <article>
         <h1>Article</h1>

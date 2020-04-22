@@ -6,6 +6,7 @@ import SEO from '~/components/seo'
 import ReadMe from '~/components/read-me'
 
 export interface IndexPageProps {
+  location: Location
   data: {
     site: {
       siteMetadata: {
@@ -15,11 +16,11 @@ export interface IndexPageProps {
   }
 }
 
-const IndexPage: React.FC<IndexPageProps> = ({ data }) => {
+const IndexPage: React.FC<IndexPageProps> = ({ data, location }) => {
   const title: string = data.site.siteMetadata.title
 
   return (
-    <Layout>
+    <Layout {...{ location }}>
       <SEO title='Home' />
       <article>
         <ReadMe {...{ title }} />

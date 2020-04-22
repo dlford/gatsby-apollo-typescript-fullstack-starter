@@ -1,1 +1,1 @@
-export const chromeframe: string
+export const chromeframe: string;
