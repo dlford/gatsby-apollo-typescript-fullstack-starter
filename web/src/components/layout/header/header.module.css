@@ -14,18 +14,10 @@
   font-size: 4vw;
   line-height: 4vw;
   margin: 0;
-  padding: 2rem 2rem 0;
-}
-
-.logoSubtext {
-  text-align: right;
-  font-size: 2vw;
-  line-height: 2vw;
-  margin: 0 24vw 0 0;
-  padding: 0 0 2rem 0;
+  padding: 2rem;
 }
 
 .logoImage {
-  padding-top: 2rem;
+  padding-top: 1rem;
   text-align: center;
 }

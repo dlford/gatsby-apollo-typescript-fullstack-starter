@@ -1,8 +1,8 @@
 module.exports = {
   siteMetadata: {
     title: `Gatsby Typescript Starter`,
-    description: `By DL Ford`,
-    author: `@dlford`,
+    description: `A minimalist Gatsby Typescript starter`,
+    author: `DL Ford`,
     navItems: [
       {
         title: `Home`,

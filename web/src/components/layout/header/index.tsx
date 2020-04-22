@@ -9,7 +9,6 @@ export interface SiteMetadata {
   site: {
     siteMetadata: {
       title: string
-      description: string
     }
   }
 }
@@ -23,7 +22,6 @@ const HEADER_QUERY = graphql`
     site {
       siteMetadata {
         title
-        description
       }
     }
   }
@@ -31,7 +29,7 @@ const HEADER_QUERY = graphql`
 
 const Header: React.FC<HeaderProps> = ({ shouldShowBigHeader }) => {
   const data: SiteMetadata = useStaticQuery(HEADER_QUERY)
-  const { title, description } = data.site.siteMetadata
+  const { title } = data.site.siteMetadata
 
   return (
     <header className={css.bigHeader}>
@@ -42,7 +40,6 @@ const Header: React.FC<HeaderProps> = ({ shouldShowBigHeader }) => {
         </div>
       )}
       <h1 className={css.logoText}>{title}</h1>
-      <h1 className={css.logoSubtext}>{description}</h1>
     </header>
   )
 }

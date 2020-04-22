@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Header from './header'
+import Footer from './footer'
 import '~/styles/reset.css'
 import '~/styles/layout.css'
 
@@ -18,6 +19,7 @@ const Layout: React.FC<LayoutProps> = ({ children, location }) => {
     <div className='page-wrapper'>
       <Header {...{ shouldShowBigHeader }} />
       <main>{children}</main>
+      <Footer />
     </div>
   )
 }
