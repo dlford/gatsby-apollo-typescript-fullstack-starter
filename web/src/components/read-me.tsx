@@ -37,7 +37,8 @@ const ReadMe: React.FC<ReadMeProps> = ({ title }) => (
       </li>
       <li>
         Customize or completely replace the css in the{' '}
-        <code>styles/</code> directory
+        <code>styles/</code> directory (this is what the Style Builder
+        page is for)
       </li>
     </ol>
   </>
