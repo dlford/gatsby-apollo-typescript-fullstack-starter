@@ -16,12 +16,7 @@ interface MetaTag {
   value?: string
 }
 
-const SEO: React.FC<SEOProps> = ({
-  description,
-  lang = 'en',
-  meta,
-  title,
-}) => {
+const SEO = ({ description, lang = 'en', meta, title }: SEOProps) => {
   const { site } = useStaticQuery(
     graphql`
       query {

@@ -1,6 +1,7 @@
 module.exports = {
+  pathPrefix: `/gatsby-typescript-starter-minimalist`,
   siteMetadata: {
-    title: `Gatsby Typescript Starter`,
+    title: `Gatsby Typescript Starter Minimalist`,
     description: `A minimalist Gatsby Typescript starter`,
     author: `DL Ford`,
     navItems: [
@@ -18,7 +19,6 @@ module.exports = {
   },
   plugins: [
     `gatsby-plugin-typescript`,
-    `gatsby-transformer-typescript-css-modules`,
     `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-source-filesystem`,

@@ -4,7 +4,7 @@ export interface ReadMeProps {
   title: string
 }
 
-const ReadMe: React.FC<ReadMeProps> = ({ title }) => (
+const ReadMe = ({ title }: ReadMeProps) => (
   <>
     <h1>Read Me</h1>
     <p>
@@ -13,6 +13,17 @@ const ReadMe: React.FC<ReadMeProps> = ({ title }) => (
     </p>
     <h2>Features</h2>
     <ul>
+      <li>
+        Don&apos;t use <code>React.FC</code> (See why{' '}
+        <a
+          href='https://github.com/facebook/create-react-app/pull/8177'
+          target='_blank'
+          rel='noopener noreferrer'
+        >
+          here
+        </a>
+        )
+      </li>
       <li>Minimal Fluff</li>
       <li>Prettier / ESLint</li>
       <li>CSS Reset / CSS Modules</li>

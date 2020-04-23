@@ -2,6 +2,7 @@
 
 ## Features
 
+- Don't use `React.FC` (See why <a href='https://github.com/facebook/create-react-app/pull/8177' target='_blank' rel='noopener noreferrer'>here</a>)
 - Minimal Fluff
 - Prettier / ESLint
 - CSS Reset / CSS Modules

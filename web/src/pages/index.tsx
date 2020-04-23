@@ -16,14 +16,14 @@ export interface IndexPageProps {
   }
 }
 
-const IndexPage: React.FC<IndexPageProps> = ({ data, location }) => {
+const IndexPage = ({ data, location }: IndexPageProps) => {
   const title: string = data.site.siteMetadata.title
 
   return (
-    <Layout {...{ location }}>
+    <Layout location={location}>
       <SEO title='Home' />
       <article>
-        <ReadMe {...{ title }} />
+        <ReadMe title={title} />
       </article>
     </Layout>
   )

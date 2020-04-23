@@ -3,7 +3,7 @@ import { graphql, useStaticQuery } from 'gatsby'
 
 import LogoImage from '~/images/logo'
 import Nav from '~/components/layout/nav'
-import * as css from './header.module.css'
+import css from './header.module.css'
 
 export interface SiteMetadata {
   site: {
@@ -27,7 +27,7 @@ const HEADER_QUERY = graphql`
   }
 `
 
-const Header: React.FC<HeaderProps> = ({ shouldShowBigHeader }) => {
+const Header = ({ shouldShowBigHeader }: HeaderProps) => {
   const data: SiteMetadata = useStaticQuery(HEADER_QUERY)
   const { title } = data.site.siteMetadata
 

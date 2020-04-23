@@ -2,12 +2,12 @@ import React from 'react'
 
 import Layout from '~/components/layout'
 
-export interface ThemeBuilderProps {
+export interface StyleBuilderProps {
   location: Location
 }
 
-const ThemeBuilder: React.FC<ThemeBuilderProps> = ({ location }) => (
-  <Layout {...{ location }}>
+const StyleBuilder = ({ location }: StyleBuilderProps) => (
+  <Layout location={location}>
     <section>
       <article>
         <h1>Article</h1>
@@ -908,4 +908,4 @@ export default SvgComponent`}
   </Layout>
 )
 
-export default ThemeBuilder
+export default StyleBuilder

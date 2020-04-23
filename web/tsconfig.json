@@ -6,7 +6,6 @@
     "lib": ["dom", "esnext"],
     "strict": true,
     "noEmit": true,
-    "outDir": "./dist/",
     "isolatedModules": true,
     "esModuleInterop": true,
     "noUnusedLocals": false,

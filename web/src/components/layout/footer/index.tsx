@@ -1,8 +1,8 @@
 import React from 'react'
 
-import * as css from './footer.module.css'
+import css from './footer.module.css'
 
-const Footer: React.FC = () => (
+const Footer = () => (
   <div className={css.outer}>
     <footer className={css.inner}>
       <p>

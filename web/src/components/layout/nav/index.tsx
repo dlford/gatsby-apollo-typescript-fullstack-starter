@@ -1,7 +1,7 @@
 import React from 'react'
 import { graphql, useStaticQuery, Link } from 'gatsby'
 
-import * as css from './nav.module.css'
+import css from './nav.module.css'
 
 export interface NavItem {
   title: string
@@ -23,7 +23,7 @@ const NAV_ITEMS_QUERY = graphql`
   }
 `
 
-const Nav: React.FC = () => {
+const Nav = () => {
   const data = useStaticQuery(NAV_ITEMS_QUERY)
   const navItems: NavItem[] = data.site.siteMetadata.navItems
   return (

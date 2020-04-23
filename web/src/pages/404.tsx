@@ -7,8 +7,8 @@ export interface NotFoundPageProps {
   location: Location
 }
 
-const NotFoundPage: React.FC<NotFoundPageProps> = ({ location }) => (
-  <Layout {...{ location }}>
+const NotFoundPage = ({ location }: NotFoundPageProps) => (
+  <Layout location={location}>
     <SEO title='404: Not found' />
     <article>
       <h1>NOT FOUND</h1>
