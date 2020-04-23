@@ -1,10 +1,25 @@
 module.exports = {
   theme: {
-    fontFamily: {
-      display: ['Montserrat', 'helvetica', 'Arial', 'sans-serif'],
-      body: ['"Open Sans"', 'helvetica', 'Arial', 'sans-serif'],
+    extend: {
+      fontFamily: {
+        montserrat: [
+          'Montserrat',
+          'system-ui',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"Segoe UI"',
+          'Roboto',
+          '"Helvetica Neue"',
+          'Arial',
+          '"Noto Sans"',
+          'sans-serif',
+          '"Apple Color Emoji"',
+          '"Segoe UI Emoji"',
+          '"Segoe UI Symbol"',
+          '"Noto Color Emoji"',
+        ],
+      },
     },
-    extend: {},
   },
   variants: {},
   plugins: [],

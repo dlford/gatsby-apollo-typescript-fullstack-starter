@@ -4,7 +4,6 @@ import tw from 'twin.macro'
 
 import LogoImage from '~/images/logo'
 import Nav from '~/components/layout/nav'
-import css from './header.module.css'
 
 export interface SiteMetadata {
   site: {
