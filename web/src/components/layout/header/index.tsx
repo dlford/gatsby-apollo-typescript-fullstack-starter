@@ -1,5 +1,6 @@
 import React from 'react'
 import { graphql, useStaticQuery } from 'gatsby'
+import tw from 'twin.macro'
 
 import LogoImage from '~/images/logo'
 import Nav from '~/components/layout/nav'
@@ -27,20 +28,23 @@ const HEADER_QUERY = graphql`
   }
 `
 
+const Wrapper = tw.header`bg-orange-400 mb-16 shadow-lg`
+const Image = tw.div`pt-4 object-center`
+
 const Header = ({ shouldShowBigHeader }: HeaderProps) => {
   const data: SiteMetadata = useStaticQuery(HEADER_QUERY)
   const { title } = data.site.siteMetadata
 
   return (
-    <header className={css.bigHeader}>
+    <Wrapper>
       <Nav />
       {shouldShowBigHeader && (
-        <div className={css.logoImage}>
+        <Image>
           <LogoImage width='30vmin' />
-        </div>
+        </Image>
       )}
       <h1 className={css.logoText}>{title}</h1>
-    </header>
+    </Wrapper>
   )
 }
 
