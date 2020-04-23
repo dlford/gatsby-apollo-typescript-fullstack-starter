@@ -28,8 +28,8 @@ const HEADER_QUERY = graphql`
 `
 
 const Wrapper = tw.header`bg-orange-400 mb-16 shadow-lg`
-const Image = tw.div`w-full flex justify-center pt-4 object-center`
-const Text = tw.h1`pb-8 text-center text-4xl font-black leading-tight`
+const Image = tw.div`w-20 sm:w-48 md:w-1/2 lg:w-1/4 pt-4 ml-auto mr-auto`
+const Text = tw.h1`font-montserrat py-4 text-center text-4xl font-black leading-tight lg:text-5xl`
 
 const Header = ({ shouldShowBigHeader }: HeaderProps) => {
   const data: SiteMetadata = useStaticQuery(HEADER_QUERY)
@@ -40,7 +40,7 @@ const Header = ({ shouldShowBigHeader }: HeaderProps) => {
       <Nav />
       {shouldShowBigHeader && (
         <Image>
-          <LogoImage width='30vmin' />
+          <LogoImage />
         </Image>
       )}
       <Text>{title}</Text>
