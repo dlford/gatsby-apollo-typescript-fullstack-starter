@@ -25,21 +25,24 @@ const NAV_ITEMS_QUERY = graphql`
 
 const Wrapper = styled.div`
   ul {
-    @assign ${tw`
-      flex-no-wrap
+    ${tw`
+      flex
       flex-row
+      flex-no-wrap
       m-0
-      pt-4
+      pt-3
       items-center
       justify-end
       list-none
     `};
   }
   li {
-    @assign ${tw`
+    ${tw`
       font-montserrat
       font-black
+      text-xs
       text-orange-900
+      pr-4
     `};
   }
 `

@@ -1,15 +1,18 @@
 import React from 'react'
+import tw from 'twin.macro'
 
-import css from './footer.module.css'
+const Div = tw.div`w-full mb-0`
+const Footer = tw.footer`p-4 mt-8 bg-orange-400 text-center shadow-inner`
+const Span = tw.span`inline-block scale-x-invert`
 
-const Footer = () => (
-  <div className={css.outer}>
-    <footer className={css.inner}>
+const FooterComponent = () => (
+  <Div>
+    <Footer>
       <p>
-        Copyleft <span className={css.copyleft}>©</span> DL Ford 2020
+        Copyleft <Span>©</Span> DL Ford 2020
       </p>
-    </footer>
-  </div>
+    </Footer>
+  </Div>
 )
 
-export default Footer
+export default FooterComponent

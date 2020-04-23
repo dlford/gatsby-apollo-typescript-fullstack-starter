@@ -28,8 +28,8 @@ const HEADER_QUERY = graphql`
 `
 
 const Wrapper = tw.header`bg-orange-400 mb-16 shadow-lg`
-const Image = tw.div`w-20 sm:w-48 md:w-1/2 lg:w-1/4 pt-4 ml-auto mr-auto`
-const Text = tw.h1`font-montserrat py-4 text-center text-4xl font-black leading-tight lg:text-5xl`
+const Image = tw.div`w-32 sm:w-48 md:w-1/3 lg:w-64 pt-4 ml-auto mr-auto`
+const Text = tw.h1`font-montserrat py-4 px-2 text-center text-orange-900 text-4xl lg:text-5xl font-black leading-tight`
 
 const Header = ({ shouldShowBigHeader }: HeaderProps) => {
   const data: SiteMetadata = useStaticQuery(HEADER_QUERY)
