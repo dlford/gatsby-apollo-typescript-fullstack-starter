@@ -1,18 +1,13 @@
 module.exports = {
-  pathPrefix: `/gatsby-typescript-starter-minimalist`,
+  pathPrefix: `/gatsby-typescript-starter-kitchen-sink`,
   siteMetadata: {
-    title: `Gatsby Typescript Starter Minimalist`,
-    description: `A minimalist Gatsby Typescript starter`,
+    title: `Gatsby Typescript Starter Kitchen Sink`,
+    description: `A Gatsby Typescript starter with all the fixins`,
     author: `DL Ford`,
     navItems: [
       {
         title: `Home`,
         url: `/`,
-        isRelative: true,
-      },
-      {
-        title: `Style Builder`,
-        url: `/style-builder`,
         isRelative: true,
       },
     ],

@@ -27,25 +27,25 @@ const HEADER_QUERY = graphql`
   }
 `
 
-const Wrapper = tw.header`bg-orange-400 mb-16 shadow-lg`
-const Image = tw.div`w-32 sm:w-48 md:w-1/3 lg:w-64 pt-4 ml-auto mr-auto`
-const Text = tw.h1`font-montserrat py-4 px-2 text-center text-orange-900 text-4xl lg:text-5xl font-black leading-tight`
+const Header = tw.header`bg-gray-500 mb-16 shadow-lg`
+const Image = tw.div`w-32 sm:w-1/4 lg:w-64 pt-4 ml-auto mr-auto`
+const H1 = tw.h1`font-montserrat py-4 px-2 text-center text-gray-900 text-4xl lg:text-5xl font-black leading-tight`
 
-const Header = ({ shouldShowBigHeader }: HeaderProps) => {
+const HeaderComponent = ({ shouldShowBigHeader }: HeaderProps) => {
   const data: SiteMetadata = useStaticQuery(HEADER_QUERY)
   const { title } = data.site.siteMetadata
 
   return (
-    <Wrapper>
+    <Header>
       <Nav />
       {shouldShowBigHeader && (
         <Image>
           <LogoImage />
         </Image>
       )}
-      <Text>{title}</Text>
-    </Wrapper>
+      <H1>{title}</H1>
+    </Header>
   )
 }
 
-export default Header
+export default HeaderComponent

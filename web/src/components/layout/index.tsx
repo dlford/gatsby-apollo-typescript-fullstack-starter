@@ -1,4 +1,5 @@
 import React from 'react'
+import tw from 'twin.macro'
 
 import Header from './header'
 import Footer from './footer'
@@ -8,8 +9,10 @@ export interface LayoutProps {
   location: Location
 }
 
+const Outer = tw.div`h-full w-full min-h-screen flex flex-col`
+
 const Layout = ({ children, location }: LayoutProps) => (
-  <div className='page-wrapper'>
+  <Outer>
     <Header
       shouldShowBigHeader={
         location.pathname === '/' ||
@@ -18,7 +21,7 @@ const Layout = ({ children, location }: LayoutProps) => (
     />
     <main>{children}</main>
     <Footer />
-  </div>
+  </Outer>
 )
 
 export default Layout

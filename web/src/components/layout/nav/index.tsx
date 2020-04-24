@@ -41,13 +41,13 @@ const Wrapper = styled.div`
       font-montserrat
       font-black
       text-xs
-      text-orange-900
+      text-gray-900
       pr-4
     `};
   }
 `
 
-const Nav = () => {
+const NavComponent = () => {
   const data = useStaticQuery(NAV_ITEMS_QUERY)
   const navItems: NavItem[] = data.site.siteMetadata.navItems
   return (
@@ -78,4 +78,4 @@ const Nav = () => {
   )
 }
 
-export default Nav
+export default NavComponent
