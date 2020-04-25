@@ -1,5 +1,1 @@
-tailwind
-tailwind.macro
-emotion
-purgecss
 storybook
