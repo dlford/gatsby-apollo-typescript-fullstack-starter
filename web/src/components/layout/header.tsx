@@ -3,7 +3,6 @@ import { graphql, useStaticQuery } from 'gatsby'
 import tw from 'twin.macro'
 
 import LogoImage from '~/images/logo'
-import Nav from '~/components/layout/nav'
 
 export interface HeaderProps {
   shouldShowBigHeader: boolean
@@ -37,7 +36,6 @@ const HeaderComponent = ({ shouldShowBigHeader }: HeaderProps) => {
 
   return (
     <Header>
-      <Nav />
       {shouldShowBigHeader && (
         <Image>
           <LogoImage />
