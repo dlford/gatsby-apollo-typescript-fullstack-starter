@@ -37,7 +37,7 @@ const IndexPage = ({ data, location }: QueryProps) => {
       <SEO title='Home' />
       <Article>
         <div>
-          <h1>Read Me</h1>
+          <h1>{title}</h1>
           <p>
             Hey! You&apos;ve found my {title}, I hope you do something
             cool with it!
@@ -55,7 +55,7 @@ const IndexPage = ({ data, location }: QueryProps) => {
               </a>
               )
             </li>
-            <li>Minimal Fluff</li>
+            <li>Storybook</li>
             <li>Prettier / ESLint</li>
             <li>Emotion + Tailwind + Twin.Macro</li>
           </ul>
