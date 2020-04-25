@@ -3,10 +3,18 @@ import { graphql, useStaticQuery, Link } from 'gatsby'
 import tw from 'twin.macro'
 import styled from '@emotion/styled'
 
-export interface NavItem {
-  title: string
-  url: string
-  isRelative: boolean
+type QueryProps = {
+  site: {
+    siteMetadata: {
+      navItems: [
+        {
+          title: string
+          url: string
+          isRelative: string
+        },
+      ]
+    }
+  }
 }
 
 const NAV_ITEMS_QUERY = graphql`
@@ -48,8 +56,8 @@ const Wrapper = styled.div`
 `
 
 const NavComponent = () => {
-  const data = useStaticQuery(NAV_ITEMS_QUERY)
-  const navItems: NavItem[] = data.site.siteMetadata.navItems
+  const data = useStaticQuery<QueryProps>(NAV_ITEMS_QUERY)
+  const navItems = data.site.siteMetadata.navItems
   return (
     <Wrapper>
       <ul>
