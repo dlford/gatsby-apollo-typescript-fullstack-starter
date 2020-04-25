@@ -50,6 +50,8 @@ const Wrapper = styled.div`
       font-black
       text-xs
       text-gray-900
+      hover:text-gray-700
+      hover:underline
       pr-4
     `};
   }
