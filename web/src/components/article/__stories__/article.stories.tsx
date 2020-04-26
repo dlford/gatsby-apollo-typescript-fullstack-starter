@@ -25,33 +25,11 @@ const defaultProps = `
       </a>
     )</li>
     <li>Storybook</li>
+    <li>Jest</li>
     <li>Prettier / ESLint</li>
-    <li>Emotion + Tailwind + Twin.Macro</li>
+    <li>Emotion</li>
+    <li>Tailwind + Twin.Macro</li>
   </ul>
-  <h2>Getting Started</h2>
-  <ol>
-    <li>
-      Initialize the project:
-      <code>
-        npx gatsby new gatsby-typescript-starter
-        https://github.com/dlford/gatsby-typescript-starter-kitchen-sink.git
-      </code>
-    </li>
-    <li>
-      Change the fonts by installing new ones and importing them
-      into <code>gatsby-browser.js</code>
-    </li>
-    <li>
-      Change the font and theme color variables in the
-      <code>body</code> section of
-      <code>styles/layout.css</code>
-    </li>
-    <li>
-      Customize or completely replace the css in the
-      <code>styles/</code> directory (this is what the Style
-      Builder page is for)
-    </li>
-  </ol>
 `
 
 storiesOf('Elements', module)
