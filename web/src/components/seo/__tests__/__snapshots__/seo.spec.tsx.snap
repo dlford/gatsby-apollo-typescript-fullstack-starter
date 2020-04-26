@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SEO matches snapshot 1`] = `
+Object {
+  "baseTag": Array [],
+  "bodyAttributes": Object {},
+  "defer": true,
+  "encode": true,
+  "htmlAttributes": Object {
+    "lang": "test",
+  },
+  "linkTags": Array [],
+  "metaTags": Array [
+    Object {
+      "content": "Description",
+      "name": "description",
+    },
+    Object {
+      "content": "test page",
+      "property": "og:title",
+    },
+    Object {
+      "content": "Description",
+      "property": "og:description",
+    },
+    Object {
+      "content": "website",
+      "property": "og:type",
+    },
+    Object {
+      "content": "summary",
+      "name": "twitter:card",
+    },
+    Object {
+      "content": "An Author",
+      "name": "twitter:creator",
+    },
+    Object {
+      "content": "test page",
+      "name": "twitter:title",
+    },
+    Object {
+      "content": "Description",
+      "name": "twitter:description",
+    },
+    Object {
+      "content": "test",
+      "name": "testname",
+    },
+    Object {
+      "content": "test",
+      "property": "testproperty",
+    },
+  ],
+  "noscriptTags": Array [],
+  "onChangeClientState": [Function],
+  "scriptTags": Array [],
+  "styleTags": Array [],
+  "title": "test page | A Title",
+  "titleAttributes": Object {},
+}
+`;

@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Article renders correctly 1`] = `
+<DocumentFragment>
+  <article
+    class="css-12xddvo"
+  >
+    <h1>
+      Test
+    </h1>
+  </article>
+</DocumentFragment>
+`;

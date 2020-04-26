@@ -2,7 +2,7 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { withKnobs, text } from '@storybook/addon-knobs'
 
-import Article from '.'
+import Article from '../'
 
 const defaultProps = `
   <h1>
