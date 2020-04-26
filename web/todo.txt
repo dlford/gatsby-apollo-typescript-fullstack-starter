@@ -1,0 +1,1 @@
+Add Gatsby test elements from __mocks__ for examples, remove mocks folder

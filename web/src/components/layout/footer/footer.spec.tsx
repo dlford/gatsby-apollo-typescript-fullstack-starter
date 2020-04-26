@@ -10,7 +10,7 @@ describe('Footer', () => {
         className="css-1m8xtdc"
       >
         <footer
-          className="css-1utbjgr"
+          className="css-181y9wj"
         >
           <p>
             Copyleft 

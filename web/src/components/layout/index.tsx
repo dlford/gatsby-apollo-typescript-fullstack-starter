@@ -16,7 +16,8 @@ const Layout = ({ children, location }: LayoutProps) => (
     <Header
       shouldShowBigHeader={
         location.pathname === '/' ||
-        location.pathname === '/gatsby-typescript-starter-minimalist/'
+        location.pathname ===
+          '/gatsby-typescript-starter-kitchen-sink/'
       }
     />
     <main>{children}</main>
