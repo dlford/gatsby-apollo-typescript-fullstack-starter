@@ -2,37 +2,52 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { useStaticQuery, graphql } from 'gatsby'
 
-interface SEOProps {
+interface MetaPropertyTag {
+  property: string
+  content: string
+}
+
+interface MetaNameTag {
+  name: string
+  content: string
+}
+
+export interface SEOProps {
   title: string
   description?: string
   lang?: string
-  meta?: MetaTag[]
+  meta?: [MetaPropertyTag | MetaNameTag]
 }
 
-interface MetaTag {
-  name?: string
-  property?: string
-  content?: string
-  value?: string
+type QueryProps = {
+  site: {
+    siteMetadata: {
+      title: string
+      description: string
+      author: string
+    }
+  }
 }
 
-const SEO = ({ description, lang = 'en', meta, title }: SEOProps) => {
-  const { site } = useStaticQuery(
-    graphql`
-      query {
-        site {
-          siteMetadata {
-            title
-            description
-            author
-          }
-        }
+const SEO_QUERY = graphql`
+  query {
+    site {
+      siteMetadata {
+        title
+        description
+        author
       }
-    `,
-  )
+    }
+  }
+`
+
+export type MetaTag = MetaPropertyTag | MetaNameTag
+
+const SEO = ({ description, lang, meta, title }: SEOProps) => {
+  const { site } = useStaticQuery<QueryProps>(SEO_QUERY)
 
   const metaDescription = description || site.siteMetadata.description
-  const metaTags: MetaTag[] = meta || []
+  const metaTags = meta || []
 
   return (
     <Helmet
@@ -81,3 +96,7 @@ const SEO = ({ description, lang = 'en', meta, title }: SEOProps) => {
 }
 
 export default SEO
+
+SEO.defaultProps = {
+  lang: 'en',
+}
