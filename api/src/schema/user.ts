@@ -25,6 +25,11 @@ export default gql`
   type User {
     id: ID!
     email: String!
-    role: String
+    role: UserRole!
+  }
+
+  enum UserRole {
+    ADMIN
+    USER
   }
 `

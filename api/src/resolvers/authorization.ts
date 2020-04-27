@@ -14,7 +14,7 @@ export const isAdmin = combineResolvers(
         return skip
         break
       default:
-        return new ForbiddenError('Not authorized as admin.')
+        return new ForbiddenError('Not authenticated as admin.')
     }
   },
 )

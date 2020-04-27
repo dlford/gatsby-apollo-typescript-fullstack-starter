@@ -13,13 +13,13 @@ const createToken = async (user, secret, expiresIn) => {
 
 export default {
   Query: {
-    users: async (parent, args, { models }) => {
+    users: async (_parent, _args, { models }) => {
       return await models.User.find()
     },
-    user: async (parent, { id }, { models }) => {
+    user: async (_parent, { id }, { models }) => {
       return await models.User.findById(id)
     },
-    me: async (parent, args, { models, me }) => {
+    me: async (_parent, _args, { models, me }) => {
       if (!me) {
         return null
       }
@@ -30,7 +30,7 @@ export default {
 
   Mutation: {
     signUp: async (
-      parent,
+      _parent,
       { username, email, password },
       { models, secret },
     ) => {
@@ -44,7 +44,7 @@ export default {
     },
 
     signIn: async (
-      parent,
+      _parent,
       { login, password },
       { models, secret },
     ) => {
@@ -67,10 +67,10 @@ export default {
 
     updateUser: combineResolvers(
       isAuthenticated,
-      async (parent, { username }, { models, me }) => {
+      async (_parent, { email }, { models, me }) => {
         return await models.User.findByIdAndUpdate(
           me.id,
-          { username },
+          { email },
           { new: true },
         )
       },
@@ -78,7 +78,7 @@ export default {
 
     deleteUser: combineResolvers(
       isAdmin,
-      async (parent, { id }, { models }) => {
+      async (_parent, { id }, { models }) => {
         const user = await models.User.findById(id)
 
         if (user) {
@@ -89,13 +89,5 @@ export default {
         }
       },
     ),
-  },
-
-  User: {
-    messages: async (user, args, { models }) => {
-      return await models.Message.find({
-        recipientUserId: user.id,
-      })
-    },
   },
 }
