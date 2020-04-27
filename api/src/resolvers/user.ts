@@ -3,6 +3,7 @@ import { combineResolvers } from 'graphql-resolvers'
 import jwt from 'jsonwebtoken'
 
 import { isAdmin, isAuthenticated } from './authorization'
+import { ContextProps } from '~/index'
 
 const createToken = async (user, secret, expiresIn) => {
   const { id, email, username, role } = user
@@ -13,13 +14,13 @@ const createToken = async (user, secret, expiresIn) => {
 
 export default {
   Query: {
-    users: async (_parent, _args, { models }) => {
+    users: async (_parent, _args, { models }: ContextProps) => {
       return await models.User.find()
     },
-    user: async (_parent, { id }, { models }) => {
+    user: async (_parent, { id }, { models }: ContextProps) => {
       return await models.User.findById(id)
     },
-    me: async (_parent, _args, { models, me }) => {
+    me: async (_parent, _args, { models, me }: ContextProps) => {
       if (!me) {
         return null
       }
@@ -32,7 +33,7 @@ export default {
     signUp: async (
       _parent,
       { username, email, password },
-      { models, secret },
+      { models, secret }: ContextProps,
     ) => {
       const user = await models.User.create({
         username,
@@ -46,7 +47,7 @@ export default {
     signIn: async (
       _parent,
       { login, password },
-      { models, secret },
+      { models, secret }: ContextProps,
     ) => {
       const user = await models.User.findByLogin(login)
 
@@ -67,7 +68,7 @@ export default {
 
     updateUser: combineResolvers(
       isAuthenticated,
-      async (_parent, { email }, { models, me }) => {
+      async (_parent, { email }, { models, me }: ContextProps) => {
         return await models.User.findByIdAndUpdate(
           me.id,
           { email },
@@ -78,7 +79,7 @@ export default {
 
     deleteUser: combineResolvers(
       isAdmin,
-      async (_parent, { id }, { models }) => {
+      async (_parent, { id }, { models }: ContextProps) => {
         const user = await models.User.findById(id)
 
         if (user) {

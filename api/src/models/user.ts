@@ -7,10 +7,15 @@ export enum UserRole {
   'USER',
 }
 
-export interface User extends mongoose.Document {
+export interface MeProps {
   email: string
-  password: string
   role: UserRole
+}
+
+export interface UserDocument extends mongoose.Document {
+  email: MeProps['email']
+  role: MeProps['role']
+  password: string
   createdAt: Date
   updatedAt: Date
 }
@@ -45,7 +50,7 @@ const userSchema = new mongoose.Schema(
 
 userSchema.statics.findByLogin = async function(
   login,
-): Promise<User | null> {
+): Promise<UserDocument | null> {
   let user = await this.findOne({
     username: login,
   })
@@ -70,6 +75,6 @@ userSchema.methods.validatePassword = async function(
   return await bcrypt.compare(password, this.password)
 }
 
-export default {
-  User: mongoose.model<User>('User', userSchema),
-}
+const User = mongoose.model<UserDocument>('User', userSchema)
+
+export default User

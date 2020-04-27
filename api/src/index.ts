@@ -9,9 +9,15 @@ import express from 'express'
 import jwt from 'jsonwebtoken'
 import morgan from 'morgan'
 
-import models, { connectDb } from './models'
+import models, { connectDb, ModelProps, MeProps } from './models'
 import resolvers from './resolvers'
 import schema from './schema'
+
+export interface ContextProps {
+  models: ModelProps
+  me: MeProps
+  secret: string
+}
 
 interface SubscriptionConnection {
   token: string

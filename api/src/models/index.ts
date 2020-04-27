@@ -1,6 +1,12 @@
 import mongoose from 'mongoose'
 
-import User from './user'
+import User, { UserDocument } from './user'
+
+export { MeProps } from './user'
+
+export interface ModelProps {
+  User: UserDocument
+}
 
 const models = { User }
 
