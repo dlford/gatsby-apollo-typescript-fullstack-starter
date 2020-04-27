@@ -77,7 +77,7 @@
     "clean": "gatsby clean",
     "lint": "eslint --ignore-path .gitignore --fix . --ext ts --ext tsx --ext js --ext jsx",
     "deploy:github": "rimraf node_modules/gh-pages/.cache && gatsby build --prefix-paths && gh-pages -d public",
-    "test": "jest",
+    "test": "jest --coverage",
     "storybook": "NODE_ENV=production start-storybook -p 6006",
     "storybook:win": "set NODE_ENV=production& start-storybook -p 6006",
     "build-storybook": "NODE_ENV=production build-storybook",
