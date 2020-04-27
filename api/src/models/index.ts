@@ -4,8 +4,8 @@ import User, { UserDocument } from './user'
 
 export { MeProps } from './user'
 
-export interface ModelProps {
-  User: UserDocument
+export type ModelTypes = {
+  User: mongoose.Model<UserDocument>
 }
 
 const models = { User }

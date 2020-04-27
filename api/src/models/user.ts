@@ -8,6 +8,7 @@ export enum UserRole {
 }
 
 export interface MeProps {
+  id: string
   email: string
   role: UserRole
 }
@@ -15,12 +16,14 @@ export interface MeProps {
 export interface UserDocument extends mongoose.Document {
   email: MeProps['email']
   role: MeProps['role']
+  generatePasswordHash: Function
+  validatePassword: Function
   password: string
   createdAt: Date
   updatedAt: Date
 }
 
-const userSchema = new mongoose.Schema(
+const userSchema: mongoose.Schema = new mongoose.Schema(
   {
     email: {
       type: String,

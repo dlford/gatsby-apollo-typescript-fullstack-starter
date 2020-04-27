@@ -9,7 +9,7 @@
 	"settings": {
     "import/resolver": {
       "typescript": {}
-    },
+    }
   },
   "parserOptions": {
     "ecmaVersion": 2018,

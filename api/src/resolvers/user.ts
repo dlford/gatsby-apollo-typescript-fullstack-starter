@@ -3,7 +3,7 @@ import { combineResolvers } from 'graphql-resolvers'
 import jwt from 'jsonwebtoken'
 
 import { isAdmin, isAuthenticated } from './authorization'
-import { ContextProps } from '~/index'
+import { ContextProps } from '~/app'
 
 const createToken = async (user, secret, expiresIn) => {
   const { id, email, username, role } = user

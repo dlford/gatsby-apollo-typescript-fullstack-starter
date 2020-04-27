@@ -6,7 +6,7 @@
     "removeComments": true
     "baseUrl": "src",
     "paths": {
-      "~/*": ["src/*"],
+      "~/*": ["src/*"]
     }
   },
   "include": [
