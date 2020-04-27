@@ -17,6 +17,10 @@
     "noImplicitAny": false,
     "noImplicitThis": false,
     "strictNullChecks": false
+    "baseUrl": "src",
+    "paths": {
+      "~/*": "src/*"
+    }
   },
   "include": [
     "src/**/*",
