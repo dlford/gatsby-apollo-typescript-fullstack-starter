@@ -51,20 +51,6 @@ const userSchema: mongoose.Schema = new mongoose.Schema(
   },
 )
 
-userSchema.statics.findByLogin = async function(
-  login,
-): Promise<UserDocument | null> {
-  let user = await this.findOne({
-    username: login,
-  })
-
-  if (!user) {
-    user = await this.findOne({ email: login })
-  }
-
-  return user
-}
-
 userSchema.methods.generatePasswordHash = async function(): Promise<
   string
 > {

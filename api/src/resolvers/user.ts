@@ -3,7 +3,7 @@ import { combineResolvers } from 'graphql-resolvers'
 import jwt from 'jsonwebtoken'
 
 import { isAdmin, isAuthenticated } from '~/resolvers/authorization'
-import { MeProps, UserDocument } from '~/models/user'
+import { UserDocument } from '~/models/user'
 import { ContextProps } from '~/app'
 
 const createToken = async (
@@ -50,22 +50,25 @@ export default {
       _parent,
       { username, email, password },
       { models, secret }: ContextProps,
-    ): Promise<string> => {
-      const user = await models.User.create({
+    ): Promise<{ token: string }> => {
+      const user = new models.User({
         username,
         email,
         password,
       })
 
-      return { token: createToken(user, secret, '30d') }
+      user.password = await user.generatePasswordHash(user.password)
+      await user.save()
+
+      return { token: await createToken(user, secret, '30d') }
     },
 
     signIn: async (
       _parent,
-      { login, password },
+      { email, password },
       { models, secret }: ContextProps,
-    ) => {
-      const user = await models.User.findByLogin(login)
+    ): Promise<{ token: string }> => {
+      const user = await models.User.find({ email: email })[0]
 
       if (!user) {
         throw new UserInputError(
@@ -79,7 +82,7 @@ export default {
         throw new AuthenticationError('Invalid password.')
       }
 
-      return { token: createToken(user, secret, '30d') }
+      return { token: await createToken(user, secret, '30d') }
     },
 
     updateUser: combineResolvers(

@@ -11,7 +11,7 @@ const models = { User }
 
 if (!process.env.DATABASE_URL) throw new Error('Missing MongoDB URL')
 
-export const connectDb = () =>
+export const connectDb = (): Promise<typeof import('mongoose')> =>
   mongoose.connect(
     process.env.DATABASE_URL ||
       'mongodb://localhost:27017/development',

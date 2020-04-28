@@ -31,7 +31,7 @@ app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'),
 )
 
-const getMe = async (req) => {
+const getMe = async (req): Promise<MeProps | void> => {
   const token = req.cookies['token'] || req.headers['token']
 
   if (token) {
@@ -50,7 +50,7 @@ const server = new ApolloServer({
   typeDefs: schema,
   resolvers,
   // cors: cors({ origin: 'http://localhost:3000', credentials: 'include' }), // TODO
-  formatError: (error) => {
+  formatError: (error): Error => {
     // remove the internal sequelize error message
     // leave only the important validation error
     const message = error.message
@@ -62,7 +62,10 @@ const server = new ApolloServer({
       message,
     }
   },
-  context: async ({ req, connection }) => {
+  context: async ({
+    req,
+    connection,
+  }): Promise<ContextProps | void> => {
     if (connection) {
       return {
         ...connection.context,
@@ -71,7 +74,7 @@ const server = new ApolloServer({
     }
 
     if (req) {
-      const me = await getMe(req)
+      const me = (await getMe(req)) || null
 
       return {
         models,
@@ -81,8 +84,11 @@ const server = new ApolloServer({
     }
   },
   subscriptions: {
-    onConnect: async ({ token }: SubscriptionConnection) => {
-      const me = (await jwt.verify(token, process.env.SECRET)) || null
+    onConnect: async ({
+      token,
+    }: SubscriptionConnection): Promise<{ me: MeProps } | void> => {
+      const me: MeProps =
+        (await jwt.verify(token, process.env.SECRET)) || null
       return { me }
     },
   },
