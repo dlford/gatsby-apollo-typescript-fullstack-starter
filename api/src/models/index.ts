@@ -9,10 +9,14 @@ export type ModelTypes = {
 
 const models = { User }
 
-export const connectDb = (): Promise<typeof import('mongoose')> =>
+export const connectDb = (
+  url: string | void,
+): Promise<typeof import('mongoose')> =>
   mongoose.connect(
-    process.env.DATABASE_URL ||
-      'mongodb://localhost:27017/development',
+    url
+      ? url
+      : process.env.DATABASE_URL ||
+          'mongodb://localhost:27017/development',
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
