@@ -16,8 +16,8 @@
     "noUnusedParameters": true,
     "noImplicitAny": false,
     "noImplicitThis": false,
-    "strictNullChecks": false
-    "baseUrl": "src",
+    "strictNullChecks": false,
+    "baseUrl": "./src",
     "paths": {
       "~/*": ["./*"]
     }

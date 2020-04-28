@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-express'
 
-import userSchema from './user'
+import userSchema from '~/schema/user'
 
 const baseSchema = gql`
   type Query {

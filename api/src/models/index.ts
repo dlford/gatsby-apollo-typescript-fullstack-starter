@@ -1,8 +1,7 @@
 import mongoose from 'mongoose'
 
-import User, { UserDocument } from './user'
-
-export { MeProps } from './user'
+import User, { UserDocument } from '~/models/user'
+export { MeProps } from '~/models/user'
 
 export type ModelTypes = {
   User: mongoose.Model<UserDocument>

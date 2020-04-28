@@ -2,7 +2,7 @@ import { AuthenticationError, UserInputError } from 'apollo-server'
 import { combineResolvers } from 'graphql-resolvers'
 import jwt from 'jsonwebtoken'
 
-import { isAdmin, isAuthenticated } from './authorization'
+import { isAdmin, isAuthenticated } from '~/resolvers/authorization'
 import { ContextProps } from '~/app'
 
 const createToken = async (user, secret, expiresIn) => {
