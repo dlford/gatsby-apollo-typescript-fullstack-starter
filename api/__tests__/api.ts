@@ -20,7 +20,7 @@ export const signUp = async (variables): Promise<any> =>
     variables,
   })
 
-export const signIn = async (variables) =>
+export const signIn = async (variables): Promise<any> =>
   await axios.post(API_URL, {
     query: `
       mutation ($email: String!, $password: String!) {
@@ -32,7 +32,7 @@ export const signIn = async (variables) =>
     variables,
   })
 
-export const me = async (token) =>
+export const me = async (token): Promise<any> =>
   await axios.post(
     API_URL,
     {
@@ -55,7 +55,7 @@ export const me = async (token) =>
       : null,
   )
 
-export const user = async (token, variables) =>
+export const user = async (token, variables): Promise<any> =>
   axios.post(
     API_URL,
     {
@@ -80,7 +80,7 @@ export const user = async (token, variables) =>
       : null,
   )
 
-export const users = async (token) =>
+export const users = async (token): Promise<any> =>
   axios.post(
     API_URL,
     {
@@ -104,7 +104,7 @@ export const users = async (token) =>
       : null,
   )
 
-export const updateUser = async (variables, token) =>
+export const updateUser = async (variables, token): Promise<any> =>
   axios.post(
     API_URL,
     {
@@ -126,7 +126,7 @@ export const updateUser = async (variables, token) =>
       : null,
   )
 
-export const deleteUser = async (variables, token) =>
+export const deleteUser = async (variables, token): Promise<any> =>
   axios.post(
     API_URL,
     {
