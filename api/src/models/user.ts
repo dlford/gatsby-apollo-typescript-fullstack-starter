@@ -1,6 +1,6 @@
 import isEmail from 'validator/lib/isEmail'
-import bcrypt from 'bcrypt'
-import mongoose from 'mongoose'
+import * as bcrypt from 'bcrypt'
+import * as mongoose from 'mongoose'
 
 export enum UserRole {
   'ADMIN',
@@ -34,8 +34,6 @@ const userSchema: mongoose.Schema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, 'Password cannot be empty.'],
-      minlength: [7, 'Password must be at least 7 characters.'],
-      maxlength: [42, 'Password must be shorter than 42 characters'],
     },
     role: {
       type: String,

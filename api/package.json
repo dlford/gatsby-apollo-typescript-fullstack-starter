@@ -32,6 +32,7 @@
     "typescript": "~3.8.2"
   },
   "scripts": {
+    "start": "node build/app",
     "doc": "typedoc --out ./docs/ ./src",
     "clean": "rimraf coverage build tmp",
     "build": "tsc -p tsconfig.release.json",

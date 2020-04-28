@@ -1,15 +1,13 @@
-import mongoose from 'mongoose'
+import * as mongoose from 'mongoose'
 
-import User, { UserDocument } from '~/models/user'
-export { MeProps } from '~/models/user'
+import User, { UserDocument } from './user'
+export { MeProps } from './user'
 
 export type ModelTypes = {
   User: mongoose.Model<UserDocument>
 }
 
 const models = { User }
-
-if (!process.env.DATABASE_URL) throw new Error('Missing MongoDB URL')
 
 export const connectDb = (): Promise<typeof import('mongoose')> =>
   mongoose.connect(

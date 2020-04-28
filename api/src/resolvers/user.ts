@@ -1,10 +1,10 @@
 import { AuthenticationError, UserInputError } from 'apollo-server'
 import { combineResolvers } from 'graphql-resolvers'
-import jwt from 'jsonwebtoken'
+import * as jwt from 'jsonwebtoken'
 
-import { isAdmin, isAuthenticated } from '~/resolvers/authorization'
-import { UserDocument } from '~/models/user'
-import { ContextProps } from '~/app'
+import { isAdmin, isAuthenticated } from './authorization'
+import { UserDocument } from '../models/user'
+import { ContextProps } from '../app'
 
 const createToken = async (
   user,
@@ -17,6 +17,7 @@ const createToken = async (
   })
 }
 
+// TODO : SECURITY
 export default {
   Query: {
     users: async (
@@ -57,7 +58,7 @@ export default {
         password,
       })
 
-      user.password = await user.generatePasswordHash(user.password)
+      user.password = await user.generatePasswordHash()
       await user.save()
 
       return { token: await createToken(user, secret, '30d') }

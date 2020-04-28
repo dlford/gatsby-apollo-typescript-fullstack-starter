@@ -1,17 +1,17 @@
-import http from 'http'
+import * as http from 'http'
 
 import {
   ApolloServer,
   AuthenticationError,
 } from 'apollo-server-express'
-import cookieParser from 'cookie-parser'
-import express from 'express'
+import * as cookieParser from 'cookie-parser'
+import * as express from 'express'
+import * as morgan from 'morgan'
 import jwt from 'jsonwebtoken'
-import morgan from 'morgan'
 
-import models, { connectDb, ModelTypes, MeProps } from '~/models'
-import resolvers from '~/resolvers'
-import schema from '~/schema'
+import models, { connectDb, ModelTypes, MeProps } from './models'
+import resolvers from './resolvers'
+import schema from './schema'
 
 export interface ContextProps {
   models: ModelTypes
@@ -32,7 +32,7 @@ app.use(
 )
 
 const getMe = async (req): Promise<MeProps | void> => {
-  const token = req.cookies['token'] || req.headers['token']
+  const token = req.cookies['token'] || req.headers['token'] || null
 
   if (token) {
     try {
