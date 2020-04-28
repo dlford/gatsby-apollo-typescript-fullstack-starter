@@ -22,7 +22,7 @@ interface SubscriptionConnection {
   token: string
 }
 
-const SECRET = process.env.SECRET || '9KzGHLmy9K'
+const SECRET = process.env.SECRET || 'secret-stub'
 
 const app = express()
 
