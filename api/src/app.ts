@@ -1,13 +1,12 @@
 import * as http from 'http'
-
+import * as cookieParser from 'cookie-parser'
+import * as express from 'express'
+import * as morgan from 'morgan'
+import * as jwt from 'jsonwebtoken'
 import {
   ApolloServer,
   AuthenticationError,
 } from 'apollo-server-express'
-import * as cookieParser from 'cookie-parser'
-import * as express from 'express'
-import * as morgan from 'morgan'
-import jwt from 'jsonwebtoken'
 
 import models, { connectDb, ModelTypes, MeProps } from './models'
 import resolvers from './resolvers'
@@ -23,6 +22,8 @@ interface SubscriptionConnection {
   token: string
 }
 
+const SECRET = process.env.SECRET || '9KzGHLmy9K'
+
 const app = express()
 
 app.use(cookieParser())
@@ -33,11 +34,11 @@ app.use(
 
 const getMe = async (req): Promise<MeProps | void> => {
   const token = req.cookies['token'] || req.headers['token'] || null
-
   if (token) {
     try {
-      return await jwt.verify(token, process.env.SECRET)
+      return await jwt.verify(token, SECRET)
     } catch (e) {
+      console.error(e)
       throw new AuthenticationError(
         'Your session has expired. Please sign in again.',
       )
@@ -79,7 +80,7 @@ const server = new ApolloServer({
       return {
         models,
         me,
-        secret: process.env.SECRET,
+        secret: SECRET,
       }
     }
   },
@@ -87,8 +88,7 @@ const server = new ApolloServer({
     onConnect: async ({
       token,
     }: SubscriptionConnection): Promise<{ me: MeProps } | void> => {
-      const me: MeProps =
-        (await jwt.verify(token, process.env.SECRET)) || null
+      const me: MeProps = (await jwt.verify(token, SECRET)) || null
       return { me }
     },
   },

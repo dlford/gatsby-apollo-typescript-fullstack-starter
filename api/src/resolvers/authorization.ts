@@ -13,8 +13,8 @@ export const isAuthenticated = (
 export const isAdmin = combineResolvers(
   isAuthenticated,
   (_parent, _args, { me: { role } }): ForbiddenError | void => {
-    switch (+role) {
-      case UserRole.ADMIN:
+    switch (role) {
+      case UserRole.admin:
         return skip
         break
       default:

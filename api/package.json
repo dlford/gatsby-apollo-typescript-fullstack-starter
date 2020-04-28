@@ -33,6 +33,7 @@
   },
   "scripts": {
     "start": "node build/app",
+    "dev": "concurrently \"npm run build:watch\" \"nodemon build/app\"",
     "doc": "typedoc --out ./docs/ ./src",
     "clean": "rimraf coverage build tmp",
     "build": "tsc -p tsconfig.release.json",

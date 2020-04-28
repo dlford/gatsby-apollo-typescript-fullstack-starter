@@ -17,23 +17,28 @@ const createToken = async (
   })
 }
 
-// TODO : SECURITY
 export default {
   Query: {
-    users: async (
-      _parent,
-      _args,
-      { models }: ContextProps,
-    ): Promise<UserDocument[]> => {
-      return await models.User.find()
-    },
-    user: async (
-      _parent,
-      { id },
-      { models }: ContextProps,
-    ): Promise<UserDocument> => {
-      return await models.User.findById(id)
-    },
+    users: combineResolvers(
+      isAdmin,
+      async (
+        _parent,
+        _args,
+        { models }: ContextProps,
+      ): Promise<UserDocument[]> => {
+        return await models.User.find()
+      },
+    ),
+    user: combineResolvers(
+      isAdmin,
+      async (
+        _parent,
+        { id },
+        { models }: ContextProps,
+      ): Promise<UserDocument> => {
+        return await models.User.findById(id)
+      },
+    ),
     me: async (
       _parent,
       _args,
@@ -69,7 +74,7 @@ export default {
       { email, password },
       { models, secret }: ContextProps,
     ): Promise<{ token: string }> => {
-      const user = await models.User.find({ email: email })[0]
+      const user = await models.User.findOne({ email: email })
 
       if (!user) {
         throw new UserInputError(
@@ -83,7 +88,7 @@ export default {
         throw new AuthenticationError('Invalid password.')
       }
 
-      return { token: await createToken(user, secret, '30d') }
+      return { token: await createToken(user, secret, '30m') }
     },
 
     updateUser: combineResolvers(

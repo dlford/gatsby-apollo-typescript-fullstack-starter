@@ -3,8 +3,8 @@ import * as bcrypt from 'bcrypt'
 import * as mongoose from 'mongoose'
 
 export enum UserRole {
-  'ADMIN',
-  'USER',
+  admin = 'ADMIN',
+  user = 'USER',
 }
 
 export interface MeProps {
