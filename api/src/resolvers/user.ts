@@ -3,9 +3,14 @@ import { combineResolvers } from 'graphql-resolvers'
 import jwt from 'jsonwebtoken'
 
 import { isAdmin, isAuthenticated } from '~/resolvers/authorization'
+import { MeProps, UserDocument } from '~/models/user'
 import { ContextProps } from '~/app'
 
-const createToken = async (user, secret, expiresIn) => {
+const createToken = async (
+  user,
+  secret,
+  expiresIn,
+): Promise<string> => {
   const { id, email, username, role } = user
   return await jwt.sign({ id, email, username, role }, secret, {
     expiresIn,
@@ -14,17 +19,28 @@ const createToken = async (user, secret, expiresIn) => {
 
 export default {
   Query: {
-    users: async (_parent, _args, { models }: ContextProps) => {
+    users: async (
+      _parent,
+      _args,
+      { models }: ContextProps,
+    ): Promise<UserDocument[]> => {
       return await models.User.find()
     },
-    user: async (_parent, { id }, { models }: ContextProps) => {
+    user: async (
+      _parent,
+      { id },
+      { models }: ContextProps,
+    ): Promise<UserDocument> => {
       return await models.User.findById(id)
     },
-    me: async (_parent, _args, { models, me }: ContextProps) => {
+    me: async (
+      _parent,
+      _args,
+      { models, me }: ContextProps,
+    ): Promise<UserDocument> => {
       if (!me) {
         return null
       }
-
       return await models.User.findById(me.id)
     },
   },
@@ -34,7 +50,7 @@ export default {
       _parent,
       { username, email, password },
       { models, secret }: ContextProps,
-    ) => {
+    ): Promise<string> => {
       const user = await models.User.create({
         username,
         email,
