@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios'
 
 const API_URL = 'http://localhost:3000/graphql'
 
-export const signUp = async (variables): Promise<object> =>
+export const signUp = async (variables): Promise<any> =>
   axios.post(API_URL, {
     query: `
       mutation(
@@ -20,7 +21,7 @@ export const signUp = async (variables): Promise<object> =>
     variables,
   })
 
-export const signIn = async (variables): Promise<object> =>
+export const signIn = async (variables): Promise<any> =>
   await axios.post(API_URL, {
     query: `
       mutation ($email: String!, $password: String!) {
@@ -32,7 +33,7 @@ export const signIn = async (variables): Promise<object> =>
     variables,
   })
 
-export const me = async (token): Promise<object> =>
+export const me = async (token): Promise<any> =>
   await axios.post(
     API_URL,
     {
@@ -55,7 +56,7 @@ export const me = async (token): Promise<object> =>
       : null,
   )
 
-export const user = async (token, variables): Promise<object> =>
+export const user = async (token, variables): Promise<any> =>
   axios.post(
     API_URL,
     {
@@ -80,7 +81,7 @@ export const user = async (token, variables): Promise<object> =>
       : null,
   )
 
-export const users = async (token): Promise<object> =>
+export const users = async (token): Promise<any> =>
   axios.post(
     API_URL,
     {
@@ -104,7 +105,7 @@ export const users = async (token): Promise<object> =>
       : null,
   )
 
-export const updateUser = async (variables, token): Promise<object> =>
+export const updateUser = async (variables, token): Promise<any> =>
   axios.post(
     API_URL,
     {
@@ -126,7 +127,7 @@ export const updateUser = async (variables, token): Promise<object> =>
       : null,
   )
 
-export const deleteUser = async (variables, token): Promise<object> =>
+export const deleteUser = async (variables, token): Promise<any> =>
   axios.post(
     API_URL,
     {

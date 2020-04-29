@@ -17,7 +17,7 @@ export interface UserDocument extends mongoose.Document {
   email: MeProps['email']
   role: MeProps['role']
   generatePasswordHash(): string
-  validatePassword(): boolean
+  validatePassword(password: string): boolean
   password: string
   createdAt: Date
   updatedAt: Date
