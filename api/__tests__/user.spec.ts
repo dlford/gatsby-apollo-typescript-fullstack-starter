@@ -6,9 +6,8 @@ import * as jwt from 'jsonwebtoken'
 let db
 let adminToken
 const SECRET = process.env.SECRET || 'secret-stub'
-const TEST_ADMIN = process.env.TEST_ADMIN || 'admin@jest.test'
+const TEST_ADMIN = 'admin@jest.test'
 const TEST_ADMIN_PASSWORD =
-  process.env.TEST_ADMIN_PASSWORD ||
   '394nv9349cr2m02mc028y3c9eytn7ioc348cur984yrcn93ceoo'
 
 beforeAll(async () => {
@@ -42,21 +41,26 @@ afterAll(async () => {
 describe('users', () => {
   describe('Query: users', () => {
     const email = 'testusers@jest.test'
-    let userToDelete
+    let userToListUsers
+    let queryResult
 
     it('rejects non-admin usage', async () => {
-      userToDelete = await models.User.create({
+      userToListUsers = await models.User.create({
         email: email,
         password: '6df54g6d54g6hs6gfj46df4h6sd5f4g6ds54h6546f54h',
       }).catch(
         async () => await models.User.findOneAndDelete({ email }),
       )
-      const { id, email: userEmail, role } = userToDelete
-      const token = await jwt.sign({ id, userEmail, role }, SECRET, {
-        expiresIn: '30m',
-      })
+      const { id, email: userEmail, role } = userToListUsers
+      const usersToken = await jwt.sign(
+        { id, email: userEmail, role },
+        SECRET,
+        {
+          expiresIn: '30m',
+        },
+      )
       const response = await userApi
-        .users(token)
+        .users(usersToken)
         .catch((err) =>
           console.error(err.response.data || err.response || err),
         )
@@ -75,9 +79,67 @@ describe('users', () => {
         .catch((err) =>
           console.error(err.response.data || err.response || err),
         )
-      const result = response.data.data.users
-      await models.User.findOneAndDelete({ id: userToDelete.id })
-      expect(result.length).toBeGreaterThan(0)
+      queryResult = response.data.data.users
+      expect(response.data.errors).toBeUndefined()
+    })
+
+    it('returns valid users', async () => {
+      await models.User.findOneAndDelete({
+        email: userToListUsers.email,
+      })
+      expect(
+        queryResult.filter((user) => user.email === email)[0].email,
+      ).toBe(email)
+    })
+  })
+
+  describe('Query: user', () => {
+    const email = 'testuser@jest.test'
+    let userToList
+    let queryResult
+
+    it('rejects non-admin usage', async () => {
+      userToList = await models.User.create({
+        email: email,
+        password: 's564gh6sa54rh6a54r6ga4654ga54g6a54s654g',
+      }).catch(
+        async () => await models.User.findOneAndDelete({ email }),
+      )
+      const { id, email: userEmail, role } = userToList
+      const userToken = await jwt.sign(
+        { id, email: userEmail, role },
+        SECRET,
+        {
+          expiresIn: '30m',
+        },
+      )
+      const response = await userApi
+        .user({ id: userToList.id }, userToken)
+        .catch((err) =>
+          console.error(err.response.data || err.response || err),
+        )
+      const result = response.data.data.user
+      const code = response.data.errors.filter(
+        (error) => !!error?.extensions?.code,
+      )[0].extensions.code
+
+      expect(result).toBe(null)
+      expect(code).toBe('FORBIDDEN')
+    })
+
+    it('allows admin usage', async () => {
+      const response = await userApi
+        .user({ id: userToList.id }, adminToken)
+        .catch((err) =>
+          console.error(err.response.data || err.response || err),
+        )
+      queryResult = response.data.data.user
+      expect(response.data.errors).toBeUndefined()
+    })
+
+    it('returns a valid user', async () => {
+      await models.User.findOneAndDelete({ email: userToList.email })
+      expect(queryResult.email).toBe(email)
     })
   })
 
@@ -164,9 +226,13 @@ describe('users', () => {
         async () => await models.User.findOneAndDelete({ email }),
       )
       const { id, email: userEmail, role } = userToDelete
-      const token = await jwt.sign({ id, userEmail, role }, SECRET, {
-        expiresIn: '30m',
-      })
+      const token = await jwt.sign(
+        { id, email: userEmail, role },
+        SECRET,
+        {
+          expiresIn: '30m',
+        },
+      )
       const response = await userApi
         .deleteUser(
           {

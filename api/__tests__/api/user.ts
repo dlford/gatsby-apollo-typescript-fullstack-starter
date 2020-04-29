@@ -26,7 +26,7 @@ export const users = async (token): Promise<any> =>
       : null,
   )
 
-export const user = async (token, variables): Promise<any> =>
+export const user = async (variables, token): Promise<any> =>
   axios.post(
     API_URL,
     {
@@ -34,7 +34,6 @@ export const user = async (token, variables): Promise<any> =>
       query ($id: ID!) {
         user(id: $id) {
           id
-          username
           email
           role
         }
