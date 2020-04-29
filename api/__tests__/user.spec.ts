@@ -40,6 +40,47 @@ afterAll(async () => {
 })
 
 describe('users', () => {
+  describe('Query: users', () => {
+    const email = 'testusers@jest.test'
+    let userToDelete
+
+    it('rejects non-admin usage', async () => {
+      userToDelete = await models.User.create({
+        email: email,
+        password: '6df54g6d54g6hs6gfj46df4h6sd5f4g6ds54h6546f54h',
+      }).catch(
+        async () => await models.User.findOneAndDelete({ email }),
+      )
+      const { id, email: userEmail, role } = userToDelete
+      const token = await jwt.sign({ id, userEmail, role }, SECRET, {
+        expiresIn: '30m',
+      })
+      const response = await userApi
+        .users(token)
+        .catch((err) =>
+          console.error(err.response.data || err.response || err),
+        )
+      const result = response.data.data.users
+      const code = response.data.errors.filter(
+        (error) => !!error?.extensions?.code,
+      )[0].extensions.code
+
+      expect(result).toBe(null)
+      expect(code).toBe('FORBIDDEN')
+    })
+
+    it('allows admin usage', async () => {
+      const response = await userApi
+        .users(adminToken)
+        .catch((err) =>
+          console.error(err.response.data || err.response || err),
+        )
+      const result = response.data.data.users
+      await models.User.findOneAndDelete({ id: userToDelete.id })
+      expect(result.length).toBeGreaterThan(0)
+    })
+  })
+
   describe('Mutation: signUp', () => {
     const email = 'testcreate@jest.test'
 

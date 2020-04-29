@@ -11,7 +11,6 @@ export const users = async (token): Promise<any> =>
       {
         users {
           id
-          username
           email
           role
         }
