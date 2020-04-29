@@ -50,7 +50,7 @@ export const user = async (variables, token): Promise<any> =>
       : null,
   )
 
-export const me = async (token): Promise<any> =>
+export const me = async (token: string | void): Promise<any> =>
   await axios.post(
     API_URL,
     {
@@ -59,7 +59,7 @@ export const me = async (token): Promise<any> =>
           me {
             id
             email
-            username
+            role
           }
         }
       `,
@@ -111,6 +111,8 @@ export const updateUser = async (variables, token): Promise<any> =>
         mutation ($email: String!) {
           updateUser(email: $email) {
             email
+            role
+            id
           }
         }
       `,

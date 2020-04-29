@@ -41,6 +41,7 @@
     "build:watch": "tsc -w -p tsconfig.release.json",
     "lint": "eslint --fix . --ext .ts,.tsx",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "test:watch": "jest --watch"
   },
   "author": "DL Ford <hello@dlford.io>",

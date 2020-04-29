@@ -87,9 +87,12 @@ describe('users', () => {
       await models.User.findOneAndDelete({
         email: userToListUsers.email,
       })
-      expect(
-        queryResult.filter((user) => user.email === email)[0].email,
-      ).toBe(email)
+      const user = queryResult.filter(
+        (user) => user.email === email,
+      )[0]
+      expect(user.id).toBeDefined()
+      expect(user.email).toBe(email)
+      expect(user.role).toBe('USER')
     })
   })
 
@@ -140,6 +143,47 @@ describe('users', () => {
     it('returns a valid user', async () => {
       await models.User.findOneAndDelete({ email: userToList.email })
       expect(queryResult.email).toBe(email)
+      expect(queryResult.role).toBe('USER')
+      expect(queryResult.id).toBeDefined()
+    })
+  })
+
+  describe('Mutation: me', () => {
+    it('returns an empty object when no token is provided', async () => {
+      const response = await userApi
+        .me()
+        .catch((err) =>
+          console.error(err.response.data || err.response || err),
+        )
+      const result = response.data.data.me
+      expect(result).toBe(null)
+      expect(response.data.errors).toBeUndefined()
+    })
+
+    it('returns a user for a given token', async () => {
+      const email = 'testme@jest.test'
+      const userToTestMe = await models.User.create({
+        email,
+        password: 'a6sdfg46sdf54g6sd5h46s5d4hg6a5d4f',
+      })
+      const { id, email: meEmail, role } = userToTestMe
+      const meToken = await jwt.sign(
+        { id, email: meEmail, role },
+        SECRET,
+        {
+          expiresIn: '30m',
+        },
+      )
+      const response = await userApi
+        .me(meToken)
+        .catch((err) =>
+          console.error(err.response.data || err.response || err),
+        )
+      await userToTestMe.remove()
+      const result = response.data.data.me
+      expect(result.email).toBe(email)
+      expect(result.role).toBe('USER')
+      expect(result.id).toBeDefined()
     })
   })
 
@@ -160,6 +204,7 @@ describe('users', () => {
       const validated = await jwt.verify(token, SECRET)
       expect(validated.email).toBe(email)
       expect(validated.role).toBe('USER')
+      expect(validated.id).toBeDefined()
     })
     it('creates a user in DB', async () => {
       const user = await models.User.findOne({
@@ -186,6 +231,7 @@ describe('users', () => {
       const validated = await jwt.verify(token, SECRET)
       expect(validated.email).toBe(TEST_ADMIN)
       expect(validated.role).toBe('ADMIN')
+      expect(validated.id).toBeDefined()
     })
   })
 
@@ -211,6 +257,8 @@ describe('users', () => {
         { email: TEST_ADMIN },
       )
       expect(user.email).toBe(email)
+      expect(user.role).toBe('ADMIN')
+      expect(user.id).toBeDefined()
     })
   })
 
