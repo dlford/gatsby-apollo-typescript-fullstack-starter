@@ -40,10 +40,11 @@ afterAll(async () => {
 
 describe('users', () => {
   describe('Mutation: signUp', () => {
+    const email = 'testcreate@jest.test'
     it('returns a valid token', async () => {
       const response = await api
         .signUp({
-          email: 'user@jest.test',
+          email: email,
           password: 'password',
         })
         .catch((err) =>
@@ -51,16 +52,17 @@ describe('users', () => {
         )
       const token = response.data.data.signUp.token
       const validated = await jwt.verify(token, SECRET)
-      expect(validated.email).toBe('user@jest.test')
+      expect(validated.email).toBe(email)
       expect(validated.role).toBe('USER')
     })
     it('creates a user in DB', async () => {
       const user = await models.User.findOne({
-        email: 'user@jest.test',
+        email: email,
       })
       expect(user.id).toBeDefined()
-      expect(user.email).toBe('user@jest.test')
+      expect(user.email).toBe(email)
       expect(user.role).toBe('USER')
+      await user.remove()
     })
   })
 
@@ -82,12 +84,12 @@ describe('users', () => {
   })
 
   describe('Mutation: updateUser', () => {
-    const newEmail = 'itworked@jest.test'
+    const email = 'testupdate@jest.test'
     it('updates user email address', async () => {
       const response = await api
         .updateUser(
           {
-            email: newEmail,
+            email: email,
           },
           adminToken,
         )
@@ -98,11 +100,63 @@ describe('users', () => {
 
       // Put it back for later tests
       await models.User.findOneAndUpdate(
-        { email: newEmail },
+        { email: email },
         { email: TEST_ADMIN },
       )
 
-      expect(user.email).toBe(newEmail)
+      expect(user.email).toBe(email)
+    })
+  })
+
+  describe('Mutation: deleteUser', () => {
+    const email = 'testdelete@jest.test'
+    let userToDelete
+    it('rejects non-admin usage', async () => {
+      userToDelete = await models.User.create({
+        email: email,
+        password: 'password',
+      }).catch(
+        async () => await models.User.findOneAndDelete({ email }),
+      )
+      const { id, email: userEmail, role } = userToDelete
+      const token = await jwt.sign({ id, userEmail, role }, SECRET, {
+        expiresIn: '30m',
+      })
+      const response = await api
+        .deleteUser(
+          {
+            id: userToDelete.id,
+          },
+          token,
+        )
+        .catch((err) =>
+          console.error(err.response.data || err.response || err),
+        )
+      const result = response.data
+      const code = result.errors.filter(
+        (error) => error.extensions.code,
+      )[0].extensions.code
+
+      expect(result.data).toBe(null)
+      expect(code).toBe('FORBIDDEN')
+    })
+    it('allows admin usage', async () => {
+      const response = await api
+        .deleteUser(
+          {
+            id: userToDelete.id,
+          },
+          adminToken,
+        )
+        .catch((err) =>
+          console.error(err.response.data || err.response || err),
+        )
+      const result = response.data.data.deleteUser
+      expect(result).toBe(true)
+    })
+    it('removes user from the db', async () => {
+      const query = await models.User.findById(userToDelete.id)
+      expect(query).toBe(null)
     })
   })
 })
