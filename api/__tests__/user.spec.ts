@@ -41,6 +41,7 @@ afterAll(async () => {
 describe('users', () => {
   describe('Mutation: signUp', () => {
     const email = 'testcreate@jest.test'
+
     it('returns a valid token', async () => {
       const response = await api
         .signUp({
@@ -85,6 +86,7 @@ describe('users', () => {
 
   describe('Mutation: updateUser', () => {
     const email = 'testupdate@jest.test'
+
     it('updates user email address', async () => {
       const response = await api
         .updateUser(
@@ -103,7 +105,6 @@ describe('users', () => {
         { email: email },
         { email: TEST_ADMIN },
       )
-
       expect(user.email).toBe(email)
     })
   })
@@ -111,6 +112,7 @@ describe('users', () => {
   describe('Mutation: deleteUser', () => {
     const email = 'testdelete@jest.test'
     let userToDelete
+
     it('rejects non-admin usage', async () => {
       userToDelete = await models.User.create({
         email: email,
@@ -134,12 +136,13 @@ describe('users', () => {
         )
       const result = response.data
       const code = result.errors.filter(
-        (error) => error.extensions.code,
+        (error) => !!error?.extensions?.code,
       )[0].extensions.code
 
       expect(result.data).toBe(null)
       expect(code).toBe('FORBIDDEN')
     })
+
     it('allows admin usage', async () => {
       const response = await api
         .deleteUser(
@@ -154,6 +157,7 @@ describe('users', () => {
       const result = response.data.data.deleteUser
       expect(result).toBe(true)
     })
+
     it('removes user from the db', async () => {
       const query = await models.User.findById(userToDelete.id)
       expect(query).toBe(null)
