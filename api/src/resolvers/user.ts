@@ -57,14 +57,11 @@ export default {
       { username, email, password },
       { models, secret }: ContextProps,
     ): Promise<{ token: string }> => {
-      const user = new models.User({
+      const user = await models.User.create({
         username,
         email,
         password,
       })
-
-      user.password = await user.generatePasswordHash()
-      await user.save()
 
       return { token: await createToken(user, secret, '30d') }
     },

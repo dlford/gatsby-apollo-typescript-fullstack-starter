@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const API_URL = 'http://localhost:3000/graphql'
 
-export const signUp = async (variables): Promise<any> =>
+export const signUp = async (variables): Promise<object> =>
   axios.post(API_URL, {
     query: `
       mutation(
@@ -20,7 +20,7 @@ export const signUp = async (variables): Promise<any> =>
     variables,
   })
 
-export const signIn = async (variables): Promise<any> =>
+export const signIn = async (variables): Promise<object> =>
   await axios.post(API_URL, {
     query: `
       mutation ($email: String!, $password: String!) {
@@ -32,7 +32,7 @@ export const signIn = async (variables): Promise<any> =>
     variables,
   })
 
-export const me = async (token): Promise<any> =>
+export const me = async (token): Promise<object> =>
   await axios.post(
     API_URL,
     {
@@ -55,7 +55,7 @@ export const me = async (token): Promise<any> =>
       : null,
   )
 
-export const user = async (token, variables): Promise<any> =>
+export const user = async (token, variables): Promise<object> =>
   axios.post(
     API_URL,
     {
@@ -80,7 +80,7 @@ export const user = async (token, variables): Promise<any> =>
       : null,
   )
 
-export const users = async (token): Promise<any> =>
+export const users = async (token): Promise<object> =>
   axios.post(
     API_URL,
     {
@@ -104,7 +104,7 @@ export const users = async (token): Promise<any> =>
       : null,
   )
 
-export const updateUser = async (variables, token): Promise<any> =>
+export const updateUser = async (variables, token): Promise<object> =>
   axios.post(
     API_URL,
     {
@@ -126,7 +126,7 @@ export const updateUser = async (variables, token): Promise<any> =>
       : null,
   )
 
-export const deleteUser = async (variables, token): Promise<any> =>
+export const deleteUser = async (variables, token): Promise<object> =>
   axios.post(
     API_URL,
     {

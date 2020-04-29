@@ -16,8 +16,8 @@ export interface MeProps {
 export interface UserDocument extends mongoose.Document {
   email: MeProps['email']
   role: MeProps['role']
-  generatePasswordHash: Function
-  validatePassword: Function
+  generatePasswordHash(): string
+  validatePassword(): boolean
   password: string
   createdAt: Date
   updatedAt: Date
@@ -61,6 +61,15 @@ userSchema.methods.validatePassword = async function(
 ): Promise<boolean> {
   return await bcrypt.compare(password, this.password)
 }
+
+userSchema.pre('save', async function(
+  this: UserDocument,
+): Promise<void> {
+  if (this.isNew) {
+    const hash = await this.generatePasswordHash()
+    this.password = hash
+  }
+})
 
 const User = mongoose.model<UserDocument>('User', userSchema)
 

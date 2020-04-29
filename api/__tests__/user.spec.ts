@@ -5,9 +5,9 @@ import * as jwt from 'jsonwebtoken'
 
 let db
 const SECRET = process.env.SECRET || 'secret-stub'
-const TEST_ADMIN = process.env.TEST_USER || 'admin@jest.test'
+const TEST_ADMIN = process.env.TEST_ADMIN || 'admin@jest.test'
 const TEST_ADMIN_PASSWORD =
-  process.env.TEST_ADMIN_PASSWORD || '123456'
+  process.env.TEST_ADMIN_PASSWORD || '12345678'
 
 beforeAll(async () => {
   db = await connectDb()
@@ -75,7 +75,6 @@ describe('users', () => {
         .catch((err) =>
           console.error(err.response.data || err.response || err),
         )
-      console.log(response.data)
       const token = response.data.data.signIn.token
       const validated = await jwt.verify(token, SECRET)
       expect(validated.email).toBe(TEST_ADMIN)
