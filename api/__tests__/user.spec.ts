@@ -1,6 +1,6 @@
 // import * as mongoose from 'mongoose'
 import models, { connectDb } from '../src/models'
-import * as api from './api'
+import * as userApi from './api/user'
 import * as jwt from 'jsonwebtoken'
 
 let db
@@ -8,7 +8,8 @@ let adminToken
 const SECRET = process.env.SECRET || 'secret-stub'
 const TEST_ADMIN = process.env.TEST_ADMIN || 'admin@jest.test'
 const TEST_ADMIN_PASSWORD =
-  process.env.TEST_ADMIN_PASSWORD || '12345678'
+  process.env.TEST_ADMIN_PASSWORD ||
+  '394nv9349cr2m02mc028y3c9eytn7ioc348cur984yrcn93ceoo'
 
 beforeAll(async () => {
   db = await connectDb()
@@ -43,10 +44,11 @@ describe('users', () => {
     const email = 'testcreate@jest.test'
 
     it('returns a valid token', async () => {
-      const response = await api
+      const response = await userApi
         .signUp({
           email: email,
-          password: 'password',
+          password:
+            '65h45d4fh6d54g6s54gd64hg4h6gs4gs54dg6s4g646s6gd54s4',
         })
         .catch((err) =>
           console.error(err.response.data || err.response || err),
@@ -69,7 +71,7 @@ describe('users', () => {
 
   describe('Mutation: signIn', () => {
     it('returns a valid token', async () => {
-      const response = await api
+      const response = await userApi
         .signIn({
           email: TEST_ADMIN,
           password: TEST_ADMIN_PASSWORD,
@@ -88,7 +90,7 @@ describe('users', () => {
     const email = 'testupdate@jest.test'
 
     it('updates user email address', async () => {
-      const response = await api
+      const response = await userApi
         .updateUser(
           {
             email: email,
@@ -116,7 +118,7 @@ describe('users', () => {
     it('rejects non-admin usage', async () => {
       userToDelete = await models.User.create({
         email: email,
-        password: 'password',
+        password: '6df54g6d54g6hs6gfj46df4h6sd5f4g6ds54h6546f54h',
       }).catch(
         async () => await models.User.findOneAndDelete({ email }),
       )
@@ -124,7 +126,7 @@ describe('users', () => {
       const token = await jwt.sign({ id, userEmail, role }, SECRET, {
         expiresIn: '30m',
       })
-      const response = await api
+      const response = await userApi
         .deleteUser(
           {
             id: userToDelete.id,
@@ -144,7 +146,7 @@ describe('users', () => {
     })
 
     it('allows admin usage', async () => {
-      const response = await api
+      const response = await userApi
         .deleteUser(
           {
             id: userToDelete.id,

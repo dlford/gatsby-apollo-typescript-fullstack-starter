@@ -3,49 +3,20 @@ import axios from 'axios'
 
 const API_URL = 'http://localhost:3000/graphql'
 
-export const signUp = async (variables): Promise<any> =>
-  axios.post(API_URL, {
-    query: `
-      mutation(
-        $email: String!,
-        $password: String!
-      ) {
-        signUp(
-          email: $email,
-          password: $password
-        ) {
-          token
-        }
-      }
-    `,
-    variables,
-  })
-
-export const signIn = async (variables): Promise<any> =>
-  await axios.post(API_URL, {
-    query: `
-      mutation ($email: String!, $password: String!) {
-        signIn(email: $email, password: $password) {
-          token
-        }
-      }
-    `,
-    variables,
-  })
-
-export const me = async (token): Promise<any> =>
-  await axios.post(
+export const users = async (token): Promise<any> =>
+  axios.post(
     API_URL,
     {
       query: `
-        {
-          me {
-            id
-            email
-            username
-          }
+      {
+        users {
+          id
+          username
+          email
+          role
         }
-      `,
+      }
+    `,
     },
     token
       ? {
@@ -81,20 +52,19 @@ export const user = async (token, variables): Promise<any> =>
       : null,
   )
 
-export const users = async (token): Promise<any> =>
-  axios.post(
+export const me = async (token): Promise<any> =>
+  await axios.post(
     API_URL,
     {
       query: `
-      {
-        users {
-          id
-          username
-          email
-          role
+        {
+          me {
+            id
+            email
+            username
+          }
         }
-      }
-    `,
+      `,
     },
     token
       ? {
@@ -104,6 +74,36 @@ export const users = async (token): Promise<any> =>
         }
       : null,
   )
+
+export const signUp = async (variables): Promise<any> =>
+  axios.post(API_URL, {
+    query: `
+      mutation(
+        $email: String!,
+        $password: String!
+      ) {
+        signUp(
+          email: $email,
+          password: $password
+        ) {
+          token
+        }
+      }
+    `,
+    variables,
+  })
+
+export const signIn = async (variables): Promise<any> =>
+  await axios.post(API_URL, {
+    query: `
+      mutation ($email: String!, $password: String!) {
+        signIn(email: $email, password: $password) {
+          token
+        }
+      }
+    `,
+    variables,
+  })
 
 export const updateUser = async (variables, token): Promise<any> =>
   axios.post(
