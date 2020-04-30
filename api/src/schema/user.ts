@@ -2,25 +2,31 @@
  *
  * ## User Schema
  *
+ * ### Queries
+ *
+ * ```graphql
+ * users: [User!]
+ * user(id: ID!): User
+ * me: User
  * ```
- * extend type Query {
- *   users: [User!]
- *   user(id: ID!): User
- *   me: User
- * }
  *
- * extend type Mutation {
- *   signUp(email: String!, password: String!): Token!
- *   signIn(email: String!, password: String!): Token!
- *   updateUser(email: String!): User!
- *   deleteUser(id: ID!): Boolean!
- * }
+ * ### Mutations
  *
- * type Token {
+ * ```graphql
+ * signUp(email: String!, password: String!): Token!
+ * signIn(email: String!, password: String!): Token!
+ * updateUser(email: String!): User!
+ * deleteUser(id: ID!): Boolean!
+ * ```
+ *
+ * ### Types
+ *
+ * ```graphql
+ * Token {
  *   token: String!
  * }
  *
- * type User {
+ * User {
  *   id: ID!
  *   email: String!
  *   role: UserRole!
