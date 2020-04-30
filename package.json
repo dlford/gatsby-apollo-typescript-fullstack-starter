@@ -5,13 +5,17 @@
   "main": "index.js",
   "husky": {
     "hooks": {
-      "pre-commit": "npm run precommit"
+      "pre-commit": "npm run precommit",
+      "post-install": "npm run postinstall"
     }
   },
   "scripts": {
+    "postinstall:web": "cd web && npm install",
     "precommit:web": "cd web && npm run precommit",
+    "postinstall:api": "cd api && npm install",
     "precommit:api": "cd api && npm run precommit",
     "precommit": "npm-run-all precommit:*",
+    "postinstall": "npm-run-all postinstall:*",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
