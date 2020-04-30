@@ -32,6 +32,9 @@ app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'),
 )
 
+/**
+ * Returns either a verified user object or null.
+ */
 const getMe = async (req): Promise<MeProps | void> => {
   const token = req.cookies['token'] || req.headers['token'] || null
   if (token) {

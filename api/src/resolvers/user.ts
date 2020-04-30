@@ -6,6 +6,10 @@ import { isAdmin, isAuthenticated } from './authorization'
 import { UserDocument } from '../models/user'
 import { ContextProps } from '../app'
 
+/**
+ * Creates a signed JWT containing a user object.
+ */
+
 const createToken = async (
   user,
   secret,

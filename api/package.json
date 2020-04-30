@@ -1,12 +1,13 @@
 {
-  "name": "ts-node-boiler",
+  "name": "gatsby-apollo-typescript-starter_api",
   "version": "0.0.1",
-  "description": "NodeJS Typescript Boilerplate.",
+  "description": "Apollo / GraphQL API",
   "engines": {
     "node": ">= 12.13 <13"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
+    "@types/cookie-parser": "^1.4.2",
     "@types/express": "^4.17.6",
     "@types/graphql-resolvers": "^0.2.2",
     "@types/jest": "~25.1.2",

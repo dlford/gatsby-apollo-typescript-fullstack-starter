@@ -1,7 +1,17 @@
+/**
+ * Helper functions for GraphQL resolvers, to be used with `combineResolvers`.
+ *
+ * @packageDocumentation
+ */
+
 import { ForbiddenError } from 'apollo-server'
 import { combineResolvers, skip } from 'graphql-resolvers'
 
 import { UserRole } from '../models/user'
+
+/**
+ * Reject access to unauthenticated users.
+ */
 
 export const isAuthenticated = (
   _parent,
@@ -9,6 +19,10 @@ export const isAuthenticated = (
   { me },
 ): ForbiddenError | void =>
   me ? skip : new ForbiddenError('Not authenticated as user.')
+
+/**
+ * Reject access to unauthenticated and non-admin users.
+ */
 
 export const isAdmin = combineResolvers(
   isAuthenticated,

@@ -1,6 +1,16 @@
+/**
+ * Common export point for GraphQL Schema
+ *
+ * @packageDocumentation
+ */
+
 import { gql } from 'apollo-server-express'
 
 import userSchema from './user'
+
+/**
+ * Dummy types
+ */
 
 const baseSchema = gql`
   scalar Date
@@ -18,4 +28,5 @@ const baseSchema = gql`
   }
 `
 
-export default [baseSchema, userSchema]
+const schema = [baseSchema, userSchema]
+export default schema

@@ -1,3 +1,20 @@
+/**
+ * ## Types
+ *
+ * | Attribute | Type                | Required | Default |
+ * |-----------|---------------------|----------|---------|
+ * | id        | ID                  | *Auto    | *Auto   |
+ * | email     | string              | true     | null    |
+ * | role      | enum(USER \| ADMIN) | true     | USER    |
+ *
+ * ## Methods
+ *
+ * - `generatePasswordHash()`: Creates a bcrypt hash of the users password for storage in DB. (Runs automatically when user is created).
+ * - `validatePassword(password: string): boolean`: Returns true if supplied password matches hash in DB.
+ *
+ * @packageDocumentation
+ */
+
 import isEmail from 'validator/lib/isEmail'
 import * as bcrypt from 'bcrypt'
 import * as mongoose from 'mongoose'

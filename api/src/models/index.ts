@@ -1,3 +1,9 @@
+/**
+ * Common export point for all models and MongoDB connection.
+ *
+ * @packageDocumentation
+ */
+
 import * as mongoose from 'mongoose'
 
 import User, { UserDocument } from './user'
@@ -8,6 +14,10 @@ export type ModelTypes = {
 }
 
 const models = { User }
+
+/**
+ * Connects to MongoDB at `process.env.DATABASE_URL` or `mongodb://localhost:27017/development`.
+ */
 
 export const connectDb = (): Promise<typeof import('mongoose')> =>
   mongoose.connect(
