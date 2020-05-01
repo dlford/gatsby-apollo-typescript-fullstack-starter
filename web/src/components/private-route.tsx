@@ -1,22 +1,27 @@
 import React from 'react'
+import { RouteComponentProps } from '@reach/router'
 import { navigate } from 'gatsby'
 
-const isLoggedIn = true
+const isLoggedIn = false
 
 export interface PrivateRouteProps {
-  Component: JSX.Element
+  Component: React.FC<RouteComponentProps>
   location: Location
   path: string
 }
 
-const PrivateRoute = ({ location }: PrivateRouteProps) => {
+const PrivateRoute = ({
+  location,
+  path,
+  Component,
+}: PrivateRouteProps) => {
   if (!isLoggedIn && location.pathname !== '/app/login') {
+    // TODO : rewrite history
     navigate('/app/login')
     return null
   }
 
-  return null
-  //return <Component path={path} />
+  return <Component path={path} />
 }
 
 export default PrivateRoute

@@ -1,4 +1,5 @@
 import React from 'react'
+import { RouteComponentProps } from '@reach/router'
 import { Router } from '@reach/router'
 
 import Layout from '~/components/layout'
@@ -9,6 +10,12 @@ export interface AppPageProps {
   location: Location
 }
 
+const LogInWarning: React.FC<RouteComponentProps> = () => (
+  <Article>
+    <p>You need to log in</p>
+  </Article>
+)
+
 const App = ({ location }: AppPageProps) => {
   return (
     <Layout location={location}>
@@ -16,16 +23,14 @@ const App = ({ location }: AppPageProps) => {
         <PrivateRoute
           path='/profile'
           location={location}
-          Component={
+          Component={() => (
             <Article>
               <h1>Private Route</h1>
               <p>You cannot see this without logging in first.</p>
             </Article>
-          }
+          )}
         />
-        <Article>
-          <p>You need to log in</p>
-        </Article>
+        <LogInWarning default />
       </Router>
     </Layout>
   )
