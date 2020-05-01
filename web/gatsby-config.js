@@ -17,6 +17,12 @@ module.exports = {
     `gatsby-plugin-react-helmet`,
     `gatsby-plugin-emotion`,
     {
+      resolve: `gatsby-plugin-create-client-paths`,
+      options: {
+        prefixes: [`/app/*`],
+      },
+    },
+    {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `images`,
