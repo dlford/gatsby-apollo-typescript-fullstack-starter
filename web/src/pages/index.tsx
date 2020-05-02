@@ -1,9 +1,11 @@
 import React from 'react'
 import { graphql, Link } from 'gatsby'
+import tw from 'twin.macro'
 
 import Layout from '~/components/layout'
 import SEO from '~/components/seo'
 import Article from '~/components/article'
+import Button from '~/components/button'
 
 export interface IndexPageProps {
   location: Location
@@ -29,14 +31,20 @@ export const pageQuery = graphql`
   }
 `
 
+const ButtonWrapper = tw.div`flex justify-center mb-12`
+
 const IndexPage = ({ data, location }: QueryProps) => {
   const title = data.site.siteMetadata.title
 
   return (
     <Layout location={location}>
       <SEO title='Welcome' />
+      <ButtonWrapper>
+        <Link to='/dashboard'>
+          <Button primary>Go to the dashboard!</Button>
+        </Link>
+      </ButtonWrapper>
       <Article>
-        <Link to='/dashboard'>Go to the dashboard!</Link>
         <h1>{title}</h1>
         <p>
           Hey! You&apos;ve found my {title}, I hope you do something
