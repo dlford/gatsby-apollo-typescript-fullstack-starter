@@ -1,7 +1,7 @@
 import React from 'react'
 
 import SEO from '~/components/seo'
-import NotFoundComponent from '~/components/not-found'
+import Article from '~/components/article'
 import Layout from '~/components/layout'
 
 export interface NotFoundPageProps {
@@ -11,7 +11,12 @@ export interface NotFoundPageProps {
 const NotFoundPage = ({ location }: NotFoundPageProps) => (
   <Layout location={location}>
     <SEO title='404: Not found' />
-    <NotFoundComponent />
+    <Article>
+      <h1>NOT FOUND</h1>
+      <p>
+        You just hit a route that doesn&#39;t exist... the sadness.
+      </p>
+    </Article>
   </Layout>
 )
 
