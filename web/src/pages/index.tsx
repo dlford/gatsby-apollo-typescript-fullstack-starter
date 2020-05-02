@@ -1,5 +1,5 @@
 import React from 'react'
-import { graphql } from 'gatsby'
+import { graphql, Link } from 'gatsby'
 
 import Layout from '~/components/layout'
 import SEO from '~/components/seo'
@@ -34,8 +34,9 @@ const IndexPage = ({ data, location }: QueryProps) => {
 
   return (
     <Layout location={location}>
-      <SEO title='Home' />
+      <SEO title='Welcome' />
       <Article>
+        <Link to='/app'>Go to the dashboard!</Link>
         <h1>{title}</h1>
         <p>
           Hey! You&apos;ve found my {title}, I hope you do something

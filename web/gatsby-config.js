@@ -1,8 +1,7 @@
 module.exports = {
-  pathPrefix: `/gatsby-typescript-starter-kitchen-sink`,
   siteMetadata: {
-    title: `Gatsby Typescript Starter Kitchen Sink`,
-    description: `A Gatsby Typescript starter with all the fixins`,
+    title: `Gatsby Typescript Starter Fullstack`,
+    description: `A Gatsby Typescript starter with Apollo/GraphQL API`,
     author: `DL Ford`,
     navItems: [
       {
