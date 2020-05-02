@@ -36,16 +36,15 @@ app.use(
  * Returns either a verified user object or null.
  */
 const getMe = async (req): Promise<MeProps | void> => {
-  const token = req.cookies['token'] || req.headers['token'] || null
-  if (token) {
-    try {
-      return await jwt.verify(token, SECRET)
-    } catch (e) {
-      console.error(e)
-      throw new AuthenticationError(
-        'Your session has expired. Please sign in again.',
-      )
-    }
+  const token = req.cookies['token'] || req.headers['token']
+  if (!token) return null
+  try {
+    return await jwt.verify(token, SECRET)
+  } catch (e) {
+    console.error(e)
+    throw new AuthenticationError(
+      'Your session has expired. Please sign in again.',
+    )
   }
 }
 
@@ -91,6 +90,7 @@ const server = new ApolloServer({
     onConnect: async ({
       token,
     }: SubscriptionConnection): Promise<{ me: MeProps } | void> => {
+      if (!token) return null
       const me: MeProps = (await jwt.verify(token, SECRET)) || null
       return { me }
     },
