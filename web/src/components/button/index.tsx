@@ -5,6 +5,7 @@ import styled from '@emotion/styled'
 export interface ButtonProps {
   primary?: boolean
   children: string
+  onClick(arg0: any | void): void
 }
 
 interface StyleProps {
@@ -13,6 +14,7 @@ interface StyleProps {
 
 const Styles = styled('div')<StyleProps>(
   tw`
+    cursor-pointer
     inline-block
     text-sm
     px-5
@@ -40,8 +42,10 @@ const Styles = styled('div')<StyleProps>(
       `,
 )
 
-const Button = ({ primary, children }: ButtonProps) => (
-  <Styles primary={primary}>{children}</Styles>
+const Button = ({ primary, children, onClick }: ButtonProps) => (
+  <Styles onClick={onClick} primary={primary}>
+    {children}
+  </Styles>
 )
 
 export default Button

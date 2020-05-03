@@ -1,30 +1,22 @@
 import React from 'react'
+import { ApolloProvider } from 'react-apollo'
 
-import SEO from '~/components/seo'
-import Layout from '~/components/layout'
-import Article from '~/components/article'
 import Dashboard from '~/components/dashboard'
-
-const isLoggedIn = false
+import ApolloClient from '~/lib/apollo-client'
+import { UserProvider } from '~/context/user'
 
 export interface DashboardPageProps {
   location: Location
 }
 
 const DashboardPage = ({ location }: DashboardPageProps) => {
-  if (!isLoggedIn) {
-    return (
-      <Layout location={location}>
-        <SEO title='Sign In' />
-        <Article>
-          <h1>Sign In</h1>
-          <p>Please sign in to continue</p>
-        </Article>
-      </Layout>
-    )
-  }
-
-  return <Dashboard location={location} />
+  return (
+    <ApolloProvider client={ApolloClient}>
+      <UserProvider>
+        <Dashboard location={location} />
+      </UserProvider>
+    </ApolloProvider>
+  )
 }
 
 export default DashboardPage

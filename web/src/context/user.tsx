@@ -3,6 +3,7 @@ import {
   useMutation,
   useQuery,
 } from '@apollo/react-hooks'
+import { ApolloError } from 'apollo-client'
 import Cookies from 'js-cookie'
 import PropTypes from 'prop-types'
 import gql from 'graphql-tag'
@@ -10,13 +11,40 @@ import React, { createContext, useEffect, useState } from 'react'
 
 import { subscriptionClient } from '~/lib/apollo-client'
 
-export const UserContext = createContext({})
+export interface UserProps {
+  user: {
+    isValidatingToken: boolean
+    signIn(credentials: UserCredentialProps): void
+    signOut(): void
+    id: string | void
+    email: string | void
+    role: UserRole | void
+  }
+  signInError: ApolloError | void
+  signInLoading: boolean | void
+}
+
+export const UserContext = createContext<UserProps>({
+  user: {
+    isValidatingToken: true,
+    signIn() {
+      return
+    },
+    signOut() {
+      return
+    },
+    id: undefined,
+    email: undefined,
+    role: undefined,
+  },
+  signInError: undefined,
+  signInLoading: undefined,
+})
 
 const USER_QUERY = gql`
   query me {
     me {
       id
-      username
       email
       role
     }
@@ -35,45 +63,24 @@ export interface UserProviderProps {
   children: JSX.Element | JSX.Element[]
 }
 
-interface MutationProps {
+enum UserRole {
+  user = 'USER',
+  admin = 'ADMIN',
+}
+
+type UserCredentialProps = {
   email: string
   password: string
 }
 
-interface ResponseProps {
-  data: {
-    signIn: {
-      token: string
-    }
+type ResponseProps = {
+  signIn: {
+    token: string
   }
 }
 
 export const UserProvider = ({ children }: UserProviderProps) => {
   const apolloClient = useApolloClient()
-  const [
-    signIn,
-    { error: signInError, loading: signInLoading },
-  ] = useMutation<MutationProps, ResponseProps>(SIGNIN_MUTATION)
-
-  const authenticate = async (
-    email: MutationProps['email'],
-    password: MutationProps['password'],
-  ): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      signIn({
-        variables: { email, password },
-      })
-        .then(async (result: ResponseProps) => {
-          if (!result.data.signIn.token) {
-            reject('Authentication error, please try again later.')
-          }
-          resolve(result.data.signIn.token)
-        })
-        .catch(() => {
-          return
-        })
-    })
-  }
 
   const {
     data,
@@ -86,37 +93,36 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     Cookies.remove('token', { path: '/' })
   }
 
+  const [
+    signIn,
+    { loading: signInLoading, error: signInError },
+  ] = useMutation(SIGNIN_MUTATION, {
+    onCompleted: (data: ResponseProps) => {
+      const { token } = data.signIn
+      Cookies.set('token', token, {
+        path: '/',
+        expires: new Date(new Date().getTime() + 30 * 60 * 1000), // 30 minutes
+      })
+      apolloClient.cache.reset()
+      refetchUser()
+    },
+  })
+
   const nullUser = {
-    id: null,
-    username: null,
-    email: null,
-    role: null,
+    id: undefined,
+    email: undefined,
+    role: undefined,
   }
 
   const [user, setUser] = useState({
     ...nullUser,
     isValidatingToken: true,
 
-    signIn: (
-      email: MutationProps['email'],
-      password: MutationProps['password'],
-    ) => {
-      return authenticate(email, password)
-        .then((token: string) => {
-          Cookies.set('token', token, {
-            path: '/',
-            expires: 30 * 24 * 60 * 60, // 30 days
-          })
-          apolloClient.cache.reset()
-          refetchUser()
-          return null
-        })
-        .catch((error) => {
-          return error
-        })
+    signIn: (credentials: UserCredentialProps): void => {
+      signIn({ variables: credentials })
     },
 
-    signOut: () => {
+    signOut: (): void => {
       Cookies.remove('token', { path: '/' })
       refetchUser()
       subscriptionClient.close(false, false)
@@ -126,20 +132,24 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
   useEffect(() => {
     if (!userLoading) {
-      if (data && data.me && !user.id) {
+      if (data?.me && !user.id) {
         setUser((prev) => ({
           ...prev,
           ...data.me,
         }))
       }
-      if ((!data || !data.me) && user.id) {
+      if (!data?.me && user.id) {
         setUser((prev) => ({
           ...prev,
           ...nullUser,
         }))
+        setUser((prev) => ({
+          ...prev,
+          isValidatingToken: false,
+        }))
       }
 
-      // This prop prevents a flash of the email screen because
+      // This prop prevents a flash of the sign in page because
       // userLoading turns false before user props are set in
       // the user context, so isValidatingToken is changed here
       // after the user props are updated.
