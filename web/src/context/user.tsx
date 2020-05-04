@@ -22,6 +22,24 @@ export interface UserProps {
   signInLoading: boolean | void
 }
 
+export const UserContext = createContext<UserProps>({
+  user: {
+    signIn() {
+      return
+    },
+    signOut() {
+      return
+    },
+    id: undefined,
+    email: undefined,
+    role: undefined,
+    exp: undefined,
+    iat: undefined,
+  },
+  signInError: undefined,
+  signInLoading: undefined,
+})
+
 export interface UserProviderProps {
   children: JSX.Element | JSX.Element[]
 }
@@ -43,46 +61,20 @@ type ResponseProps = {
 }
 
 type TokenProps = {
+  id: string | void
   email: string | void
+  role: UserRole | void
   exp: number | void
   iat: number | void
-  id: string | void
-  role: UserRole | void
 }
 
-const nullUser = {
+const nullToken = {
   id: undefined,
   email: undefined,
   role: undefined,
   exp: undefined,
   iat: undefined,
 }
-
-const readToken = async (): Promise<TokenProps> => {
-  const token = Cookies.get('token')
-  if (token) {
-    return (await jwt.decode(token)) as TokenProps
-  }
-  return nullUser
-}
-
-export const UserContext = createContext<UserProps>({
-  user: {
-    signIn() {
-      return
-    },
-    signOut() {
-      return
-    },
-    id: undefined,
-    email: undefined,
-    role: undefined,
-    exp: undefined,
-    iat: undefined,
-  },
-  signInError: undefined,
-  signInLoading: undefined,
-})
 
 const SIGNIN_MUTATION = gql`
   mutation signIn($email: String!, $password: String!) {
@@ -92,11 +84,25 @@ const SIGNIN_MUTATION = gql`
   }
 `
 
+const readToken = async (): Promise<TokenProps> => {
+  const token = Cookies.get('token')
+  if (token) {
+    const tokenObj = (await jwt.decode(token)) as TokenProps
+    if (tokenObj.id) {
+      if ((tokenObj.exp as number) - (tokenObj.iat as number) <= 0) {
+        Cookies.remove('token', { path: '/' })
+        return nullToken
+      }
+      return tokenObj
+    }
+  }
+  return nullToken
+}
+
 export const UserProvider = ({ children }: UserProviderProps) => {
   const apolloClient = useApolloClient()
 
-  const [me, setMe] = useState(readToken())
-  //    Cookies.remove('token', { path: '/' })
+  const [me, setMe] = useState(nullToken as TokenProps)
 
   const [
     signIn,
@@ -109,12 +115,14 @@ export const UserProvider = ({ children }: UserProviderProps) => {
         expires: new Date(new Date().getTime() + 30 * 60 * 1000), // 30 minutes
       })
       apolloClient.cache.reset()
-      setMe(readToken())
+      readToken().then((data) => {
+        setMe(data)
+      })
     },
   })
 
   const [user, setUser] = useState({
-    ...nullUser,
+    ...me,
 
     signIn: (credentials: UserCredentialProps): void => {
       signIn({ variables: credentials })
@@ -122,19 +130,22 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
     signOut: (): void => {
       Cookies.remove('token', { path: '/' })
+      setMe(nullToken)
       subscriptionClient.close(false, false)
       apolloClient.cache.reset()
     },
   })
 
   useEffect(() => {
-    if (me) {
-      setUser((prev) => ({
-        ...prev,
-        ...me,
-      }))
-    }
-  }, [me, nullUser])
+    readToken().then((data) => setMe(data))
+  }, [])
+
+  useEffect(() => {
+    setUser((prev) => ({
+      ...prev,
+      ...me,
+    }))
+  }, [me, nullToken])
 
   return (
     <UserContext.Provider
