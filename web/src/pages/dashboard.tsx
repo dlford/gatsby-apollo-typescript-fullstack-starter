@@ -1,7 +1,7 @@
 import React from 'react'
 import { ApolloProvider } from 'react-apollo'
 
-import Dashboard from '~/components/dashboard'
+import Dashboard from '~/dashboard'
 import ApolloClient from '~/lib/apollo-client'
 import { UserProvider } from '~/context/user'
 
