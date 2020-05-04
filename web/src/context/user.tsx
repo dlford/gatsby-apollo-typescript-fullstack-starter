@@ -25,7 +25,27 @@ export interface UserProps {
   signInLoading: boolean | void
 }
 
-interface TokenProps {
+export interface UserProviderProps {
+  children: JSX.Element | JSX.Element[]
+}
+
+enum UserRole {
+  user = 'USER',
+  admin = 'ADMIN',
+}
+
+type UserCredentialProps = {
+  email: string
+  password: string
+}
+
+type ResponseProps = {
+  signIn: {
+    token: string
+  }
+}
+
+type TokenProps = {
   email: string
   exp: number
   iat: number
@@ -35,12 +55,16 @@ interface TokenProps {
 
 // TODO : Don't query backend to validate token, just read and test expiration
 
-const token = Cookies.get('token')
-if (token) {
-  const me = jwt.decode(token)
-  const isExpired = me.exp < me.iat
-  console.log(me)
-  console.log(isExpired)
+const getMe = (): TokenProps => {
+  const token = Cookies.get('token')
+  let me
+  let isExpired
+  if (token) {
+    me = jwt.decode(token) as TokenProps
+    isExpired = me.exp < me.iat
+    console.log(me)
+    console.log(isExpired)
+  }
 }
 
 export const UserContext = createContext<UserProps>({
@@ -77,26 +101,6 @@ const SIGNIN_MUTATION = gql`
     }
   }
 `
-
-export interface UserProviderProps {
-  children: JSX.Element | JSX.Element[]
-}
-
-enum UserRole {
-  user = 'USER',
-  admin = 'ADMIN',
-}
-
-type UserCredentialProps = {
-  email: string
-  password: string
-}
-
-type ResponseProps = {
-  signIn: {
-    token: string
-  }
-}
 
 export const UserProvider = ({ children }: UserProviderProps) => {
   const apolloClient = useApolloClient()
