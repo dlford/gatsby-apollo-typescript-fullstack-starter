@@ -1,8 +1,4 @@
-import {
-  useApolloClient,
-  useMutation,
-  useQuery,
-} from '@apollo/react-hooks'
+import { useApolloClient, useMutation } from '@apollo/react-hooks'
 import { ApolloError } from 'apollo-client'
 import Cookies from 'js-cookie'
 import PropTypes from 'prop-types'
@@ -14,12 +10,13 @@ import { subscriptionClient } from '~/lib/apollo-client'
 
 export interface UserProps {
   user: {
-    isValidatingToken: boolean
     signIn(credentials: UserCredentialProps): void
     signOut(): void
     id: string | void
     email: string | void
     role: UserRole | void
+    exp: number | void
+    iat: number | void
   }
   signInError: ApolloError | void
   signInLoading: boolean | void
@@ -46,25 +43,31 @@ type ResponseProps = {
 }
 
 type TokenProps = {
-  email: string
-  exp: number
-  iat: number
-  id: string
-  role: UserRole
+  email: string | void
+  exp: number | void
+  iat: number | void
+  id: string | void
+  role: UserRole | void
 }
 
-// TODO : Don't query backend to validate token, just read and test expiration
+const nullUser = {
+  id: undefined,
+  email: undefined,
+  role: undefined,
+  exp: undefined,
+  iat: undefined,
+}
 
-const getToken = async (): Promise<TokenProps | void> => {
+const readToken = async (): Promise<TokenProps> => {
   const token = Cookies.get('token')
   if (token) {
     return (await jwt.decode(token)) as TokenProps
   }
+  return nullUser
 }
 
 export const UserContext = createContext<UserProps>({
   user: {
-    isValidatingToken: true,
     signIn() {
       return
     },
@@ -74,20 +77,12 @@ export const UserContext = createContext<UserProps>({
     id: undefined,
     email: undefined,
     role: undefined,
+    exp: undefined,
+    iat: undefined,
   },
   signInError: undefined,
   signInLoading: undefined,
 })
-
-const USER_QUERY = gql`
-  query me {
-    me {
-      id
-      email
-      role
-    }
-  }
-`
 
 const SIGNIN_MUTATION = gql`
   mutation signIn($email: String!, $password: String!) {
@@ -100,41 +95,26 @@ const SIGNIN_MUTATION = gql`
 export const UserProvider = ({ children }: UserProviderProps) => {
   const apolloClient = useApolloClient()
 
-  const {
-    data,
-    loading: userLoading,
-    error: userError,
-    refetch: refetchUser,
-  } = useQuery(USER_QUERY)
-
-  if (userError) {
-    Cookies.remove('token', { path: '/' })
-  }
+  const [me, setMe] = useState(readToken())
+  //    Cookies.remove('token', { path: '/' })
 
   const [
     signIn,
     { loading: signInLoading, error: signInError },
   ] = useMutation(SIGNIN_MUTATION, {
-    onCompleted: (data: ResponseProps) => {
+    onCompleted: async (data: ResponseProps) => {
       const { token } = data.signIn
       Cookies.set('token', token, {
         path: '/',
         expires: new Date(new Date().getTime() + 30 * 60 * 1000), // 30 minutes
       })
       apolloClient.cache.reset()
-      refetchUser()
+      setMe(readToken())
     },
   })
 
-  const nullUser = {
-    id: undefined,
-    email: undefined,
-    role: undefined,
-  }
-
   const [user, setUser] = useState({
     ...nullUser,
-    isValidatingToken: true,
 
     signIn: (credentials: UserCredentialProps): void => {
       signIn({ variables: credentials })
@@ -142,43 +122,19 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
     signOut: (): void => {
       Cookies.remove('token', { path: '/' })
-      refetchUser()
       subscriptionClient.close(false, false)
       apolloClient.cache.reset()
     },
   })
 
   useEffect(() => {
-    if (!userLoading) {
-      if (data?.me && !user.id) {
-        setUser((prev) => ({
-          ...prev,
-          ...data.me,
-        }))
-      }
-      if (!data?.me && user.id) {
-        setUser((prev) => ({
-          ...prev,
-          ...nullUser,
-        }))
-        setUser((prev) => ({
-          ...prev,
-          isValidatingToken: false,
-        }))
-      }
-
-      // This prop prevents a flash of the sign in page because
-      // userLoading turns false before user props are set in
-      // the user context, so isValidatingToken is changed here
-      // after the user props are updated.
-      if (user.isValidatingToken) {
-        setUser((prev) => ({
-          ...prev,
-          isValidatingToken: false,
-        }))
-      }
+    if (me) {
+      setUser((prev) => ({
+        ...prev,
+        ...me,
+      }))
     }
-  }, [data, userLoading, user.isValidatingToken, user.id, nullUser])
+  }, [me, nullUser])
 
   return (
     <UserContext.Provider

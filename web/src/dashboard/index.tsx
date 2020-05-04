@@ -5,7 +5,6 @@ import { UserContext } from '~/context/user'
 import Layout from '~/components/layout'
 import SignIn from '~/dashboard/pages/sign-in'
 import Home from '~/dashboard/pages/home'
-import Loader from '~/components/loader'
 
 export interface DashboardComponentProps {
   location: Location
@@ -13,13 +12,7 @@ export interface DashboardComponentProps {
 
 const App = ({ location }: DashboardComponentProps) => {
   const { user } = useContext(UserContext)
-
-  if (user?.isValidatingToken)
-    return (
-      <Layout location={location}>
-        <Loader />
-      </Layout>
-    )
+  console.log(user)
 
   if (!user?.id)
     return (
