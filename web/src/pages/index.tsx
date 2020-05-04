@@ -45,7 +45,6 @@ const IndexPage = ({ data, location }: QueryProps) => {
         </Link>
       </ButtonWrapper>
       <Article>
-        <h1>{title}</h1>
         <p>
           Hey! You&apos;ve found my {title}, I hope you do something
           cool with it!

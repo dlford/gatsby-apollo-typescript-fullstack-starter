@@ -22,7 +22,7 @@ const FormComponent = styled.form`
         flex-no-wrap
         items-center
         justify-center
-        bg-gray-300
+        bg-gray-200
         rounded
         p-2
         m-0
@@ -47,7 +47,7 @@ const FormComponent = styled.form`
       bg-blue-500
       hover:bg-blue-400
       active:bg-blue-600
-      disabled:bg-blue-200
+      disabled:bg-gray-500
       text-white
     `}
   }

@@ -8,6 +8,7 @@ import Cookies from 'js-cookie'
 import PropTypes from 'prop-types'
 import gql from 'graphql-tag'
 import React, { createContext, useEffect, useState } from 'react'
+import jwt from 'jsonwebtoken'
 
 import { subscriptionClient } from '~/lib/apollo-client'
 
@@ -22,6 +23,24 @@ export interface UserProps {
   }
   signInError: ApolloError | void
   signInLoading: boolean | void
+}
+
+interface TokenProps {
+  email: string
+  exp: number
+  iat: number
+  id: string
+  role: UserRole
+}
+
+// TODO : Don't query backend to validate token, just read and test expiration
+
+const token = Cookies.get('token')
+if (token) {
+  const me = jwt.decode(token)
+  const isExpired = me.exp < me.iat
+  console.log(me)
+  console.log(isExpired)
 }
 
 export const UserContext = createContext<UserProps>({

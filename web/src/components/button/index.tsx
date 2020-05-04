@@ -5,7 +5,7 @@ import styled from '@emotion/styled'
 export interface ButtonProps {
   primary?: boolean
   children: string
-  onClick(arg0: MouseEvent | void): void
+  onClick?(arg0: MouseEvent | void): void
 }
 
 interface StyleProps {

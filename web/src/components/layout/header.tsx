@@ -1,7 +1,9 @@
 import React from 'react'
 import { graphql, useStaticQuery } from 'gatsby'
 import tw from 'twin.macro'
+import styled from '@emotion/styled'
 
+import AbstractHeader from '~/images/abstract-header'
 import LogoImage from '~/images/logo'
 
 export interface HeaderProps {
@@ -26,9 +28,18 @@ const HEADER_QUERY = graphql`
   }
 `
 
-const Header = tw.header`bg-gray-500 mb-16 shadow-lg`
-const Image = tw.div`w-32 sm:w-1/4 lg:w-64 pt-4 ml-auto mr-auto`
-const H1 = tw.h1`font-montserrat py-4 px-2 text-center text-gray-900 text-4xl lg:text-5xl font-black leading-tight`
+const Header = tw.header`mb-16`
+const Image = tw.div`w-12 sm:w-24 lg:w-32 pt-4 ml-auto mr-auto`
+const H1 = tw.h1`font-montserrat py-4 px-2 text-center text-gray-900 text-2xl lg:text-4xl font-black leading-tight`
+
+const BGWrapper = styled.div`
+  z-index: -1;
+  overflow: hidden;
+  opacity: 0.175;
+  position: absolute;
+  top: 0;
+  left: 0;
+`
 
 const HeaderComponent = ({ shouldShowBigHeader }: HeaderProps) => {
   const data = useStaticQuery<QueryProps>(HEADER_QUERY)
@@ -36,6 +47,9 @@ const HeaderComponent = ({ shouldShowBigHeader }: HeaderProps) => {
 
   return (
     <Header>
+      <BGWrapper>
+        <AbstractHeader />
+      </BGWrapper>
       {shouldShowBigHeader && (
         <Image>
           <LogoImage />
