@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { MouseEvent } from 'react'
 import tw from 'twin.macro'
 import styled from '@emotion/styled'
 
 export interface ButtonProps {
   primary?: boolean
   children: string
-  onClick(arg0: any | void): void
+  onClick(arg0: MouseEvent | void): void
 }
 
 interface StyleProps {
@@ -15,6 +15,7 @@ interface StyleProps {
 const Styles = styled('div')<StyleProps>(
   tw`
     cursor-pointer
+    shadow-lg
     inline-block
     text-sm
     px-5
