@@ -3,12 +3,6 @@ import styled from '@emotion/styled'
 
 const FormComponent = styled.form`
   ${tw`flex items-center flex-col mx-auto px-2`};
-  button {
-    ${tw`my-4`}
-  }
-  input {
-    ${tw`w-48 max-w-full`}
-  }
   label {
     ${tw`
       font-bold
@@ -21,6 +15,9 @@ const FormComponent = styled.form`
   }
   input {
     ${tw`
+        w-64
+        max-w-full
+        shadow-md
         flex
         flex-no-wrap
         items-center
@@ -34,6 +31,8 @@ const FormComponent = styled.form`
   }
   button {
     ${tw`
+      my-4
+      shadow-lg
       cursor-pointer
       inline-block
       text-sm

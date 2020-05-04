@@ -4,6 +4,7 @@ import tw from 'twin.macro'
 import Article from '~/components/article'
 import { UserContext } from '~/context/user'
 import Form from '~/components/form'
+import Loader from '~/components/loader'
 
 const SignInComponent = () => {
   const { user, signInLoading, signInError } = useContext(UserContext)
@@ -47,14 +48,12 @@ const SignInComponent = () => {
           <input type='email' name='email' />
           <label htmlFor='password'>Password</label>
           <input type='password' name='password' />
-          <button
-            disabled={signInLoading ? true : false}
-            type='submit'
-          >
+          <button disabled={!!signInLoading} type='submit'>
             Submit
           </button>
         </Form>
       </FormWrapper>
+      {!!signInLoading && <Loader />}
     </>
   )
 }

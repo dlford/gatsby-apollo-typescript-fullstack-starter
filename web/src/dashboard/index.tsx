@@ -2,10 +2,10 @@ import React, { useContext } from 'react'
 import { Router } from '@reach/router'
 
 import { UserContext } from '~/context/user'
-import Article from '~/components/article'
 import Layout from '~/components/layout'
 import SignIn from '~/dashboard/pages/sign-in'
 import Home from '~/dashboard/pages/home'
+import Loader from '~/components/loader'
 
 export interface DashboardComponentProps {
   location: Location
@@ -17,9 +17,7 @@ const App = ({ location }: DashboardComponentProps) => {
   if (user?.isValidatingToken)
     return (
       <Layout location={location}>
-        <Article>
-          <p>Loading...</p>
-        </Article>
+        <Loader />
       </Layout>
     )
 

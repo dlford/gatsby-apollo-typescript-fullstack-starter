@@ -79,14 +79,16 @@ export default {
 
       if (!user) {
         throw new UserInputError(
-          'No user found with this login credentials.',
+          'Email address or password incorrect.',
         )
       }
 
       const isValid = await user.validatePassword(password)
 
       if (!isValid) {
-        throw new AuthenticationError('Invalid password.')
+        throw new AuthenticationError(
+          'Email address or password incorrect.',
+        )
       }
 
       return { token: await createToken(user, secret, '30m') }
