@@ -55,15 +55,10 @@ type TokenProps = {
 
 // TODO : Don't query backend to validate token, just read and test expiration
 
-const getMe = (): TokenProps => {
+const getToken = async (): Promise<TokenProps | void> => {
   const token = Cookies.get('token')
-  let me
-  let isExpired
   if (token) {
-    me = jwt.decode(token) as TokenProps
-    isExpired = me.exp < me.iat
-    console.log(me)
-    console.log(isExpired)
+    return (await jwt.decode(token)) as TokenProps
   }
 }
 
