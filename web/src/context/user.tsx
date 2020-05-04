@@ -18,6 +18,7 @@ export interface UserProps {
     exp: number | void
     iat: number | void
   }
+  authenticating: boolean
   signInError: ApolloError | void
   signInLoading: boolean | void
 }
@@ -36,6 +37,7 @@ export const UserContext = createContext<UserProps>({
     exp: undefined,
     iat: undefined,
   },
+  authenticating: true,
   signInError: undefined,
   signInLoading: undefined,
 })
@@ -103,6 +105,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   const apolloClient = useApolloClient()
 
   const [me, setMe] = useState(nullToken as TokenProps)
+  const [authenticating, setAuthenticating] = useState(true)
 
   const [
     signIn,
@@ -137,19 +140,21 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   })
 
   useEffect(() => {
-    readToken().then((data) => setMe(data))
-  }, [])
+    readToken()
+      .then((data) => setMe(data))
+      .then(() => setAuthenticating(false))
+  }, [setMe, setAuthenticating])
 
   useEffect(() => {
     setUser((prev) => ({
       ...prev,
       ...me,
     }))
-  }, [me, nullToken])
+  }, [me, setUser])
 
   return (
     <UserContext.Provider
-      value={{ user, signInError, signInLoading }}
+      value={{ user, authenticating, signInError, signInLoading }}
     >
       {children}
     </UserContext.Provider>
