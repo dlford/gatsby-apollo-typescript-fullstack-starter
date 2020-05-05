@@ -20,24 +20,24 @@ import * as jwt from 'jsonwebtoken'
 
 import { UserDocument } from './user'
 
-export interface RefreshTokenProps {
+export interface SessionProps {
   id?: string
   userId: string
   iat: number
   exp: number
 }
 
-export interface RefreshTokenDocument extends mongoose.Document {
-  id: RefreshTokenProps['id']
-  userId: RefreshTokenProps['userId']
-  iat: RefreshTokenProps['iat']
-  exp: RefreshTokenProps['exp']
+export interface SessionDocument extends mongoose.Document {
+  id: SessionProps['id']
+  userId: SessionProps['userId']
+  iat: SessionProps['iat']
+  exp: SessionProps['exp']
   generateAccessToken(): string
 }
 
 const SECRET = process.env.SECRET || 'secret-stub'
 
-const refreshTokenSchema: mongoose.Schema = new mongoose.Schema({
+const sessionSchema: mongoose.Schema = new mongoose.Schema({
   userId: {
     type: String,
     unique: true,
@@ -61,28 +61,28 @@ const refreshTokenSchema: mongoose.Schema = new mongoose.Schema({
 // sessions when the legitimate user signs in. Only send access token on client
 // side, server will send new salt and session token in response.
 
-refreshTokenSchema.methods.generateAccessToken = async function(
-  this: RefreshTokenDocument,
+sessionSchema.methods.generateAccessToken = async function(
+  this: SessionDocument,
 ): Promise<[string, string]> {
   const user = (await this.model('User').findById(
     this.userId,
   )) as UserDocument
   const { id, email, role } = user
-  const refreshTokenData = {
+  const sessionData = {
     data: { userId: id },
     iat: Math.floor(Date.now() / 1000),
     exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // 30 days
   }
   const userToken = await jwt.sign({ id, email, role }, SECRET, '15m')
-  const refreshToken = await jwt.sign(refreshTokenData, SECRET)
-  this.exp = refreshTokenData.exp
+  const session = await jwt.sign(sessionData, SECRET)
+  this.exp = sessionData.exp
   await this.save()
-  return [userToken, refreshToken]
+  return [userToken, session]
 }
 
-const RefreshToken = mongoose.model<RefreshTokenDocument>(
-  'RefreshToken',
-  refreshTokenSchema,
+const Session = mongoose.model<SessionDocument>(
+  'Session',
+  sessionSchema,
 )
 
-export default RefreshToken
+export default Session

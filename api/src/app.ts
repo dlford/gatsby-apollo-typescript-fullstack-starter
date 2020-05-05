@@ -3,6 +3,8 @@ import * as cookieParser from 'cookie-parser'
 import * as express from 'express'
 import * as morgan from 'morgan'
 import * as jwt from 'jsonwebtoken'
+import * as useragent from 'express-useragent'
+import * as requestIp from 'request-ip'
 import {
   ApolloServer,
   AuthenticationError,
@@ -14,6 +16,8 @@ import schema from './schema'
 
 export interface ContextProps {
   models: ModelTypes
+  useragent: useragent.Details
+  ip: string
   me: MeProps
   secret: string
 }
@@ -25,9 +29,9 @@ interface SubscriptionConnection {
 const SECRET = process.env.SECRET || 'secret-stub'
 
 const app = express()
-
 app.use(cookieParser())
-
+app.use(useragent.express())
+app.use(requestIp.mw())
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'),
 )
@@ -81,6 +85,8 @@ const server = new ApolloServer({
 
       return {
         models,
+        useragent: req.useragent,
+        ip: req.clientIp,
         me,
         secret: SECRET,
       }
