@@ -115,7 +115,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       const { token } = data.signIn
       Cookies.set('token', token, {
         path: '/',
-        expires: new Date(new Date().getTime() + 30 * 60 * 1000), // 30 minutes
+        expires: new Date(new Date().getTime() + 15 * 60 * 1000), // 15 minutes
         sameSite:
           process.env.NODE_ENV === 'production' ? 'strict' : 'none',
         secure: process.env.NODE_ENV === 'production' ? true : false,

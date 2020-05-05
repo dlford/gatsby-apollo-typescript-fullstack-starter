@@ -10,13 +10,13 @@ import { ContextProps } from '../app'
  * Creates a signed JWT containing a user object.
  */
 
-const createToken = async (
+export const createToken = async (
   user,
   secret,
   expiresIn,
 ): Promise<string> => {
-  const { id, email, username, role } = user
-  return await jwt.sign({ id, email, username, role }, secret, {
+  const { id, email, role } = user
+  return await jwt.sign({ id, email, role }, secret, {
     expiresIn,
   })
 }
