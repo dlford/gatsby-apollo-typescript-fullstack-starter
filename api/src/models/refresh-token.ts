@@ -53,9 +53,13 @@ const refreshTokenSchema: mongoose.Schema = new mongoose.Schema({
   },
 })
 
-// TODO : Don't renew refresh token here, make that initiate from the user side
-// IDEA : Use server salts instead of storing token in DB, { tokenId, salt }
-// for de-authorization, store session data and add to dashboard.
+// TODO : convert this to session collection with a salt for each session,
+// browser/IP metadata with it, add session salt to jwt secret, store session
+// ID and salt in cookies, user can review and de-auth any or all sessions.
+// Cycle salt with each request and return new salt + new access/session tokens.
+// Drop session and start a new one if salt mis-match to de-auth hijacked
+// sessions when the legitimate user signs in. Only send access token on client
+// side, server will send new salt and session token in response.
 
 refreshTokenSchema.methods.generateAccessToken = async function(
   this: RefreshTokenDocument,
