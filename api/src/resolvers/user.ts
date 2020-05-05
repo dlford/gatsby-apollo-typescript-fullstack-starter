@@ -67,7 +67,7 @@ export default {
         password,
       })
 
-      return { token: await createToken(user, secret, '30d') }
+      return { token: await createToken(user, secret, '15m') }
     },
 
     signIn: async (
@@ -91,7 +91,7 @@ export default {
         )
       }
 
-      return { token: await createToken(user, secret, '30m') }
+      return { token: await createToken(user, secret, '15m') }
     },
 
     updateUser: combineResolvers(

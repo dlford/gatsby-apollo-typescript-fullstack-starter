@@ -16,13 +16,12 @@
  */
 
 import * as mongoose from 'mongoose'
-// import * as jwt from 'jsonwebtoken'
+import * as jwt from 'jsonwebtoken'
 
-// import { createToken } from '../app'
-// import { MeProps, UserDocument } from './user'
+import { UserDocument } from './user'
 
 export interface RefreshTokenProps {
-  id: string
+  id?: string
   userId: string
   iat: number
   exp: number
@@ -35,6 +34,8 @@ export interface RefreshTokenDocument extends mongoose.Document {
   exp: RefreshTokenProps['exp']
   generateAccessToken(): string
 }
+
+const SECRET = process.env.SECRET || 'secret-stub'
 
 const refreshTokenSchema: mongoose.Schema = new mongoose.Schema({
   userId: {
@@ -52,16 +53,25 @@ const refreshTokenSchema: mongoose.Schema = new mongoose.Schema({
   },
 })
 
-/*
+// TODO : Don't renew refresh token here, make that initiate from the user side
 refreshTokenSchema.methods.generateAccessToken = async function(
-  this: RefreshTokenDocument
-): Promise<
-  MeProps
-> {
-  const user = await this.model('User').findById(this.userId) as UserDocument
+  this: RefreshTokenDocument,
+): Promise<[string, string]> {
+  const user = (await this.model('User').findById(
+    this.userId,
+  )) as UserDocument
   const { id, email, role } = user
+  const refreshTokenData = {
+    data: { userId: id },
+    iat: Math.floor(Date.now() / 1000),
+    exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // 30 days
+  }
+  const userToken = await jwt.sign({ id, email, role }, SECRET, '15m')
+  const refreshToken = await jwt.sign(refreshTokenData, SECRET)
+  this.exp = refreshTokenData.exp
+  await this.save()
+  return [userToken, refreshToken]
 }
-*/
 
 const RefreshToken = mongoose.model<RefreshTokenDocument>(
   'RefreshToken',
