@@ -54,6 +54,9 @@ const refreshTokenSchema: mongoose.Schema = new mongoose.Schema({
 })
 
 // TODO : Don't renew refresh token here, make that initiate from the user side
+// IDEA : Use server salts instead of storing token in DB, { tokenId, salt }
+// for de-authorization, store session data and add to dashboard.
+
 refreshTokenSchema.methods.generateAccessToken = async function(
   this: RefreshTokenDocument,
 ): Promise<[string, string]> {
