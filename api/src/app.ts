@@ -5,6 +5,7 @@ import * as morgan from 'morgan'
 import * as jwt from 'jsonwebtoken'
 import * as useragent from 'express-useragent'
 import * as requestIp from 'request-ip'
+import * as httpHeadersPlugin from 'apollo-server-plugin-http-headers'
 import {
   ApolloServer,
   AuthenticationError,
@@ -16,6 +17,8 @@ import schema from './schema'
 
 export interface ContextProps {
   models: ModelTypes
+  cookies: string
+  setCookies: []
   useragent: useragent.Details
   ip: string
   me: MeProps
@@ -57,6 +60,7 @@ const server = new ApolloServer({
   typeDefs: schema,
   resolvers,
   // cors: cors({ origin: 'http://localhost:3000', credentials: 'include' }), // TODO
+  plugins: [httpHeadersPlugin],
   formatError: (error): Error => {
     // remove the internal sequelize error message
     // leave only the important validation error
@@ -85,10 +89,12 @@ const server = new ApolloServer({
 
       return {
         models,
+        cookies: req.cookies,
+        setCookies: [],
         useragent: req.useragent,
         ip: req.clientIp,
-        me,
         secret: SECRET,
+        me,
       }
     }
   },

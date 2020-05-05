@@ -60,6 +60,7 @@ const sessionSchema: mongoose.Schema = new mongoose.Schema({
 // Drop session and start a new one if salt mis-match to de-auth hijacked
 // sessions when the legitimate user signs in. Only send access token on client
 // side, server will send new salt and session token in response.
+// set session ID and session token cookies from Express as httponly!
 
 sessionSchema.methods.generateAccessToken = async function(
   this: SessionDocument,
