@@ -116,6 +116,9 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       Cookies.set('token', token, {
         path: '/',
         expires: new Date(new Date().getTime() + 30 * 60 * 1000), // 30 minutes
+        sameSite:
+          process.env.NODE_ENV === 'production' ? 'strict' : 'none',
+        secure: process.env.NODE_ENV === 'production' ? true : false,
       })
       apolloClient.cache.reset()
       readToken().then((data) => {
