@@ -9,7 +9,7 @@ exports[`Layout matches snapshot / 1`] = `
       class="css-fxtdit"
     >
       <div
-        class="css-16e5yms"
+        class="css-193tl1y"
       >
         <div
           class="css-15ypf3i"
@@ -24,7 +24,7 @@ exports[`Layout matches snapshot / 1`] = `
               >
                 <path
                   d="M.15 85.467h338.395v180.211H.15z"
-                  fill="#ececec"
+                  fill="#fff"
                   stroke-linecap="round"
                   stroke-width="1.058"
                 />
@@ -35,7 +35,7 @@ exports[`Layout matches snapshot / 1`] = `
               >
                 <path
                   d="M.15 85.467h338.395v180.211H.15z"
-                  fill="#ececec"
+                  fill="#fff"
                   stroke-linecap="round"
                   stroke-width="1.058"
                 />
@@ -46,7 +46,7 @@ exports[`Layout matches snapshot / 1`] = `
               >
                 <path
                   d="M.15 85.467h338.395v180.211H.15z"
-                  fill="#ececec"
+                  fill="#fff"
                   stroke-linecap="round"
                   stroke-width="1.058"
                 />
@@ -57,7 +57,7 @@ exports[`Layout matches snapshot / 1`] = `
               >
                 <path
                   d="M.15 85.467h338.395v180.211H.15z"
-                  fill="#ececec"
+                  fill="#fff"
                   stroke-linecap="round"
                   stroke-width="1.058"
                 />
@@ -78,130 +78,6 @@ exports[`Layout matches snapshot / 1`] = `
                   y="86.16"
                 />
               </clippath>
-              <filter
-                color-interpolation-filters="sRGB"
-                id="prefix__c"
-              >
-                <feflood
-                  flood-color="#38397D"
-                  flood-opacity="1"
-                  result="flood"
-                />
-                <fecomposite
-                  in="flood"
-                  in2="SourceGraphic"
-                  operator="in"
-                  result="composite1"
-                />
-                <fegaussianblur
-                  in="composite1"
-                  result="blur"
-                  stdDeviation="1"
-                />
-                <feoffset
-                  dx="1"
-                  dy="1"
-                  result="offset"
-                />
-                <fecomposite
-                  in="SourceGraphic"
-                  in2="offset"
-                  result="composite2"
-                />
-              </filter>
-              <filter
-                color-interpolation-filters="sRGB"
-                id="prefix__g"
-              >
-                <feflood
-                  flood-color="#38397D"
-                  flood-opacity="1"
-                  result="flood"
-                />
-                <fecomposite
-                  in="flood"
-                  in2="SourceGraphic"
-                  operator="in"
-                  result="composite1"
-                />
-                <fegaussianblur
-                  in="composite1"
-                  result="blur"
-                  stdDeviation="1"
-                />
-                <feoffset
-                  dx="1"
-                  dy="1"
-                  result="offset"
-                />
-                <fecomposite
-                  in="SourceGraphic"
-                  in2="offset"
-                  result="composite2"
-                />
-              </filter>
-              <filter
-                color-interpolation-filters="sRGB"
-                id="prefix__i"
-              >
-                <feflood
-                  flood-color="#38397D"
-                  flood-opacity="1"
-                  result="flood"
-                />
-                <fecomposite
-                  in="flood"
-                  in2="SourceGraphic"
-                  operator="in"
-                  result="composite1"
-                />
-                <fegaussianblur
-                  in="composite1"
-                  result="blur"
-                  stdDeviation="1"
-                />
-                <feoffset
-                  dx="1"
-                  dy="1"
-                  result="offset"
-                />
-                <fecomposite
-                  in="SourceGraphic"
-                  in2="offset"
-                  result="composite2"
-                />
-              </filter>
-              <filter
-                color-interpolation-filters="sRGB"
-                id="prefix__e"
-              >
-                <feflood
-                  flood-color="#38397D"
-                  flood-opacity="1"
-                  result="flood"
-                />
-                <fecomposite
-                  in="flood"
-                  in2="SourceGraphic"
-                  operator="in"
-                  result="composite1"
-                />
-                <fegaussianblur
-                  in="composite1"
-                  result="blur"
-                  stdDeviation="1"
-                />
-                <feoffset
-                  dx="-1"
-                  dy="1"
-                  result="offset"
-                />
-                <fecomposite
-                  in="SourceGraphic"
-                  in2="offset"
-                  result="composite2"
-                />
-              </filter>
             </defs>
             <g
               clip-path="url(#prefix__a)"
@@ -211,25 +87,21 @@ exports[`Layout matches snapshot / 1`] = `
                 clip-path="url(#prefix__b)"
                 d="M110.44 154.007l58.052 106.367 96.138-120.562-31.949-54.337-82.462-.06z"
                 fill="#00aad4"
-                filter="url(#prefix__c)"
               />
               <path
                 clip-path="url(#prefix__d)"
                 d="M338.549 85.463l-.004 180.215L232.681 85.475z"
                 fill="#2c89a0"
-                filter="url(#prefix__e)"
               />
               <path
                 clip-path="url(#prefix__f)"
                 d="M73.196 218.399l77.023-132.983-88.09.094L28.87 143.3c14.13 25.427 29.393 50.027 44.326 75.098z"
-                fill="#5fbcd3"
-                filter="url(#prefix__g)"
+                fill="#1fc3f1"
               />
               <path
                 clip-path="url(#prefix__h)"
                 d="M.15 85.467L.134 193.153 62.13 85.51z"
-                fill="#afdde9"
-                filter="url(#prefix__i)"
+                fill="#5fbcd3"
               />
             </g>
           </svg>
@@ -297,7 +169,7 @@ exports[`Layout matches snapshot / 1`] = `
         </svg>
       </div>
       <h1
-        class="css-10g8kfj"
+        class="css-o7noaf"
       >
         A Title
       </h1>
@@ -337,7 +209,7 @@ exports[`Layout matches snapshot /gatsby-typescript-starter-kitchen-sink/ 1`] = 
       class="css-fxtdit"
     >
       <div
-        class="css-16e5yms"
+        class="css-193tl1y"
       >
         <div
           class="css-15ypf3i"
@@ -352,7 +224,7 @@ exports[`Layout matches snapshot /gatsby-typescript-starter-kitchen-sink/ 1`] = 
               >
                 <path
                   d="M.15 85.467h338.395v180.211H.15z"
-                  fill="#ececec"
+                  fill="#fff"
                   stroke-linecap="round"
                   stroke-width="1.058"
                 />
@@ -363,7 +235,7 @@ exports[`Layout matches snapshot /gatsby-typescript-starter-kitchen-sink/ 1`] = 
               >
                 <path
                   d="M.15 85.467h338.395v180.211H.15z"
-                  fill="#ececec"
+                  fill="#fff"
                   stroke-linecap="round"
                   stroke-width="1.058"
                 />
@@ -374,7 +246,7 @@ exports[`Layout matches snapshot /gatsby-typescript-starter-kitchen-sink/ 1`] = 
               >
                 <path
                   d="M.15 85.467h338.395v180.211H.15z"
-                  fill="#ececec"
+                  fill="#fff"
                   stroke-linecap="round"
                   stroke-width="1.058"
                 />
@@ -385,7 +257,7 @@ exports[`Layout matches snapshot /gatsby-typescript-starter-kitchen-sink/ 1`] = 
               >
                 <path
                   d="M.15 85.467h338.395v180.211H.15z"
-                  fill="#ececec"
+                  fill="#fff"
                   stroke-linecap="round"
                   stroke-width="1.058"
                 />
@@ -406,130 +278,6 @@ exports[`Layout matches snapshot /gatsby-typescript-starter-kitchen-sink/ 1`] = 
                   y="86.16"
                 />
               </clippath>
-              <filter
-                color-interpolation-filters="sRGB"
-                id="prefix__c"
-              >
-                <feflood
-                  flood-color="#38397D"
-                  flood-opacity="1"
-                  result="flood"
-                />
-                <fecomposite
-                  in="flood"
-                  in2="SourceGraphic"
-                  operator="in"
-                  result="composite1"
-                />
-                <fegaussianblur
-                  in="composite1"
-                  result="blur"
-                  stdDeviation="1"
-                />
-                <feoffset
-                  dx="1"
-                  dy="1"
-                  result="offset"
-                />
-                <fecomposite
-                  in="SourceGraphic"
-                  in2="offset"
-                  result="composite2"
-                />
-              </filter>
-              <filter
-                color-interpolation-filters="sRGB"
-                id="prefix__g"
-              >
-                <feflood
-                  flood-color="#38397D"
-                  flood-opacity="1"
-                  result="flood"
-                />
-                <fecomposite
-                  in="flood"
-                  in2="SourceGraphic"
-                  operator="in"
-                  result="composite1"
-                />
-                <fegaussianblur
-                  in="composite1"
-                  result="blur"
-                  stdDeviation="1"
-                />
-                <feoffset
-                  dx="1"
-                  dy="1"
-                  result="offset"
-                />
-                <fecomposite
-                  in="SourceGraphic"
-                  in2="offset"
-                  result="composite2"
-                />
-              </filter>
-              <filter
-                color-interpolation-filters="sRGB"
-                id="prefix__i"
-              >
-                <feflood
-                  flood-color="#38397D"
-                  flood-opacity="1"
-                  result="flood"
-                />
-                <fecomposite
-                  in="flood"
-                  in2="SourceGraphic"
-                  operator="in"
-                  result="composite1"
-                />
-                <fegaussianblur
-                  in="composite1"
-                  result="blur"
-                  stdDeviation="1"
-                />
-                <feoffset
-                  dx="1"
-                  dy="1"
-                  result="offset"
-                />
-                <fecomposite
-                  in="SourceGraphic"
-                  in2="offset"
-                  result="composite2"
-                />
-              </filter>
-              <filter
-                color-interpolation-filters="sRGB"
-                id="prefix__e"
-              >
-                <feflood
-                  flood-color="#38397D"
-                  flood-opacity="1"
-                  result="flood"
-                />
-                <fecomposite
-                  in="flood"
-                  in2="SourceGraphic"
-                  operator="in"
-                  result="composite1"
-                />
-                <fegaussianblur
-                  in="composite1"
-                  result="blur"
-                  stdDeviation="1"
-                />
-                <feoffset
-                  dx="-1"
-                  dy="1"
-                  result="offset"
-                />
-                <fecomposite
-                  in="SourceGraphic"
-                  in2="offset"
-                  result="composite2"
-                />
-              </filter>
             </defs>
             <g
               clip-path="url(#prefix__a)"
@@ -539,25 +287,21 @@ exports[`Layout matches snapshot /gatsby-typescript-starter-kitchen-sink/ 1`] = 
                 clip-path="url(#prefix__b)"
                 d="M110.44 154.007l58.052 106.367 96.138-120.562-31.949-54.337-82.462-.06z"
                 fill="#00aad4"
-                filter="url(#prefix__c)"
               />
               <path
                 clip-path="url(#prefix__d)"
                 d="M338.549 85.463l-.004 180.215L232.681 85.475z"
                 fill="#2c89a0"
-                filter="url(#prefix__e)"
               />
               <path
                 clip-path="url(#prefix__f)"
                 d="M73.196 218.399l77.023-132.983-88.09.094L28.87 143.3c14.13 25.427 29.393 50.027 44.326 75.098z"
-                fill="#5fbcd3"
-                filter="url(#prefix__g)"
+                fill="#1fc3f1"
               />
               <path
                 clip-path="url(#prefix__h)"
                 d="M.15 85.467L.134 193.153 62.13 85.51z"
-                fill="#afdde9"
-                filter="url(#prefix__i)"
+                fill="#5fbcd3"
               />
             </g>
           </svg>
@@ -625,7 +369,7 @@ exports[`Layout matches snapshot /gatsby-typescript-starter-kitchen-sink/ 1`] = 
         </svg>
       </div>
       <h1
-        class="css-10g8kfj"
+        class="css-o7noaf"
       >
         A Title
       </h1>
@@ -665,7 +409,7 @@ exports[`Layout matches snapshot /some-other-path/ 1`] = `
       class="css-fxtdit"
     >
       <div
-        class="css-16e5yms"
+        class="css-94f1m1"
       >
         <div
           class="css-15ypf3i"
@@ -680,7 +424,7 @@ exports[`Layout matches snapshot /some-other-path/ 1`] = `
               >
                 <path
                   d="M.15 85.467h338.395v180.211H.15z"
-                  fill="#ececec"
+                  fill="#fff"
                   stroke-linecap="round"
                   stroke-width="1.058"
                 />
@@ -691,7 +435,7 @@ exports[`Layout matches snapshot /some-other-path/ 1`] = `
               >
                 <path
                   d="M.15 85.467h338.395v180.211H.15z"
-                  fill="#ececec"
+                  fill="#fff"
                   stroke-linecap="round"
                   stroke-width="1.058"
                 />
@@ -702,7 +446,7 @@ exports[`Layout matches snapshot /some-other-path/ 1`] = `
               >
                 <path
                   d="M.15 85.467h338.395v180.211H.15z"
-                  fill="#ececec"
+                  fill="#fff"
                   stroke-linecap="round"
                   stroke-width="1.058"
                 />
@@ -713,7 +457,7 @@ exports[`Layout matches snapshot /some-other-path/ 1`] = `
               >
                 <path
                   d="M.15 85.467h338.395v180.211H.15z"
-                  fill="#ececec"
+                  fill="#fff"
                   stroke-linecap="round"
                   stroke-width="1.058"
                 />
@@ -734,130 +478,6 @@ exports[`Layout matches snapshot /some-other-path/ 1`] = `
                   y="86.16"
                 />
               </clippath>
-              <filter
-                color-interpolation-filters="sRGB"
-                id="prefix__c"
-              >
-                <feflood
-                  flood-color="#38397D"
-                  flood-opacity="1"
-                  result="flood"
-                />
-                <fecomposite
-                  in="flood"
-                  in2="SourceGraphic"
-                  operator="in"
-                  result="composite1"
-                />
-                <fegaussianblur
-                  in="composite1"
-                  result="blur"
-                  stdDeviation="1"
-                />
-                <feoffset
-                  dx="1"
-                  dy="1"
-                  result="offset"
-                />
-                <fecomposite
-                  in="SourceGraphic"
-                  in2="offset"
-                  result="composite2"
-                />
-              </filter>
-              <filter
-                color-interpolation-filters="sRGB"
-                id="prefix__g"
-              >
-                <feflood
-                  flood-color="#38397D"
-                  flood-opacity="1"
-                  result="flood"
-                />
-                <fecomposite
-                  in="flood"
-                  in2="SourceGraphic"
-                  operator="in"
-                  result="composite1"
-                />
-                <fegaussianblur
-                  in="composite1"
-                  result="blur"
-                  stdDeviation="1"
-                />
-                <feoffset
-                  dx="1"
-                  dy="1"
-                  result="offset"
-                />
-                <fecomposite
-                  in="SourceGraphic"
-                  in2="offset"
-                  result="composite2"
-                />
-              </filter>
-              <filter
-                color-interpolation-filters="sRGB"
-                id="prefix__i"
-              >
-                <feflood
-                  flood-color="#38397D"
-                  flood-opacity="1"
-                  result="flood"
-                />
-                <fecomposite
-                  in="flood"
-                  in2="SourceGraphic"
-                  operator="in"
-                  result="composite1"
-                />
-                <fegaussianblur
-                  in="composite1"
-                  result="blur"
-                  stdDeviation="1"
-                />
-                <feoffset
-                  dx="1"
-                  dy="1"
-                  result="offset"
-                />
-                <fecomposite
-                  in="SourceGraphic"
-                  in2="offset"
-                  result="composite2"
-                />
-              </filter>
-              <filter
-                color-interpolation-filters="sRGB"
-                id="prefix__e"
-              >
-                <feflood
-                  flood-color="#38397D"
-                  flood-opacity="1"
-                  result="flood"
-                />
-                <fecomposite
-                  in="flood"
-                  in2="SourceGraphic"
-                  operator="in"
-                  result="composite1"
-                />
-                <fegaussianblur
-                  in="composite1"
-                  result="blur"
-                  stdDeviation="1"
-                />
-                <feoffset
-                  dx="-1"
-                  dy="1"
-                  result="offset"
-                />
-                <fecomposite
-                  in="SourceGraphic"
-                  in2="offset"
-                  result="composite2"
-                />
-              </filter>
             </defs>
             <g
               clip-path="url(#prefix__a)"
@@ -867,32 +487,28 @@ exports[`Layout matches snapshot /some-other-path/ 1`] = `
                 clip-path="url(#prefix__b)"
                 d="M110.44 154.007l58.052 106.367 96.138-120.562-31.949-54.337-82.462-.06z"
                 fill="#00aad4"
-                filter="url(#prefix__c)"
               />
               <path
                 clip-path="url(#prefix__d)"
                 d="M338.549 85.463l-.004 180.215L232.681 85.475z"
                 fill="#2c89a0"
-                filter="url(#prefix__e)"
               />
               <path
                 clip-path="url(#prefix__f)"
                 d="M73.196 218.399l77.023-132.983-88.09.094L28.87 143.3c14.13 25.427 29.393 50.027 44.326 75.098z"
-                fill="#5fbcd3"
-                filter="url(#prefix__g)"
+                fill="#1fc3f1"
               />
               <path
                 clip-path="url(#prefix__h)"
                 d="M.15 85.467L.134 193.153 62.13 85.51z"
-                fill="#afdde9"
-                filter="url(#prefix__i)"
+                fill="#5fbcd3"
               />
             </g>
           </svg>
         </div>
       </div>
       <h1
-        class="css-10g8kfj"
+        class="css-o7noaf"
       >
         A Title
       </h1>

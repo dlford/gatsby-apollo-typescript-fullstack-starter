@@ -89,13 +89,13 @@ const SIGNIN_MUTATION = gql`
 const readToken = async (): Promise<TokenProps> => {
   const token = Cookies.get('token')
   if (token) {
-    const tokenObj = (await jwt.decode(token)) as TokenProps
-    if (tokenObj.id) {
-      if ((tokenObj.exp as number) - (tokenObj.iat as number) <= 0) {
+    const contents = (await jwt.decode(token)) as TokenProps
+    if (contents.id) {
+      if ((contents.exp as number) - (contents.iat as number) <= 0) {
         Cookies.remove('token', { path: '/' })
         return nullToken
       }
-      return tokenObj
+      return contents
     }
   }
   return nullToken

@@ -30,14 +30,19 @@ const HEADER_QUERY = graphql`
 
 const Header = tw.header`mb-16`
 const Image = tw.div`w-12 sm:w-24 lg:w-32 pt-4 ml-auto mr-auto`
-const H1 = tw.h1`font-montserrat py-4 px-2 text-center text-gray-900 text-2xl lg:text-4xl font-black leading-tight`
+const H1 = tw.h1`font-montserrat py-4 px-2 text-center text-gray-900 lg:text-xl font-black leading-tight`
 
-const BGWrapper = styled.div`
+type BGWrapperProps = {
+  bright: boolean
+}
+
+const BGWrapper = styled.div<BGWrapperProps>`
   z-index: -1;
   overflow: hidden;
-  opacity: 0.175;
   position: absolute;
-  top: 0;
+  opacity: ${({ bright }) => (bright ? '0.5' : '0.15')};
+  transform: scaleY(0.4);
+  top: -20vw;
   left: 0;
 `
 
@@ -47,7 +52,7 @@ const HeaderComponent = ({ shouldShowBigHeader }: HeaderProps) => {
 
   return (
     <Header>
-      <BGWrapper>
+      <BGWrapper bright={shouldShowBigHeader}>
         <AbstractHeader />
       </BGWrapper>
       {shouldShowBigHeader && (
