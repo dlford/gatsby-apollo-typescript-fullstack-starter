@@ -1,6 +1,7 @@
 /**
  * TODO :
  * - Replace apollo-server-plugin-http-headers with a plain rest api for auth only
+ * - Use Axios on client, js fetch doesn't support set-cookie
  * - Don't fetch API token from cookie
  * - Find some other way to make GraphQL explorer work in dev
  * @packageDocumentation
@@ -22,6 +23,7 @@ import {
 import models, { connectDb, ModelTypes, MeProps } from './models'
 import resolvers from './resolvers'
 import schema from './schema'
+import authentication from './middleware/authentication'
 
 export interface ContextProps {
   models: ModelTypes
@@ -36,7 +38,7 @@ export interface ContextProps {
 
 export interface CookieProps {
   name: string
-  value: any // TODO
+  value: string // TODO
   options: {
     domain?: string
     httpOnly?: boolean
@@ -57,6 +59,7 @@ const app = express()
 app.use(cookieParser())
 app.use(useragent.express())
 app.use(requestIp.mw())
+app.post('/authenticate', authentication)
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'),
 )
