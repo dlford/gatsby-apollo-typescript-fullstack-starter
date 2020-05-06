@@ -1,5 +1,6 @@
 /**
  * TODO :
+ * - https://stackoverflow.com/questions/53022767/using-apollo-cookie-in-response-header-but-not-being-set
  * - Replace apollo-server-plugin-http-headers with a plain rest api for auth only
  * - Use Axios on client, js fetch doesn't support set-cookie
  * - Don't fetch API token from cookie
@@ -16,7 +17,6 @@ import * as morgan from 'morgan'
 import * as jwt from 'jsonwebtoken'
 import * as useragent from 'express-useragent'
 import * as requestIp from 'request-ip'
-import * as httpHeadersPlugin from 'apollo-server-plugin-http-headers'
 import {
   ApolloServer,
   AuthenticationError,
@@ -30,11 +30,10 @@ import authentication from './middleware/authentication'
 export interface ContextProps {
   models: ModelTypes
   cookies: string
-  setCookies: CookieProps[]
-  setHeaders: []
   useragent: useragent.Details
   ip: string
   me: MeProps
+  res: express.Response
   secret: string
 }
 
@@ -88,7 +87,6 @@ const server = new ApolloServer({
   typeDefs: schema,
   resolvers,
   // cors: cors({ origin: 'http://localhost:3000', credentials: 'include' }), // TODO
-  plugins: [httpHeadersPlugin],
   formatError: (error): Error => {
     // remove the internal sequelize error message
     // leave only the important validation error
@@ -103,6 +101,7 @@ const server = new ApolloServer({
   },
   context: async ({
     req,
+    res,
     connection,
   }): Promise<ContextProps | void> => {
     if (connection) {
@@ -118,11 +117,10 @@ const server = new ApolloServer({
       return {
         models,
         cookies: req.cookies,
-        setCookies: [],
-        setHeaders: [],
         useragent: req.useragent,
         ip: req.clientIp,
         secret: SECRET,
+        res,
         me,
       }
     }

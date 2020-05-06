@@ -67,13 +67,14 @@ export default {
         password,
       })
 
+      // TODO
       return { token: await createToken(user, secret, '15m') }
     },
 
     signIn: async (
       _parent,
       { email, password },
-      { models, secret, useragent, ip, setCookies }: ContextProps,
+      { models, secret, useragent, ip, res }: ContextProps,
     ): Promise<{ token: string }> => {
       const user = await models.User.findOne({ email: email })
 
@@ -96,18 +97,34 @@ export default {
         ip,
       })
 
-      setCookies.push({
-        name: 'session_id',
-        value: session.id,
-        options: {
-          domain: '*', // TODO
-          httpOnly: true,
-          maxAge: 3600,
-          path: '/',
-          sameSite: true,
-          secure: false, // TODO
+      const sessionToken = await jwt.sign(
+        {
+          id: session.id,
+          iat: session.iat,
+          exp: session.exp,
         },
+        secret, // TODO : Session Secret + salt
+      )
+
+      res.cookie('session_id', session.id, {
+        domain: '*', // TODO
+        httpOnly: true,
+        maxAge: 3600,
+        path: '/',
+        sameSite: true,
+        secure: false, // TODO
       })
+
+      res.cookie('session', sessionToken, {
+        domain: 'localhost', // TODO
+        httpOnly: true,
+        maxAge: 3600, // TODO
+        path: '/',
+        sameSite: true,
+        secure: false, // TODO
+      })
+
+      await session.save()
 
       return { token: await createToken(user, secret, '15m') }
     },
