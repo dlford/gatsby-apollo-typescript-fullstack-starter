@@ -10,6 +10,7 @@
  */
 
 import * as http from 'http'
+import * as cors from 'cors'
 import * as cookieParser from 'cookie-parser'
 import * as bodyParser from 'body-parser'
 import * as express from 'express'
@@ -57,6 +58,19 @@ interface SubscriptionConnection {
 const SECRET = process.env.SECRET || 'secret-stub'
 
 const app = express()
+app.use(
+  cors({
+    origin: 'http://localhost:8000', // TODO
+    credentials: true,
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'token',
+      'session',
+      'session_id',
+    ], // TODO
+  }),
+)
 app.use(cookieParser())
 app.use(useragent.express())
 app.use(requestIp.mw())
@@ -86,7 +100,6 @@ const server = new ApolloServer({
   introspection: true,
   typeDefs: schema,
   resolvers,
-  // cors: cors({ origin: 'http://localhost:3000', credentials: 'include' }), // TODO
   formatError: (error): Error => {
     // remove the internal sequelize error message
     // leave only the important validation error

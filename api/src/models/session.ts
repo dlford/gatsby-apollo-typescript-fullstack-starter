@@ -80,7 +80,7 @@ const sessionSchema: mongoose.Schema = new mongoose.Schema({
   salt: {
     type: String,
     unique: true,
-    default: createUUID(),
+    default: (): string => createUUID(),
   },
   iat: {
     type: Number,

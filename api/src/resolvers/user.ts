@@ -74,7 +74,7 @@ export default {
     signIn: async (
       _parent,
       { email, password },
-      { models, secret, useragent, ip, res }: ContextProps,
+      { models, secret, useragent, ip, res, cookies }: ContextProps,
     ): Promise<{ token: string }> => {
       const user = await models.User.findOne({ email: email })
 
@@ -103,11 +103,13 @@ export default {
           iat: session.iat,
           exp: session.exp,
         },
-        secret, // TODO : Session Secret + salt
+        secret + session.salt,
       )
 
-      res.cookie('session_id', session.id, {
-        domain: '*', // TODO
+      console.log(cookies)
+
+      res.cookie('ses_id', session.id, {
+        domain: 'localhost', // TODO
         httpOnly: true,
         maxAge: 3600,
         path: '/',
@@ -115,7 +117,7 @@ export default {
         secure: false, // TODO
       })
 
-      res.cookie('session', sessionToken, {
+      res.cookie('ses', sessionToken, {
         domain: 'localhost', // TODO
         httpOnly: true,
         maxAge: 3600, // TODO
