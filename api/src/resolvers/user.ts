@@ -73,7 +73,7 @@ export default {
     signIn: async (
       _parent,
       { email, password },
-      { models, secret }: ContextProps,
+      { models, secret, useragent, ip, setCookies }: ContextProps,
     ): Promise<{ token: string }> => {
       const user = await models.User.findOne({ email: email })
 
@@ -90,6 +90,24 @@ export default {
           'Email address or password incorrect.',
         )
       }
+
+      const session = await new models.Session({
+        useragent,
+        ip,
+      })
+
+      setCookies.push({
+        name: 'session_id',
+        value: session.id,
+        options: {
+          domain: '*', // TODO
+          httpOnly: true,
+          maxAge: 3600,
+          path: '/',
+          sameSite: true,
+          secure: false, // TODO
+        },
+      })
 
       return { token: await createToken(user, secret, '15m') }
     },

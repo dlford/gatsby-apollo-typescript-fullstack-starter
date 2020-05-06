@@ -1,4 +1,6 @@
 /**
+ * TODO : Replace email validator with scalar
+ *
  * ## Types
  *
  * | Attribute | Type                | Required | Default |

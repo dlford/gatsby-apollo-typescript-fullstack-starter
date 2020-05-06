@@ -1,3 +1,11 @@
+/**
+ * TODO :
+ * - Replace apollo-server-plugin-http-headers with a plain rest api for auth only
+ * - Don't fetch API token from cookie
+ * - Find some other way to make GraphQL explorer work in dev
+ * @packageDocumentation
+ */
+
 import * as http from 'http'
 import * as cookieParser from 'cookie-parser'
 import * as express from 'express'
@@ -18,11 +26,25 @@ import schema from './schema'
 export interface ContextProps {
   models: ModelTypes
   cookies: string
-  setCookies: []
+  setCookies: CookieProps[]
+  setHeaders: []
   useragent: useragent.Details
   ip: string
   me: MeProps
   secret: string
+}
+
+export interface CookieProps {
+  name: string
+  value: any // TODO
+  options: {
+    domain?: string
+    httpOnly?: boolean
+    maxAge?: number
+    path?: string
+    sameSite?: boolean
+    secure?: boolean
+  }
 }
 
 interface SubscriptionConnection {
@@ -91,6 +113,7 @@ const server = new ApolloServer({
         models,
         cookies: req.cookies,
         setCookies: [],
+        setHeaders: [],
         useragent: req.useragent,
         ip: req.clientIp,
         secret: SECRET,
