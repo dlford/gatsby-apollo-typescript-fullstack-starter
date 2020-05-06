@@ -40,18 +40,22 @@
  */
 
 import * as mongoose from 'mongoose'
+import { Details } from 'express-useragent'
 
 import { MeProps } from './user'
 
 export interface SessionProps extends MeProps {
-  userId: MeProps['id']
+  ip: string
+  salt: string
   iat: number
   exp: number
 }
 
 export interface SessionDocument extends mongoose.Document {
   id: SessionProps['id']
-  salt: SessionProps['userId']
+  userId: MeProps['id']
+  useragent: Details
+  salt: string
   iat: SessionProps['iat']
   exp: SessionProps['exp']
   generateSalt(): string
