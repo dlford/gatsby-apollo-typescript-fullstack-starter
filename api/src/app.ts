@@ -12,6 +12,7 @@
 import * as http from 'http'
 import * as cors from 'cors'
 import * as cookieParser from 'cookie-parser'
+import * as bodyParser from 'body-parser'
 import * as express from 'express'
 import * as morgan from 'morgan'
 import * as jwt from 'jsonwebtoken'
@@ -25,7 +26,6 @@ import {
 import models, { connectDb, ModelTypes, MeProps } from './models'
 import resolvers from './resolvers'
 import schema from './schema'
-import authentication from './middleware/authentication'
 
 export interface ContextProps {
   models: ModelTypes
@@ -60,7 +60,6 @@ const app = express()
 app.use(
   cors({
     origin: 'http://localhost:8000', // TODO
-    optionsSuccessStatus: 200,
     credentials: true,
     allowedHeaders: [
       'Content-Type',
@@ -74,6 +73,8 @@ app.use(
 app.use(cookieParser())
 app.use(useragent.express())
 app.use(requestIp.mw())
+app.use(bodyParser.json())
+app.post('/authenticate', authentication)
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'),
 )
