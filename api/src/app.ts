@@ -1,6 +1,7 @@
 /**
  * TODO :
  * - Don't get API token from cookie, user 'Bearer '
+ * - Disable GraphQL explorer
  * - Add logout mutation to clear session cookies
  * - Find some other way to make GraphQL explorer work in dev
  * - use node-cron to purge old sessions from db
@@ -70,10 +71,20 @@ app.use(
  * Returns either a verified user object or null.
  */
 const getMe = async (req): Promise<MeProps | void> => {
+  // New Auth Scheme
+  let bearer: string | void
+  const authorization =
+    req.headers['authorization'] || req.headers['Authorization']
+  if (authorization) {
+    bearer =
+      new RegExp(/Bearer ([^,^ ]+)/).exec(authorization)[1] ||
+      undefined
+  }
+  // New Auth Scheme
   const token = req.cookies['token'] || req.headers['token']
-  if (!token) return null
+  if (!token && !bearer) return null
   try {
-    return await jwt.verify(token, SECRET)
+    return await jwt.verify(bearer || token, SECRET)
   } catch (e) {
     console.error(e)
     throw new AuthenticationError(
