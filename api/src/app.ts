@@ -1,9 +1,6 @@
 /**
  * TODO :
- * - https://stackoverflow.com/questions/53022767/using-apollo-cookie-in-response-header-but-not-being-set
- * - Replace apollo-server-plugin-http-headers with a plain rest api for auth only
- * - Use Axios on client, js fetch doesn't support set-cookie
- * - Don't fetch API token from cookie
+ * - Don't get API token from cookie, user 'Bearer '
  * - Find some other way to make GraphQL explorer work in dev
  * - use node-cron to purge old sessions from db
  * @packageDocumentation
@@ -11,7 +8,6 @@
 
 import * as http from 'http'
 import * as cookieParser from 'cookie-parser'
-import * as bodyParser from 'body-parser'
 import * as express from 'express'
 import * as morgan from 'morgan'
 import * as jwt from 'jsonwebtoken'
@@ -56,7 +52,7 @@ interface SubscriptionConnection {
 const SECRET = process.env.SECRET || 'secret-stub'
 
 const corsOptions = {
-  origin: 'http://localhost:8000', // TODO
+  origin: ['http://localhost:8000'], // TODO
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization', 'token'], // TODO
 }
@@ -65,7 +61,6 @@ const app = express()
 app.use(cookieParser())
 app.use(useragent.express())
 app.use(requestIp.mw())
-app.use(bodyParser.json())
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'),
 )

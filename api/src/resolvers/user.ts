@@ -99,7 +99,9 @@ export default {
 
       const sessionToken = await jwt.sign(
         {
-          id: session.id,
+          id: user.id,
+          email: user.email,
+          role: user.role,
           iat: session.iat,
           exp: session.exp,
         },
@@ -108,19 +110,19 @@ export default {
 
       console.log(cookies)
 
-      res.cookie('ses_id', session.id, {
+      res.cookie('sessionId', session.id, {
         domain: 'localhost', // TODO
         httpOnly: true,
-        maxAge: 3600,
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
         path: '/',
         sameSite: true,
         secure: false, // TODO
       })
 
-      res.cookie('ses', sessionToken, {
+      res.cookie('sessionToken', sessionToken, {
         domain: 'localhost', // TODO
         httpOnly: true,
-        maxAge: 3600, // TODO
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
         path: '/',
         sameSite: true,
         secure: false, // TODO
