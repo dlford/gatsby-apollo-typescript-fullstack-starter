@@ -1,6 +1,7 @@
 /**
  * TODO :
  * - Don't get API token from cookie, user 'Bearer '
+ * - Add logout mutation to clear session cookies
  * - Find some other way to make GraphQL explorer work in dev
  * - use node-cron to purge old sessions from db
  * @packageDocumentation
