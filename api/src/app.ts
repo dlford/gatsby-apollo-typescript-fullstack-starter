@@ -58,13 +58,7 @@ const SECRET = process.env.SECRET || 'secret-stub'
 const corsOptions = {
   origin: 'http://localhost:8000', // TODO
   credentials: true,
-  allowedHeaders: [
-    'Content-Type',
-    'Authorization',
-    'token',
-    'ses',
-    'ses_id',
-  ], // TODO
+  allowedHeaders: ['Content-Type', 'Authorization', 'token'], // TODO
 }
 
 const app = express()
