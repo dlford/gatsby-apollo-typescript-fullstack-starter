@@ -74,7 +74,6 @@ app.use(cookieParser())
 app.use(useragent.express())
 app.use(requestIp.mw())
 app.use(bodyParser.json())
-app.post('/authenticate', authentication)
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'),
 )
