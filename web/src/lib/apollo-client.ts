@@ -24,7 +24,7 @@ const getToken = (): string => {
 
 const uploadLink = createUploadLink({
   uri: apiUrl,
-  credentials: 'same-origin',
+  credentials: 'include',
 })
 
 export const subscriptionClient = new SubscriptionClient(wsUrl, {
