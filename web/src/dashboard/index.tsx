@@ -5,6 +5,7 @@ import { UserContext } from '~/context/user'
 import Layout from '~/components/layout'
 import SignIn from '~/dashboard/pages/sign-in'
 import Home from '~/dashboard/pages/home'
+import Sessions from '~/dashboard/pages/sessions'
 import Loader from '~/components/loader'
 
 export interface DashboardComponentProps {
@@ -32,6 +33,7 @@ const App = ({ location }: DashboardComponentProps) => {
     <Layout location={location}>
       <Router basepath='/dashboard'>
         <Home path='/' />
+        <Sessions path='/sessions' />
       </Router>
     </Layout>
   )

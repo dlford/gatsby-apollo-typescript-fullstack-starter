@@ -4,6 +4,7 @@ import * as jwt from 'jsonwebtoken'
 
 import { isAdmin, isAuthenticated } from './authorization'
 import { UserDocument } from '../models/user'
+import { SessionDocument } from '../models/session'
 import { ContextProps } from '../app'
 
 /**
@@ -92,7 +93,7 @@ export default {
         )
       }
 
-      const session = await new models.Session({
+      const session: SessionDocument = await new models.Session({
         useragent,
         ip,
       })
@@ -194,7 +195,9 @@ export default {
         return null
       }
       const { sessionId, sessionToken } = cookies
-      const session = await models.Session.findById(sessionId)
+      const session: SessionDocument = await models.Session.findById(
+        sessionId,
+      )
 
       if (!session) {
         res.cookie('sessionId', '', {

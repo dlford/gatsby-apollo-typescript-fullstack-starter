@@ -12,7 +12,7 @@
  *
  * ## Types
  *
- * ### SessionDocument
+ * ### SessionProps
  *
  * | Attribute | Type   | Required | Default       |
  * |-----------|--------|----------|---------------|
@@ -21,7 +21,7 @@
  * | iat       | number | *Auto    | now           |
  * | exp       | number | *Auto    | now + 30 days |
  *
- * ### SessionProps
+ * ### SessionDocument TODO
  *
  * | Attribute | Type                | Required | Default |
  * |-----------|---------------------|----------|---------|
