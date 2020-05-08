@@ -57,10 +57,14 @@ type UserCredentialProps = {
   password: string
 }
 
-type ResponseProps = {
+type SignInMutationProps = {
   signIn: {
     token: string
   }
+}
+
+type RefreshTokenProps = {
+  refreshToken: string
 }
 
 type TokenProps = {
@@ -87,6 +91,12 @@ const SIGNIN_MUTATION = gql`
   }
 `
 
+const REFRESH_TOKEN_MUTATION = gql`
+  mutation {
+    refreshToken
+  }
+`
+
 export const UserProvider = ({
   children,
   token,
@@ -98,7 +108,7 @@ export const UserProvider = ({
   const [me, setMe] = useState(nullToken as TokenProps)
   const [authenticating, setAuthenticating] = useState(true)
 
-  const readToken = async (): Promise<TokenProps> => {
+  const checkToken = async (): Promise<TokenProps> => {
     if (token) {
       const contents = (await jwt.decode(token)) as TokenProps
       if (contents.id) {
@@ -119,13 +129,26 @@ export const UserProvider = ({
     signIn,
     { loading: signInLoading, error: signInError },
   ] = useMutation(SIGNIN_MUTATION, {
-    onCompleted: async (data: ResponseProps) => {
+    onCompleted: async (data: SignInMutationProps) => {
       const { token: newToken } = data.signIn
       setToken(newToken)
       apolloClient.cache.reset()
-      readToken().then((data) => {
+      checkToken().then((data) => {
         setMe(data)
       })
+    },
+  })
+
+  const [refreshTokenMutation] = useMutation(REFRESH_TOKEN_MUTATION, {
+    onCompleted: async ({ refreshToken }: RefreshTokenProps) => {
+      if (refreshToken) {
+        setToken(refreshToken)
+        setTimeout(() => {
+          refreshTokenMutation()
+        }, 1000 * 60 * 14) // 14 minutes
+      } else {
+        setToken('')
+      }
     },
   })
 
@@ -145,9 +168,13 @@ export const UserProvider = ({
   })
 
   useEffect(() => {
-    readToken()
-      .then((data) => setMe(data))
-      .then(() => setAuthenticating(false))
+    if (token) {
+      checkToken()
+        .then((data) => setMe(data))
+        .then(() => setAuthenticating(false))
+    } else {
+      refreshTokenMutation()
+    }
   }, [token, setMe, setAuthenticating])
 
   useEffect(() => {
