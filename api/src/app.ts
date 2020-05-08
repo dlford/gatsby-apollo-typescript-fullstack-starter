@@ -71,7 +71,6 @@ app.use(
  * Returns either a verified user object or null.
  */
 const getMe = async (req): Promise<MeProps | void> => {
-  // New Auth Scheme
   let bearer: string | void
   const authorization =
     req.headers['authorization'] || req.headers['Authorization']
@@ -80,11 +79,9 @@ const getMe = async (req): Promise<MeProps | void> => {
       new RegExp(/Bearer ([^,^ ]+)/).exec(authorization)[1] ||
       undefined
   }
-  // New Auth Scheme
-  const token = req.cookies['token'] || req.headers['token']
-  if (!token && !bearer) return null
+  if (!bearer) return null
   try {
-    return await jwt.verify(bearer || token, SECRET)
+    return await jwt.verify(bearer, SECRET)
   } catch (e) {
     console.error(e)
     throw new AuthenticationError(

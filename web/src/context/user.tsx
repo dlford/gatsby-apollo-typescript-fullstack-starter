@@ -1,12 +1,11 @@
 import { useApolloClient, useMutation } from '@apollo/react-hooks'
 import { ApolloError } from 'apollo-client'
-import Cookies from 'js-cookie'
 import PropTypes from 'prop-types'
 import gql from 'graphql-tag'
 import React, { createContext, useEffect, useState } from 'react'
 import jwt from 'jsonwebtoken'
 
-import { subscriptionClient } from '~/lib/apollo-client'
+import useApollo from '~/lib/apollo-client'
 
 export interface UserProps {
   user: {
@@ -44,6 +43,8 @@ export const UserContext = createContext<UserProps>({
 
 export interface UserProviderProps {
   children: JSX.Element | JSX.Element[]
+  token: string | void
+  setToken(arg0: string | void): void
 }
 
 enum UserRole {
@@ -86,40 +87,41 @@ const SIGNIN_MUTATION = gql`
   }
 `
 
-const readToken = async (): Promise<TokenProps> => {
-  const token = Cookies.get('token')
-  if (token) {
-    const contents = (await jwt.decode(token)) as TokenProps
-    if (contents.id) {
-      if ((contents.exp as number) - (contents.iat as number) <= 0) {
-        Cookies.remove('token', { path: '/' })
-        return nullToken
-      }
-      return contents
-    }
-  }
-  return nullToken
-}
-
-export const UserProvider = ({ children }: UserProviderProps) => {
+export const UserProvider = ({
+  children,
+  token,
+  setToken,
+}: UserProviderProps) => {
   const apolloClient = useApolloClient()
+  const { subscriptionClient } = useApollo(token)
 
   const [me, setMe] = useState(nullToken as TokenProps)
   const [authenticating, setAuthenticating] = useState(true)
+
+  const readToken = async (): Promise<TokenProps> => {
+    if (token) {
+      const contents = (await jwt.decode(token)) as TokenProps
+      if (contents.id) {
+        if (
+          (contents.exp as number) - (contents.iat as number) <=
+          0
+        ) {
+          setToken(undefined)
+          return nullToken
+        }
+        return contents
+      }
+    }
+    return nullToken
+  }
 
   const [
     signIn,
     { loading: signInLoading, error: signInError },
   ] = useMutation(SIGNIN_MUTATION, {
     onCompleted: async (data: ResponseProps) => {
-      const { token } = data.signIn
-      Cookies.set('token', token, {
-        path: '/',
-        expires: new Date(new Date().getTime() + 15 * 60 * 1000), // 15 minutes
-        sameSite:
-          process.env.NODE_ENV === 'production' ? 'strict' : 'none',
-        secure: process.env.NODE_ENV === 'production' ? true : false,
-      })
+      const { token: newToken } = data.signIn
+      setToken(newToken)
       apolloClient.cache.reset()
       readToken().then((data) => {
         setMe(data)
@@ -135,7 +137,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     },
 
     signOut: (): void => {
-      Cookies.remove('token', { path: '/' })
+      setToken(undefined)
       setMe(nullToken)
       subscriptionClient.close(false, false)
       apolloClient.cache.reset()
@@ -146,7 +148,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     readToken()
       .then((data) => setMe(data))
       .then(() => setAuthenticating(false))
-  }, [setMe, setAuthenticating])
+  }, [token, setMe, setAuthenticating])
 
   useEffect(() => {
     setUser((prev) => ({

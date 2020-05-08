@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ApolloProvider } from 'react-apollo'
 
 import Dashboard from '~/dashboard'
-import ApolloClient from '~/lib/apollo-client'
+import useApollo from '~/lib/apollo-client'
 import { UserProvider } from '~/context/user'
 
 export interface DashboardPageProps {
@@ -10,9 +10,11 @@ export interface DashboardPageProps {
 }
 
 const DashboardPage = ({ location }: DashboardPageProps) => {
+  const [token, setToken] = useState<string | void>()
+  const { client } = useApollo(token)
   return (
-    <ApolloProvider client={ApolloClient}>
-      <UserProvider>
+    <ApolloProvider client={client}>
+      <UserProvider token={token} setToken={setToken}>
         <Dashboard location={location} />
       </UserProvider>
     </ApolloProvider>
