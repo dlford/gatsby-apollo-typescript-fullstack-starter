@@ -54,7 +54,7 @@ interface SubscriptionConnection {
 const SECRET = process.env.SECRET || 'secret-stub'
 
 const corsOptions = {
-  origin: ['http://localhost:8000'], // TODO
+  origin: ['http://localhost:8000', 'http://localhost:9000'], // TODO
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization', 'token'], // TODO
 }

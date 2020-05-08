@@ -74,7 +74,7 @@ export default {
     signIn: async (
       _parent,
       { email, password },
-      { models, secret, useragent, ip, res, cookies }: ContextProps,
+      { models, secret, useragent, ip, res }: ContextProps,
     ): Promise<{ token: string }> => {
       const user = await models.User.findOne({ email: email })
 

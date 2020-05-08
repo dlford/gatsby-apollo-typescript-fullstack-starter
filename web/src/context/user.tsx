@@ -147,7 +147,7 @@ export const UserProvider = ({
           refreshTokenMutation()
         }, 1000 * 60 * 14) // 14 minutes
       } else {
-        setToken('')
+        setAuthenticating(false)
       }
     },
   })
@@ -162,7 +162,7 @@ export const UserProvider = ({
     signOut: (): void => {
       setToken(undefined)
       setMe(nullToken)
-      subscriptionClient.close(false, false)
+      subscriptionClient && subscriptionClient.close(false, false)
       apolloClient.cache.reset()
     },
   })

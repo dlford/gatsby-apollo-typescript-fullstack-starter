@@ -23,29 +23,32 @@ const useApollo = (token: string | void) => {
     credentials: 'include', // TODO
   })
 
-  const subscriptionClient = new SubscriptionClient(wsUrl, {
-    reconnect: true,
-    connectionParams: () => {
-      return { token }
-    },
-  })
-
-  const wsLink = new WebSocketLink(subscriptionClient)
-
   let link = uploadLink
-  link = split(
-    ({ query }) => {
-      const { kind, operation }: LinkDefinition = getMainDefinition(
-        query,
-      )
-      return (
-        kind === 'OperationLinkDefinition' &&
-        operation === 'subscription'
-      )
-    },
-    wsLink,
-    uploadLink,
-  )
+  let subscriptionClient
+  if (typeof window !== 'undefined') {
+    subscriptionClient = new SubscriptionClient(wsUrl, {
+      reconnect: true,
+      connectionParams: () => {
+        return { token }
+      },
+    })
+
+    const wsLink = new WebSocketLink(subscriptionClient)
+
+    link = split(
+      ({ query }) => {
+        const { kind, operation }: LinkDefinition = getMainDefinition(
+          query,
+        )
+        return (
+          kind === 'OperationLinkDefinition' &&
+          operation === 'subscription'
+        )
+      },
+      wsLink,
+      uploadLink,
+    )
+  }
 
   const authLink = setContext((request, { headers }) => {
     return token
