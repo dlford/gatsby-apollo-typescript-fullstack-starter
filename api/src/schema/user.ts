@@ -15,6 +15,7 @@
  * ```graphql
  * signUp(email: String!, password: String!): Token!
  * signIn(email: String!, password: String!): Token!
+ * signOut: Boolean!
  * updateUser(email: String!): User!
  * deleteUser(id: ID!): Boolean!
  * refreshToken: String
@@ -54,6 +55,7 @@ const userSchema = gql`
   extend type Mutation {
     signUp(email: String!, password: String!): Token!
     signIn(email: String!, password: String!): Token!
+    signOut: Boolean!
     updateUser(email: String!): User!
     deleteUser(id: ID!): Boolean!
     refreshToken: String

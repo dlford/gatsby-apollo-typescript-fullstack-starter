@@ -54,6 +54,7 @@ export interface SessionProps extends MeProps {
 export interface SessionDocument extends mongoose.Document {
   id: SessionProps['id']
   userId: MeProps['id']
+  ip: string
   useragent: Details
   salt: string
   iat: SessionProps['iat']
@@ -106,6 +107,11 @@ sessionSchema.methods.generateSalt = async function(
   await this.save()
   return salt
 }
+
+sessionSchema.pre('save', function(this: SessionDocument): void {
+  this.iat = Math.floor(Date.now() / 1000)
+  this.exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30 // 30 Days
+})
 
 const Session = mongoose.model<SessionDocument>(
   'Session',

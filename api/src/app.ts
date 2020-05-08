@@ -1,8 +1,8 @@
 /**
  * TODO :
- * - Don't get API token from cookie, user 'Bearer '
  * - Disable GraphQL explorer
  * - Add logout mutation to clear session cookies
+ * - Add subscription for user sessions, display in UI
  * - Find some other way to make GraphQL explorer work in dev
  * - use node-cron to purge old sessions from db
  * @packageDocumentation
@@ -26,7 +26,10 @@ import schema from './schema'
 
 export interface ContextProps {
   models: ModelTypes
-  cookies: string
+  cookies: {
+    sessionId: string
+    sessionToken: string
+  }
   useragent: useragent.Details
   ip: string
   me: MeProps

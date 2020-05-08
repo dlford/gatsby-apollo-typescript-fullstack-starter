@@ -91,6 +91,12 @@ const SIGNIN_MUTATION = gql`
   }
 `
 
+const SIGN_OUT_MUTATION = gql`
+  mutation {
+    signOut
+  }
+`
+
 const REFRESH_TOKEN_MUTATION = gql`
   mutation {
     refreshToken
@@ -129,7 +135,7 @@ export const UserProvider = ({
     signIn,
     { loading: signInLoading, error: signInError },
   ] = useMutation(SIGNIN_MUTATION, {
-    onCompleted: async (data: SignInMutationProps) => {
+    onCompleted: async (data: SignInMutationProps): Promise<void> => {
       const { token: newToken } = data.signIn
       setToken(newToken)
       apolloClient.cache.reset()
@@ -140,7 +146,9 @@ export const UserProvider = ({
   })
 
   const [refreshTokenMutation] = useMutation(REFRESH_TOKEN_MUTATION, {
-    onCompleted: async ({ refreshToken }: RefreshTokenProps) => {
+    onCompleted: async ({
+      refreshToken,
+    }: RefreshTokenProps): Promise<void> => {
       if (refreshToken) {
         setToken(refreshToken)
         setTimeout(() => {
@@ -152,6 +160,16 @@ export const UserProvider = ({
     },
   })
 
+  const [signOutMutation] = useMutation(SIGN_OUT_MUTATION, {
+    onCompleted: async (): Promise<void> => {
+      setToken(undefined)
+      setMe(nullToken)
+      subscriptionClient && subscriptionClient.close(false, false)
+      apolloClient.cache.reset()
+      setAuthenticating(false)
+    },
+  })
+
   const [user, setUser] = useState({
     ...me,
 
@@ -160,10 +178,8 @@ export const UserProvider = ({
     },
 
     signOut: (): void => {
-      setToken(undefined)
-      setMe(nullToken)
-      subscriptionClient && subscriptionClient.close(false, false)
-      apolloClient.cache.reset()
+      setAuthenticating(true)
+      signOutMutation()
     },
   })
 

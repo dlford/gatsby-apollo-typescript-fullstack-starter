@@ -131,6 +131,35 @@ export default {
       return { token: await createToken(user, secret, '15m') }
     },
 
+    signOut: async (
+      _parent,
+      _args,
+      { models, cookies, res }: ContextProps,
+    ): Promise<boolean> => {
+      const { sessionId } = cookies
+      await models.Session.findByIdAndDelete(sessionId)
+
+      res.cookie('sessionId', '', {
+        domain: 'localhost', // TODO
+        httpOnly: true,
+        maxAge: 0,
+        path: '/',
+        sameSite: true,
+        secure: false, // TODO
+      })
+
+      res.cookie('sessionToken', '', {
+        domain: 'localhost', // TODO
+        httpOnly: true,
+        maxAge: 0,
+        path: '/',
+        sameSite: true,
+        secure: false, // TODO
+      })
+
+      return true
+    },
+
     updateUser: combineResolvers(
       isAuthenticated,
       async (_parent, { email }, { models, me }: ContextProps) => {
@@ -155,16 +184,39 @@ export default {
         }
       },
     ),
+
     refreshToken: async (
       _parent,
       _args,
-      { models, cookies, res, secret },
+      { models, cookies, res, secret, useragent, ip }: ContextProps,
     ): Promise<string | null> => {
       if (!cookies.sessionId || !cookies.sessionToken) {
         return null
       }
       const { sessionId, sessionToken } = cookies
       const session = await models.Session.findById(sessionId)
+
+      if (!session) {
+        res.cookie('sessionId', '', {
+          domain: 'localhost', // TODO
+          httpOnly: true,
+          maxAge: 0,
+          path: '/',
+          sameSite: true,
+          secure: false, // TODO
+        })
+
+        res.cookie('sessionToken', '', {
+          domain: 'localhost', // TODO
+          httpOnly: true,
+          maxAge: 0,
+          path: '/',
+          sameSite: true,
+          secure: false, // TODO
+        })
+
+        return null
+      }
 
       try {
         const sessionData = await jwt.verify(
@@ -174,7 +226,9 @@ export default {
 
         const { id, email, role } = sessionData
 
-        const newSalt = await session.generateSalt()
+        session.salt = await session.generateSalt()
+        session.useragent = useragent
+        session.ip = ip
         await session.save()
 
         const newSessionToken = await jwt.sign(
@@ -185,8 +239,17 @@ export default {
             iat: session.iat,
             exp: session.exp,
           },
-          secret + newSalt,
+          secret + session.salt,
         )
+
+        res.cookie('sessionId', session.id, {
+          domain: 'localhost', // TODO
+          httpOnly: true,
+          maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+          path: '/',
+          sameSite: true,
+          secure: false, // TODO
+        })
 
         res.cookie('sessionToken', newSessionToken, {
           domain: 'localhost', // TODO
