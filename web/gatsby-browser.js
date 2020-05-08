@@ -9,3 +9,4 @@
 import '@openfonts/open-sans_latin-ext'
 import 'typeface-montserrat'
 import 'tailwindcss/dist/base.css'
+export { wrapRootElement } from './src/lib/wrap-root-element'
