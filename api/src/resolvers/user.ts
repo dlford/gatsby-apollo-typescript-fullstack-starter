@@ -108,8 +108,6 @@ export default {
         secret + session.salt,
       )
 
-      console.log(cookies)
-
       res.cookie('sessionId', session.id, {
         domain: 'localhost', // TODO
         httpOnly: true,
@@ -157,5 +155,53 @@ export default {
         }
       },
     ),
+    refreshToken: async (
+      _parent,
+      _args,
+      { models, cookies, res, secret },
+    ): Promise<string | null> => {
+      if (!cookies.sessionId || !cookies.sessionToken) {
+        return null
+      }
+      const { sessionId, sessionToken } = cookies
+      const session = await models.Session.findById(sessionId)
+
+      try {
+        const sessionData = await jwt.verify(
+          sessionToken,
+          secret + session.salt,
+        )
+
+        const { id, email, role } = sessionData
+
+        const newSalt = await session.generateSalt()
+        await session.save()
+
+        const newSessionToken = await jwt.sign(
+          {
+            id,
+            email,
+            role,
+            iat: session.iat,
+            exp: session.exp,
+          },
+          secret + newSalt,
+        )
+
+        res.cookie('sessionToken', newSessionToken, {
+          domain: 'localhost', // TODO
+          httpOnly: true,
+          maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+          path: '/',
+          sameSite: true,
+          secure: false, // TODO
+        })
+
+        return await createToken({ id, email, role }, secret, '15m')
+      } catch (e) {
+        console.error(e)
+        return null
+      }
+    },
   },
 }

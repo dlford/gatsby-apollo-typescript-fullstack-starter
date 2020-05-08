@@ -17,6 +17,7 @@
  * signIn(email: String!, password: String!): Token!
  * updateUser(email: String!): User!
  * deleteUser(id: ID!): Boolean!
+ * refreshToken: String
  * ```
  *
  * ### Types
@@ -55,6 +56,7 @@ const userSchema = gql`
     signIn(email: String!, password: String!): Token!
     updateUser(email: String!): User!
     deleteUser(id: ID!): Boolean!
+    refreshToken: String
   }
 
   type Token {
