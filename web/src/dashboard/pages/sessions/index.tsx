@@ -13,25 +13,22 @@ const SESSIONS_QUERY = gql`
 `
 
 const SessionsComponent: React.ElementType<RouteComponentProps> = () => {
-  const { loading, error } = useQuery(SESSIONS_QUERY)
+  const { data, loading, error } = useQuery(SESSIONS_QUERY)
   return (
     <Article>
       <SEO title='Home' />
       <h1>Sessions</h1>
       {loading && 'loading...'}
       {error && (error.message || error)}
+      {data && (
+        <ul>
+          {data.sessions.map((session: string, idx: number) => (
+            <li key={idx}>{session}</li>
+          ))}
+        </ul>
+      )}
     </Article>
   )
 }
 
 export default SessionsComponent
-
-/*
-      {data && (
-        <ul>
-          {data.sessions.map((session) => (
-            <li>{session}</li>
-          ))}
-        </ul>
-      )}
-*/

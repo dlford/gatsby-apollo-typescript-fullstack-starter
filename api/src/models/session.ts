@@ -83,6 +83,9 @@ const sessionSchema: mongoose.Schema = new mongoose.Schema({
     unique: true,
     default: (): string => createUUID(),
   },
+  userId: {
+    type: String,
+  },
   iat: {
     type: Number,
     default: Math.floor(Date.now() / 1000), // Now

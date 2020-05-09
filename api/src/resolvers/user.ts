@@ -94,6 +94,7 @@ export default {
       }
 
       const session: SessionDocument = await new models.Session({
+        userId: user.id,
         useragent,
         ip,
       })

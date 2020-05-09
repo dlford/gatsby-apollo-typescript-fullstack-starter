@@ -82,7 +82,6 @@ const getMe = async (req): Promise<MeProps | void> => {
       new RegExp(/Bearer ([^,^ ]+)/).exec(authorization)[1] ||
       undefined
   }
-  console.log(authorization)
   if (!bearer) return null
   try {
     return await jwt.verify(bearer, SECRET)
@@ -124,7 +123,6 @@ const server = new ApolloServer({
 
     if (req) {
       const me = (await getMe(req)) || null
-      console.log(me)
 
       return {
         models,
