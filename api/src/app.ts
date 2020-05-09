@@ -1,9 +1,8 @@
 /**
  * TODO :
- * - Disable GraphQL explorer
- * - Add logout mutation to clear session cookies
- * - Add subscription for user sessions, display in UI
- * - Find some other way to make GraphQL explorer work in dev
+ * - Add otplib and TOTP config
+ * - Add subscription for user sessions
+ * - Document the use of Graphiql-app and Bearer tokens
  * - use node-cron to purge old sessions from db
  * @packageDocumentation
  */
@@ -144,14 +143,7 @@ const server = new ApolloServer({
       return { me }
     },
   },
-  playground:
-    process.env.NODE_ENV === 'production'
-      ? false
-      : {
-          settings: {
-            'request.credentials': 'include',
-          },
-        },
+  playground: false,
 })
 
 server.applyMiddleware({ app, path: '/graphql', cors: corsOptions })
@@ -159,10 +151,12 @@ server.applyMiddleware({ app, path: '/graphql', cors: corsOptions })
 const httpServer = http.createServer(app)
 server.installSubscriptionHandlers(httpServer)
 
-const port = process.env.PORT || 3000
+// The + converts a variable to a string
+const port = +process.env.PORT || 3000
+const address = process.env.ADDRESS || '0.0.0.0'
 
 connectDb().then(async () => {
-  httpServer.listen({ port }, () => {
+  httpServer.listen(port, address, () => {
     console.log(
       `Apollo Server on http://localhost:${port}${server.graphqlPath}`,
     )

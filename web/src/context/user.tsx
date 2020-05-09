@@ -1,3 +1,9 @@
+/**
+ * TODO
+ * Debug flash of 'loading' on sessions page when token is refreshed
+ * @packageDocumentation
+ */
+
 import { useApolloClient, useMutation } from '@apollo/react-hooks'
 import { ApolloError } from 'apollo-client'
 import PropTypes from 'prop-types'

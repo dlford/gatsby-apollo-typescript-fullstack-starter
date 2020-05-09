@@ -1,5 +1,6 @@
 /**
  * TODO : convert this to session collection with a salt for each session,
+ * Make sure JWT actually expires
  * browser/IP metadata with it, add session salt to jwt secret, store session
  * ID and salt in cookies, user can review and de-auth any or all sessions.
  * Cycle salt with each request and return new salt + new access/session tokens.
