@@ -1,0 +1,3 @@
+export const CREATED = 'SESSION_CREATED'
+export const UPDATED = 'SESSION_UPDATED'
+export const DELETED = 'SESSION_DELETED'

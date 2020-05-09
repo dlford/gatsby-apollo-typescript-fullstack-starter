@@ -5,7 +5,9 @@ import * as jwt from 'jsonwebtoken'
 import { isAdmin, isAuthenticated } from './authorization'
 import { UserDocument } from '../models/user'
 import { SessionDocument } from '../models/session'
+import { generateSessionString, UserSession } from './session'
 import { ContextProps } from '../app'
+import pubsub, { EVENTS } from '../subscription'
 
 /**
  * Creates a signed JWT containing a user object.
@@ -130,6 +132,15 @@ export default {
 
       await session.save()
 
+      pubsub.publish(EVENTS.SESSION.CREATED, {
+        sessionCreated: {
+          session: {
+            id: session.id,
+            detail: generateSessionString(session),
+          } as UserSession,
+        },
+      })
+
       return { token: await createToken(user, secret, '15m') }
     },
 
@@ -139,7 +150,18 @@ export default {
       { models, cookies, res }: ContextProps,
     ): Promise<boolean> => {
       const { sessionId } = cookies
-      await models.Session.findByIdAndDelete(sessionId)
+
+      const session = await models.Session.findById(sessionId)
+
+      pubsub.publish(EVENTS.SESSION.DELETED, {
+        sessionDeleted: {
+          session: {
+            id: session.id,
+          } as UserSession,
+        },
+      })
+
+      await session.remove()
 
       res.cookie('sessionId', '', {
         domain: 'localhost', // TODO

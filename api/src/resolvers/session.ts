@@ -6,16 +6,20 @@
 
 import { combineResolvers } from 'graphql-resolvers'
 import * as moment from 'moment'
+import { withFilter } from 'apollo-server'
 
 import { isAuthenticated } from './authorization'
 import { SessionDocument } from '../models/session'
 import { ContextProps } from '../app'
+import pubsub, { EVENTS } from '../subscription'
 
 /**
  * Parses useragent details into a user-friendly string
  */
 
-const generateSessionString = (session: SessionDocument): string => {
+export const generateSessionString = (
+  session: SessionDocument,
+): string => {
   const browser = session.useragent.browser
   const os = session.useragent.os
 
@@ -32,6 +36,11 @@ const generateSessionString = (session: SessionDocument): string => {
   )})`
 }
 
+export interface UserSession {
+  id: string
+  detail: string
+}
+
 export default {
   Query: {
     sessions: combineResolvers(
@@ -40,14 +49,50 @@ export default {
         _parent,
         _args,
         { models, me }: ContextProps,
-      ): Promise<string[]> => {
+      ): Promise<UserSession[]> => {
         const sessions: SessionDocument[] = await models.Session.find(
           { userId: me.id },
         )
-        return sessions.map((session) =>
-          generateSessionString(session),
-        )
+        return sessions.map((sessionDoc) => ({
+          id: sessionDoc.id,
+          detail: generateSessionString(sessionDoc),
+        }))
       },
     ),
+  },
+  Subscription: {
+    sessionCreated: {
+      subscribe: combineResolvers(
+        isAuthenticated,
+        withFilter(
+          () => pubsub.asyncIterator(EVENTS.SESSION.CREATED),
+          ({ sessionCreated }, _args, { me }) => {
+            return sessionCreated.session.userId.toString() === me.id
+          },
+        ),
+      ),
+    },
+    sessionUpdated: {
+      subscribe: combineResolvers(
+        isAuthenticated,
+        withFilter(
+          () => pubsub.asyncIterator(EVENTS.SESSION.UPDATED),
+          ({ sessionUpdated }, _args, { me }) => {
+            return sessionUpdated.session.userId.toString() === me.id
+          },
+        ),
+      ),
+    },
+    sessionDeleted: {
+      subscribe: combineResolvers(
+        isAuthenticated,
+        withFilter(
+          () => pubsub.asyncIterator(EVENTS.SESSION.DELETED),
+          ({ sessionDeleted }, _args, { me }) => {
+            return sessionDeleted.userId.toString() === me.id
+          },
+        ),
+      ),
+    },
   },
 }
