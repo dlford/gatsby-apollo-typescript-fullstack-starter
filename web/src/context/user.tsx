@@ -1,6 +1,7 @@
 /**
  * TODO
  * Debug flash of 'loading' on sessions page when token is refreshed
+ * Debug eternal loader when session is removed from DB
  * @packageDocumentation
  */
 

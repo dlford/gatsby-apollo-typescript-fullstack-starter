@@ -139,30 +139,8 @@ const SessionsComponent: React.ElementType<RouteComponentProps> = () => {
     })
   }
 
-  const unsubscribeFromMoreSessions = () => {
-    subscribeToMore({
-      document: SESSION_CREATED_SUBSCRIPTION,
-      updateQuery: () => {
-        return
-      },
-    })
-    subscribeToMore({
-      document: SESSION_UPDATED_SUBSCRIPTION,
-      updateQuery: () => {
-        return
-      },
-    })
-    subscribeToMore({
-      document: SESSION_DELETED_SUBSCRIPTION,
-      updateQuery: () => {
-        return
-      },
-    })
-  }
-
   useEffect(() => {
     subscribeToMoreSessions()
-    return unsubscribeFromMoreSessions()
   }, [])
 
   return (

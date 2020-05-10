@@ -26,6 +26,7 @@ const useApollo = (token: string | void) => {
   })
 
   const subscriptionClient = new SubscriptionClient(wsUrl, {
+    lazy: true,
     reconnect: true,
     connectionParams: () => ({
       token,
