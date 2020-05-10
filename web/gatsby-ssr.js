@@ -5,4 +5,4 @@
  */
 
 // You can delete this file if you're not using it
-export { wrapRootElement } from './src/lib/wrap-root-element'
+export { wrapSSRElement } from './src/lib/wrap-ssr-element'

@@ -68,8 +68,8 @@ export default {
         isAuthenticated,
         withFilter(
           () => pubsub.asyncIterator(EVENTS.SESSION.CREATED),
-          ({ sessionCreated }, _args, { me }) => {
-            return sessionCreated.session.userId.toString() === me.id
+          ({ userId }, _args, { me }) => {
+            return userId === me.id
           },
         ),
       ),
@@ -79,8 +79,8 @@ export default {
         isAuthenticated,
         withFilter(
           () => pubsub.asyncIterator(EVENTS.SESSION.UPDATED),
-          ({ sessionUpdated }, _args, { me }) => {
-            return sessionUpdated.session.userId.toString() === me.id
+          ({ userId }, _args, { me }) => {
+            return userId === me.id
           },
         ),
       ),
@@ -90,8 +90,8 @@ export default {
         isAuthenticated,
         withFilter(
           () => pubsub.asyncIterator(EVENTS.SESSION.DELETED),
-          ({ sessionDeleted }, _args, { me }) => {
-            return sessionDeleted.userId.toString() === me.id
+          ({ userId }, _args, { me }) => {
+            return userId === me.id
           },
         ),
       ),

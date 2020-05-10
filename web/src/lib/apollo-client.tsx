@@ -6,6 +6,7 @@ import { createUploadLink } from 'apollo-upload-client'
 import { getMainDefinition } from 'apollo-utilities'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { WebSocketLink } from 'apollo-link-ws'
+import fetch from 'isomorphic-unfetch'
 
 const useApollo = (token: string | void) => {
   interface LinkDefinition {
@@ -21,34 +22,33 @@ const useApollo = (token: string | void) => {
   const uploadLink = createUploadLink({
     uri: apiUrl,
     credentials: 'include', // TODO
+    fetch,
   })
 
   let link = uploadLink
-  let subscriptionClient
-  if (typeof window !== 'undefined') {
-    subscriptionClient = new SubscriptionClient(wsUrl, {
-      reconnect: true,
-      connectionParams: () => {
-        return { token }
-      },
-    })
 
-    const wsLink = new WebSocketLink(subscriptionClient)
+  const subscriptionClient = new SubscriptionClient(wsUrl, {
+    reconnect: true,
+    connectionParams: () => ({
+      token,
+    }),
+  })
 
-    link = split(
-      ({ query }) => {
-        const { kind, operation }: LinkDefinition = getMainDefinition(
-          query,
-        )
-        return (
-          kind === 'OperationLinkDefinition' &&
-          operation === 'subscription'
-        )
-      },
-      wsLink,
-      uploadLink,
-    )
-  }
+  const wsLink = new WebSocketLink(subscriptionClient)
+
+  link = split(
+    ({ query }) => {
+      const { kind, operation }: LinkDefinition = getMainDefinition(
+        query,
+      )
+      return (
+        kind === 'OperationLinkDefinition' &&
+        operation === 'subscription'
+      )
+    },
+    wsLink,
+    uploadLink,
+  )
 
   const authLink = setContext((request, { headers }) => {
     return token

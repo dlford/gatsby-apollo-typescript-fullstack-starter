@@ -16,7 +16,7 @@ const SESSIONS_QUERY = gql`
 `
 
 const SESSION_CREATED_SUBSCRIPTION = gql`
-  subscription onSessionCreated {
+  subscription {
     sessionCreated {
       session {
         id
@@ -27,7 +27,7 @@ const SESSION_CREATED_SUBSCRIPTION = gql`
 `
 
 const SESSION_UPDATED_SUBSCRIPTION = gql`
-  subscription onSessionUpdated {
+  subscription {
     sessionUpdated {
       session {
         id
@@ -38,7 +38,7 @@ const SESSION_UPDATED_SUBSCRIPTION = gql`
 `
 
 const SESSION_DELETED_SUBSCRIPTION = gql`
-  subscription onSessionDeleted {
+  subscription {
     sessionDeleted {
       session {
         id

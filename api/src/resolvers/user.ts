@@ -5,7 +5,7 @@ import * as jwt from 'jsonwebtoken'
 import { isAdmin, isAuthenticated } from './authorization'
 import { UserDocument } from '../models/user'
 import { SessionDocument } from '../models/session'
-import { generateSessionString, UserSession } from './session'
+import { generateSessionString } from './session'
 import { ContextProps } from '../app'
 import pubsub, { EVENTS } from '../subscription'
 
@@ -137,8 +137,9 @@ export default {
           session: {
             id: session.id,
             detail: generateSessionString(session),
-          } as UserSession,
+          },
         },
+        userId: session.userId,
       })
 
       return { token: await createToken(user, secret, '15m') }
@@ -157,8 +158,9 @@ export default {
         sessionDeleted: {
           session: {
             id: session.id,
-          } as UserSession,
+          },
         },
+        userId: session.userId,
       })
 
       await session.remove()
@@ -227,8 +229,9 @@ export default {
           sessionDeleted: {
             session: {
               id: sessionId,
-            } as UserSession,
+            },
           },
+          userId: session.userId,
         })
 
         res.cookie('sessionId', '', {
@@ -270,8 +273,9 @@ export default {
             session: {
               id: sessionId,
               detail: generateSessionString(session),
-            } as UserSession,
+            },
           },
+          userId: session.userId,
         })
 
         const newSessionToken = await jwt.sign(

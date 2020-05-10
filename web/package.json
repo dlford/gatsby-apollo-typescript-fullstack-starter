@@ -56,6 +56,7 @@
     "gatsby-transformer-sharp": "^2.5.1",
     "gatsby-transformer-typescript-css-modules": "^1.0.14",
     "graphql-tag": "^2.10.3",
+    "isomorphic-unfetch": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
     "react": "^16.12.0",
     "react-apollo": "^3.1.5",

@@ -134,6 +134,7 @@ const server = new ApolloServer({
       }
     }
   },
+  // TODO : Change token to authorization header ?
   subscriptions: {
     onConnect: async ({
       token,
@@ -143,6 +144,10 @@ const server = new ApolloServer({
       return { me }
     },
   },
+  // The built-in playground is useless to us because it can't set headers,
+  // use https://github.com/skevy/graphiql-app and run the signIn mutation,
+  // then add a header called 'authorization' with the token returned from
+  // the signIn mutation in the format of 'Bearer YOUR_TOKEN_HERE'
   playground: false,
 })
 
