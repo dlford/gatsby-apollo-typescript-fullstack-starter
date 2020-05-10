@@ -52,6 +52,8 @@ export default {
       ): Promise<UserSession[]> => {
         const sessions: SessionDocument[] = await models.Session.find(
           { userId: me.id },
+          {},
+          { sort: { iat: -1 } },
         )
         return sessions.map((sessionDoc) => ({
           id: sessionDoc.id,

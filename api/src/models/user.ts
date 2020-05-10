@@ -90,6 +90,12 @@ userSchema.pre('save', async function(
   }
 })
 
+userSchema.pre('remove', async function(
+  this: UserDocument,
+): Promise<void> {
+  await this.model('Session').deleteMany({ userId: this.id })
+})
+
 const User = mongoose.model<UserDocument>('User', userSchema)
 
 export default User

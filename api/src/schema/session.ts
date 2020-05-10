@@ -25,7 +25,7 @@ import { gql } from 'apollo-server-express'
 
 const sessionSchema = gql`
   extend type Query {
-    sessions: [String!]
+    sessions: [Session!]
   }
 
   extend type Subscription {
@@ -34,18 +34,21 @@ const sessionSchema = gql`
     sessionDeleted: SessionDeleted
   }
 
-  type SessionCreated: {
+  type Session {
     id: ID!
     detail: String
   }
 
-  type SessionUpdated: {
-    id: ID!
-    detail: String
+  type SessionCreated {
+    session: Session
   }
 
-  type SessionDeleted: {
-    detail: ID!
+  type SessionUpdated {
+    session: Session
+  }
+
+  type SessionDeleted {
+    session: Session
   }
 `
 

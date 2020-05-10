@@ -223,6 +223,14 @@ export default {
       )
 
       if (!session) {
+        pubsub.publish(EVENTS.SESSION.DELETED, {
+          sessionDeleted: {
+            session: {
+              id: sessionId,
+            } as UserSession,
+          },
+        })
+
         res.cookie('sessionId', '', {
           domain: 'localhost', // TODO
           httpOnly: true,
@@ -256,6 +264,15 @@ export default {
         session.useragent = useragent
         session.ip = ip
         await session.save()
+
+        pubsub.publish(EVENTS.SESSION.UPDATED, {
+          sessionUpdated: {
+            session: {
+              id: sessionId,
+              detail: generateSessionString(session),
+            } as UserSession,
+          },
+        })
 
         const newSessionToken = await jwt.sign(
           {
