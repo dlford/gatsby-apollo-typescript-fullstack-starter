@@ -25,8 +25,6 @@ const useApollo = (token: string | void) => {
     fetch,
   })
 
-  let link = uploadLink
-
   const subscriptionClient = new SubscriptionClient(wsUrl, {
     reconnect: true,
     connectionParams: () => ({
@@ -36,14 +34,13 @@ const useApollo = (token: string | void) => {
 
   const wsLink = new WebSocketLink(subscriptionClient)
 
-  link = split(
+  const link = split(
     ({ query }) => {
       const { kind, operation }: LinkDefinition = getMainDefinition(
         query,
       )
       return (
-        kind === 'OperationLinkDefinition' &&
-        operation === 'subscription'
+        kind === 'OperationDefinition' && operation === 'subscription'
       )
     },
     wsLink,
