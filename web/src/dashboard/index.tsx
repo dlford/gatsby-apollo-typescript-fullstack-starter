@@ -3,9 +3,9 @@ import { Router } from '@reach/router'
 
 import { UserContext } from '~/context/user'
 import Layout from '~/components/layout'
-import SignIn from '~/dashboard/pages/sign-in'
-import Home from '~/dashboard/pages/home'
-import Sessions from '~/dashboard/pages/sessions'
+import SignIn from '~/dashboard/sign-in'
+import Home from '~/dashboard/home'
+import Sessions from '~/dashboard/sessions'
 import Loader from '~/components/loader'
 
 export interface DashboardComponentProps {

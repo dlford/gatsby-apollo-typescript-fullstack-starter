@@ -41,8 +41,7 @@ const BGWrapper = styled.div<BGWrapperProps>`
   overflow: hidden;
   position: absolute;
   opacity: ${({ bright }) => (bright ? '0.5' : '0.15')};
-  transform: scaleY(0.4);
-  top: -20vw;
+  top: 0;
   left: 0;
 `
 
