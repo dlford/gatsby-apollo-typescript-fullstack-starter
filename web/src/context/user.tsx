@@ -196,7 +196,7 @@ export const UserProvider = ({
         .then((data) => setMe(data))
         .then(() => setAuthenticating(false))
     } else {
-      refreshTokenMutation()
+      refreshTokenMutation().catch(() => setAuthenticating(false))
     }
   }, [token, setMe, setAuthenticating])
 
