@@ -1,3 +1,4 @@
+import { Link } from 'gatsby'
 import React, { useContext, FormEvent } from 'react'
 import tw from 'twin.macro'
 
@@ -35,6 +36,14 @@ const SignInComponent = () => {
         <Article>
           <h1>Sign In</h1>
           <p>Please sign in to continue</p>
+          {!process.env.DISABLE_SIGNUP && (
+            <p>
+              Don&apos;t have an account?{' '}
+              <Link replace to='/dashboard/sign-up'>
+                Create one here!
+              </Link>
+            </p>
+          )}
           <ErrorText>
             {signInError
               ? signInError.message.replace(/GraphQL error: /, '')

@@ -2,13 +2,14 @@
  * TODO
  * Debug flash of 'loading' on sessions page when token is refreshed
  * Debug eternal loader when session is removed from DB
- * Add signUp
+ * Merge sign-in and sign-up components, just use state
  * @packageDocumentation
  */
 
 import { useApolloClient, useMutation } from '@apollo/react-hooks'
 import { ApolloError } from 'apollo-client'
 import PropTypes from 'prop-types'
+import { navigate } from 'gatsby'
 import gql from 'graphql-tag'
 import React, { createContext, useEffect, useState } from 'react'
 import jwt from 'jsonwebtoken'
@@ -29,6 +30,12 @@ enum UserRole {
 type UserCredentialProps = {
   email: string
   password: string
+}
+
+type SignUpMutationProps = {
+  signUp: {
+    token: string
+  }
 }
 
 type SignInMutationProps = {
@@ -101,7 +108,7 @@ export const UserContext = createContext<UserProps>({
 
 const SIGNUP_MUTATION = gql`
   mutation signUp($email: String!, $password: String!) {
-    signIn(email: $email, password: $password) {
+    signUp(email: $email, password: $password) {
       token
     }
   }
@@ -159,12 +166,13 @@ export const UserProvider = ({
     signUp,
     { loading: signUpLoading, error: signUpError },
   ] = useMutation(SIGNUP_MUTATION, {
-    onCompleted: async (data: SignInMutationProps): Promise<void> => {
-      const { token: newToken } = data.signIn
+    onCompleted: async (data: SignUpMutationProps): Promise<void> => {
+      const { token: newToken } = data.signUp
       setToken(newToken)
       apolloClient.cache.reset()
       checkToken().then((data) => {
         setMe(data)
+        navigate('/dashboard', { replace: true })
       })
     },
   })
