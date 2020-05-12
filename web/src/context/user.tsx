@@ -2,7 +2,7 @@
  * TODO
  * Debug flash of 'loading' on sessions page when token is refreshed
  * Debug eternal loader when session is removed from DB
- * Add singUp
+ * Add signUp
  * @packageDocumentation
  */
 
@@ -14,40 +14,6 @@ import React, { createContext, useEffect, useState } from 'react'
 import jwt from 'jsonwebtoken'
 
 import useApollo from '~/lib/apollo-client'
-
-export interface UserProps {
-  user: {
-    signIn(credentials: UserCredentialProps): void
-    signOut(): void
-    id: string | void
-    email: string | void
-    role: UserRole | void
-    exp: number | void
-    iat: number | void
-  }
-  authenticating: boolean
-  signInError: ApolloError | void
-  signInLoading: boolean | void
-}
-
-export const UserContext = createContext<UserProps>({
-  user: {
-    signIn() {
-      return
-    },
-    signOut() {
-      return
-    },
-    id: undefined,
-    email: undefined,
-    role: undefined,
-    exp: undefined,
-    iat: undefined,
-  },
-  authenticating: true,
-  signInError: undefined,
-  signInLoading: undefined,
-})
 
 export interface UserProviderProps {
   children: JSX.Element | JSX.Element[]
@@ -83,6 +49,24 @@ type TokenProps = {
   iat: number | void
 }
 
+export interface UserProps {
+  user: {
+    signUp?: (credentials: UserCredentialProps) => void
+    signIn: (credentials: UserCredentialProps) => void
+    signOut: () => void
+    id: string | void
+    email: string | void
+    role: UserRole | void
+    exp: number | void
+    iat: number | void
+  }
+  authenticating: boolean
+  signUpError: ApolloError | void
+  signUpLoading: boolean | void
+  signInError: ApolloError | void
+  signInLoading: boolean | void
+}
+
 const nullToken = {
   id: undefined,
   email: undefined,
@@ -90,6 +74,38 @@ const nullToken = {
   exp: undefined,
   iat: undefined,
 }
+
+export const UserContext = createContext<UserProps>({
+  user: {
+    signUp() {
+      return
+    },
+    signIn() {
+      return
+    },
+    signOut() {
+      return
+    },
+    id: undefined,
+    email: undefined,
+    role: undefined,
+    exp: undefined,
+    iat: undefined,
+  },
+  authenticating: true,
+  signUpError: undefined,
+  signUpLoading: undefined,
+  signInError: undefined,
+  signInLoading: undefined,
+})
+
+const SIGNUP_MUTATION = gql`
+  mutation signUp($email: String!, $password: String!) {
+    signIn(email: $email, password: $password) {
+      token
+    }
+  }
+`
 
 const SIGNIN_MUTATION = gql`
   mutation signIn($email: String!, $password: String!) {
@@ -140,6 +156,20 @@ export const UserProvider = ({
   }
 
   const [
+    signUp,
+    { loading: signUpLoading, error: signUpError },
+  ] = useMutation(SIGNUP_MUTATION, {
+    onCompleted: async (data: SignInMutationProps): Promise<void> => {
+      const { token: newToken } = data.signIn
+      setToken(newToken)
+      apolloClient.cache.reset()
+      checkToken().then((data) => {
+        setMe(data)
+      })
+    },
+  })
+
+  const [
     signIn,
     { loading: signInLoading, error: signInError },
   ] = useMutation(SIGNIN_MUTATION, {
@@ -181,6 +211,14 @@ export const UserProvider = ({
   const [user, setUser] = useState({
     ...me,
 
+    signUp: process.env.DISABLE_SIGNUP
+      ? () => {
+          return
+        }
+      : (credentials: UserCredentialProps): void => {
+          signUp({ variables: credentials })
+        },
+
     signIn: (credentials: UserCredentialProps): void => {
       signIn({ variables: credentials })
     },
@@ -210,7 +248,14 @@ export const UserProvider = ({
 
   return (
     <UserContext.Provider
-      value={{ user, authenticating, signInError, signInLoading }}
+      value={{
+        user,
+        authenticating,
+        signInError,
+        signInLoading,
+        signUpError,
+        signUpLoading,
+      }}
     >
       {children}
     </UserContext.Provider>
