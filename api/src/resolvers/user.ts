@@ -10,6 +10,19 @@ import { ContextProps } from '../app'
 import pubsub, { EVENTS } from '../subscription'
 
 /**
+ * Default values for Set-Cookie headers
+ */
+
+const cookieProps = {
+  domain: 'localhost', // TODO
+  httpOnly: true,
+  maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+  path: '/',
+  sameSite: true,
+  secure: false, // TODO
+}
+
+/**
  * Creates a signed JWT containing a user object.
  */
 
@@ -62,15 +75,38 @@ export default {
     signUp: async (
       _parent,
       { username, email, password },
-      { models, secret }: ContextProps,
+      { models, secret, useragent, ip, res }: ContextProps,
     ): Promise<{ token: string }> => {
-      const user = await models.User.create({
+      const user = new models.User({
         username,
         email,
         password,
       })
 
-      // TODO
+      await user.save()
+
+      const session: SessionDocument = await new models.Session({
+        userId: user.id,
+        useragent,
+        ip,
+      })
+
+      const sessionToken = await jwt.sign(
+        {
+          id: user.id,
+          email: user.email,
+          role: user.role,
+          iat: session.iat,
+          exp: session.exp,
+        },
+        secret + session.salt,
+      )
+
+      res.cookie('sessionId', session.id, cookieProps)
+      res.cookie('sessionToken', sessionToken, cookieProps)
+
+      await session.save()
+
       return { token: await createToken(user, secret, '15m') }
     },
 
@@ -112,23 +148,8 @@ export default {
         secret + session.salt,
       )
 
-      res.cookie('sessionId', session.id, {
-        domain: 'localhost', // TODO
-        httpOnly: true,
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-        path: '/',
-        sameSite: true,
-        secure: false, // TODO
-      })
-
-      res.cookie('sessionToken', sessionToken, {
-        domain: 'localhost', // TODO
-        httpOnly: true,
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-        path: '/',
-        sameSite: true,
-        secure: false, // TODO
-      })
+      res.cookie('sessionId', session.id, cookieProps)
+      res.cookie('sessionToken', sessionToken, cookieProps)
 
       await session.save()
 
@@ -165,23 +186,8 @@ export default {
 
       await session.remove()
 
-      res.cookie('sessionId', '', {
-        domain: 'localhost', // TODO
-        httpOnly: true,
-        maxAge: 0,
-        path: '/',
-        sameSite: true,
-        secure: false, // TODO
-      })
-
-      res.cookie('sessionToken', '', {
-        domain: 'localhost', // TODO
-        httpOnly: true,
-        maxAge: 0,
-        path: '/',
-        sameSite: true,
-        secure: false, // TODO
-      })
+      res.cookie('sessionId', '', { ...cookieProps, maxAge: 0 })
+      res.cookie('sessionToken', '', { ...cookieProps, maxAge: 0 })
 
       return true
     },
@@ -234,23 +240,8 @@ export default {
           userId: session.userId,
         })
 
-        res.cookie('sessionId', '', {
-          domain: 'localhost', // TODO
-          httpOnly: true,
-          maxAge: 0,
-          path: '/',
-          sameSite: true,
-          secure: false, // TODO
-        })
-
-        res.cookie('sessionToken', '', {
-          domain: 'localhost', // TODO
-          httpOnly: true,
-          maxAge: 0,
-          path: '/',
-          sameSite: true,
-          secure: false, // TODO
-        })
+        res.cookie('sessionId', '', { ...cookieProps, maxAge: 0 })
+        res.cookie('sessionToken', '', { ...cookieProps, maxAge: 0 })
 
         return null
       }
@@ -289,23 +280,8 @@ export default {
           secret + session.salt,
         )
 
-        res.cookie('sessionId', session.id, {
-          domain: 'localhost', // TODO
-          httpOnly: true,
-          maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-          path: '/',
-          sameSite: true,
-          secure: false, // TODO
-        })
-
-        res.cookie('sessionToken', newSessionToken, {
-          domain: 'localhost', // TODO
-          httpOnly: true,
-          maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-          path: '/',
-          sameSite: true,
-          secure: false, // TODO
-        })
+        res.cookie('sessionId', session.id, cookieProps)
+        res.cookie('sessionToken', newSessionToken, cookieProps)
 
         return await createToken({ id, email, role }, secret, '15m')
       } catch (e) {
