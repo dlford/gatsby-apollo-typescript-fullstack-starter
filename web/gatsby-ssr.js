@@ -5,4 +5,4 @@
  */
 
 // You can delete this file if you're not using it
-export { wrapSSRElement } from './src/lib/wrap-ssr-element'
+export { wrapSSRElement as wrapPageElement } from './src/lib/wrap-ssr-element'

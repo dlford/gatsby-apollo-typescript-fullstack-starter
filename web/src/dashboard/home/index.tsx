@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link } from 'gatsby'
 import { RouteComponentProps } from '@reach/router'
 import { UserContext } from '~/context/user'
@@ -11,6 +11,7 @@ import Button from '~/components/button'
 const ButtonWrap = tw.div`py-4`
 
 const HomeComponent: React.ElementType<RouteComponentProps> = () => {
+  const [allDevices, setAllDevices] = useState(false)
   const { user } = useContext(UserContext)
 
   return (
@@ -24,10 +25,19 @@ const HomeComponent: React.ElementType<RouteComponentProps> = () => {
         security purposes.
       </p>
       <ButtonWrap>
-        <Button primary onClick={user.signOut}>
+        <Button primary onClick={() => user.signOut({ allDevices })}>
           Sign Out
         </Button>
       </ButtonWrap>
+      <input
+        name='allDevices'
+        type='checkbox'
+        checked={allDevices}
+        onChange={(e) => {
+          setAllDevices(e.target.checked)
+        }}
+      />
+      <label htmlFor='allDevices'> Sign out all devices</label>
     </Article>
   )
 }

@@ -55,11 +55,15 @@ type TokenProps = {
   iat: number | void
 }
 
+type SignOutArgs = {
+  allDevices: boolean
+}
+
 export interface UserProps {
   user: {
     signUp: (credentials: UserCredentialProps) => void
     signIn: (credentials: UserCredentialProps) => void
-    signOut: () => void
+    signOut: (arg0?: SignOutArgs) => void
     id: string | void
     email: string | void
     role: UserRole | void
@@ -122,8 +126,8 @@ const SIGNIN_MUTATION = gql`
 `
 
 const SIGN_OUT_MUTATION = gql`
-  mutation {
-    signOut
+  mutation signOut($allDevices: Boolean) {
+    signOut(allDevices: $allDevices)
   }
 `
 
@@ -230,9 +234,15 @@ export const UserProvider = ({
       signIn({ variables: credentials })
     },
 
-    signOut: (): void => {
+    // TODO : Warn user on failure to de-auth sessions
+
+    signOut: (
+      { allDevices }: SignOutArgs = { allDevices: false },
+    ): void => {
       setAuthenticating(true)
-      signOutMutation()
+      signOutMutation({
+        variables: { allDevices: allDevices },
+      })
     },
   })
 

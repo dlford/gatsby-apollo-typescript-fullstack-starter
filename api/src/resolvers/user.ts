@@ -26,7 +26,7 @@ const cookieProps = {
  * Creates a signed JWT containing a user object.
  */
 
-export const createAccessToken = async (
+const createAccessToken = async (
   user,
   secret,
   expiresIn,
@@ -173,12 +173,14 @@ export default {
 
     signOut: async (
       _parent,
-      _args,
+      { allDevices },
       { models, cookies, res }: ContextProps,
     ): Promise<boolean> => {
       const { sessionId } = cookies
 
       const session = await models.Session.findById(sessionId)
+
+      if (!session) throw new UserInputError('Could not find session')
 
       pubsub.publish(EVENTS.SESSION.DELETED, {
         sessionDeleted: {
@@ -193,6 +195,24 @@ export default {
 
       res.cookie('sessionId', '', { ...cookieProps, maxAge: 0 })
       res.cookie('sessionToken', '', { ...cookieProps, maxAge: 0 })
+
+      if (allDevices) {
+        const sessions = await models.Session.find({
+          userId: session.userId,
+        })
+        sessions.map(async (session) => {
+          pubsub.publish(EVENTS.SESSION.DELETED, {
+            sessionDeleted: {
+              session: {
+                id: session.id,
+              },
+            },
+            userId: session.userId,
+          })
+
+          await session.remove()
+        })
+      }
 
       return true
     },
