@@ -28,10 +28,14 @@ const sessionSchema = gql`
     sessions: [Session!]
   }
 
+  extend type Mutation {
+    deleteSession(id: ID!): Boolean!
+  }
+
   extend type Subscription {
-    sessionCreated: SessionCreated
-    sessionUpdated: SessionUpdated
-    sessionDeleted: SessionDeleted
+    sessionCreated: SessionCreated!
+    sessionUpdated: SessionUpdated!
+    sessionDeleted: SessionDeleted!
   }
 
   type Session {
@@ -40,15 +44,15 @@ const sessionSchema = gql`
   }
 
   type SessionCreated {
-    session: Session
+    session: Session!
   }
 
   type SessionUpdated {
-    session: Session
+    session: Session!
   }
 
   type SessionDeleted {
-    session: Session
+    session: Session!
   }
 `
 

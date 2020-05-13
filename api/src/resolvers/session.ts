@@ -6,9 +6,9 @@
 
 import { combineResolvers } from 'graphql-resolvers'
 import * as moment from 'moment'
-import { withFilter } from 'apollo-server'
+import { withFilter, UserInputError } from 'apollo-server'
 
-import { isAuthenticated } from './authorization'
+import { isAuthenticated, isSessionOwner } from './authorization'
 import { SessionDocument } from '../models/session'
 import { ContextProps } from '../app'
 import pubsub, { EVENTS } from '../subscription'
@@ -55,6 +55,7 @@ export default {
           {},
           { sort: { iat: -1 } },
         )
+
         return sessions.map((sessionDoc) => ({
           id: sessionDoc.id,
           detail: generateSessionString(sessionDoc),
@@ -62,6 +63,36 @@ export default {
       },
     ),
   },
+
+  Mutation: {
+    deleteSession: combineResolvers(
+      isSessionOwner,
+      async (
+        _parent,
+        { id },
+        { models }: ContextProps,
+      ): Promise<boolean> => {
+        const session = await models.Session.findById(id)
+
+        if (!session)
+          throw new UserInputError('Could not find session')
+
+        pubsub.publish(EVENTS.SESSION.DELETED, {
+          sessionDeleted: {
+            session: {
+              id: session.id,
+            },
+          },
+          userId: session.userId,
+        })
+
+        await session.remove()
+
+        return true
+      },
+    ),
+  },
+
   Subscription: {
     sessionCreated: {
       subscribe: combineResolvers(
@@ -74,6 +105,7 @@ export default {
         ),
       ),
     },
+
     sessionUpdated: {
       subscribe: combineResolvers(
         isAuthenticated,
@@ -85,6 +117,7 @@ export default {
         ),
       ),
     },
+
     sessionDeleted: {
       subscribe: combineResolvers(
         isAuthenticated,

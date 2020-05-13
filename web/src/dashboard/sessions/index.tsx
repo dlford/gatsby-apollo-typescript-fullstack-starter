@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { RouteComponentProps } from '@reach/router'
 
 import SEO from '~/components/seo'
 import Article from '~/components/article'
+import Loader from '~/components/loader'
 
 const SESSIONS_QUERY = gql`
   query {
@@ -12,6 +13,12 @@ const SESSIONS_QUERY = gql`
       id
       detail
     }
+  }
+`
+
+const DELETE_SESSION_MUTATION = gql`
+  mutation($id: ID!) {
+    deleteSession(id: $id)
   }
 `
 
@@ -72,6 +79,11 @@ const SessionsComponent: React.ElementType<RouteComponentProps> = () => {
   const { subscribeToMore, data, loading, error } = useQuery(
     SESSIONS_QUERY,
   )
+
+  const [
+    deleteSession,
+    { loading: deleteLoading, error: deleteError },
+  ] = useMutation(DELETE_SESSION_MUTATION)
 
   const subscribeToMoreSessions = () => {
     subscribeToMore({
@@ -143,16 +155,33 @@ const SessionsComponent: React.ElementType<RouteComponentProps> = () => {
     subscribeToMoreSessions()
   }, [])
 
+  // TODO : Loader position absolute
+  // TODO : ScrollTo on error
+  // TODO : Label THIS session
+
   return (
     <Article>
       <SEO title='Home' />
+      {loading || (deleteLoading && <Loader />)}
+      {error && <p>{error.message || error}</p>}
+      {deleteError && <p>{deleteError.message || deleteError}</p>}
       <h1>Sessions</h1>
-      {loading && 'loading...'}
       {error && (error.message || error)}
       {data && (
         <ul>
           {data.sessions.map((session: QueryProps) => (
-            <li key={session.id}>{session.detail}</li>
+            <li key={session.id}>
+              {session.detail}{' '}
+              <a
+                role='button'
+                tabIndex={0}
+                onClick={() =>
+                  deleteSession({ variables: { id: session.id } })
+                }
+              >
+                Remove
+              </a>
+            </li>
           ))}
         </ul>
       )}

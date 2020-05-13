@@ -79,7 +79,7 @@ export default {
     ): Promise<{ token: string }> => {
       if (process.env.DISABLE_SIGNUP)
         throw new UserInputError(
-          'Sign up is disabled by administrator.',
+          'Sign up is disabled by administrator',
         )
 
       const user = new models.User({
@@ -124,7 +124,7 @@ export default {
 
       if (!user) {
         throw new UserInputError(
-          'Email address or password incorrect.',
+          'Email address or password incorrect',
         )
       }
 
@@ -132,7 +132,7 @@ export default {
 
       if (!isValid) {
         throw new AuthenticationError(
-          'Email address or password incorrect.',
+          'Email address or password incorrect',
         )
       }
 
