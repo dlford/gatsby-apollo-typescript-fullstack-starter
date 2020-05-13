@@ -23,7 +23,7 @@ const ArticleComponent = styled.article`
     ${tw`bg-gray-300`};
   }
   a {
-    ${tw`text-indigo-600 underline hover:text-indigo-800 hover:no-underline`};
+    ${tw`cursor-pointer text-indigo-600 underline hover:text-indigo-800 hover:no-underline`};
   }
 `
 

@@ -1,4 +1,3 @@
-import { Link } from 'gatsby'
 import React, { useState, useContext, FormEvent } from 'react'
 import tw from 'twin.macro'
 
@@ -49,17 +48,6 @@ const SignInComponent = () => {
               ? 'Please create an account to continue'
               : 'Please sign in to continue'}
           </p>
-          {!process.env.DISABLE_SIGNUP && (
-            <p>
-              {isSignUp ? 'Already' : "Don't"} have an account?{' '}
-              <a
-                href='#'
-                onClick={() => setIsSignUp((prev) => !prev)}
-              >
-                {isSignUp ? 'Sign in' : 'Create one'} here!
-              </a>
-            </p>
-          )}
           <ErrorText>
             {signInError
               ? signInError.message.replace(/GraphQL error: /, '')
@@ -82,6 +70,18 @@ const SignInComponent = () => {
           >
             Submit
           </button>
+          {!process.env.DISABLE_SIGNUP && (
+            <Article>
+              {isSignUp ? 'Already' : "Don't"} have an account?{' '}
+              <a
+                role='button'
+                tabIndex={0}
+                onClick={() => setIsSignUp((prev) => !prev)}
+              >
+                {isSignUp ? 'Sign in' : 'Create one'} here!
+              </a>
+            </Article>
+          )}
         </Form>
       </FormWrapper>
       {!!signInLoading || (!!signUpLoading && <Loader />)}
