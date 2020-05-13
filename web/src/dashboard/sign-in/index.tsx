@@ -1,5 +1,5 @@
 import { Link } from 'gatsby'
-import React, { useContext, FormEvent } from 'react'
+import React, { useState, useContext, FormEvent } from 'react'
 import tw from 'twin.macro'
 
 import Article from '~/components/article'
@@ -8,13 +8,22 @@ import Form from '~/components/form'
 import Loader from '~/components/loader'
 
 const SignInComponent = () => {
-  const { user, signInLoading, signInError } = useContext(UserContext)
+  const [isSignUp, setIsSignUp] = useState(false)
+  const {
+    user,
+    signInLoading,
+    signInError,
+    signUpLoading,
+    signUpError,
+  } = useContext(UserContext)
 
   const handleSumbit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const email = e.currentTarget.email.value
     const password = e.currentTarget.password.value
-    user.signIn({ email, password })
+    isSignUp
+      ? user.signUp({ email, password })
+      : user.signIn({ email, password })
   }
 
   const TextWrapper = tw.div`
@@ -34,19 +43,29 @@ const SignInComponent = () => {
     <>
       <TextWrapper>
         <Article>
-          <h1>Sign In</h1>
-          <p>Please sign in to continue</p>
+          <h1>{isSignUp ? 'Sign Up' : 'Sign In'}</h1>
+          <p>
+            {isSignUp
+              ? 'Please create an account to continue'
+              : 'Please sign in to continue'}
+          </p>
           {!process.env.DISABLE_SIGNUP && (
             <p>
-              Don&apos;t have an account?{' '}
-              <Link replace to='/dashboard/sign-up'>
-                Create one here!
-              </Link>
+              {isSignUp ? 'Already' : "Don't"} have an account?{' '}
+              <a
+                href='#'
+                onClick={() => setIsSignUp((prev) => !prev)}
+              >
+                {isSignUp ? 'Sign in' : 'Create one'} here!
+              </a>
             </p>
           )}
           <ErrorText>
             {signInError
               ? signInError.message.replace(/GraphQL error: /, '')
+              : ''}
+            {signUpError
+              ? signUpError.message.replace(/GraphQL error: /, '')
               : ''}
           </ErrorText>
         </Article>
@@ -57,12 +76,15 @@ const SignInComponent = () => {
           <input type='email' name='email' />
           <label htmlFor='password'>Password</label>
           <input type='password' name='password' />
-          <button disabled={!!signInLoading} type='submit'>
+          <button
+            disabled={!!signInLoading || !!signUpLoading}
+            type='submit'
+          >
             Submit
           </button>
         </Form>
       </FormWrapper>
-      {!!signInLoading && <Loader />}
+      {!!signInLoading || (!!signUpLoading && <Loader />)}
     </>
   )
 }

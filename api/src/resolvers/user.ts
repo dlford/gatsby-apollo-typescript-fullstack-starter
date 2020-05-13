@@ -26,7 +26,7 @@ const cookieProps = {
  * Creates a signed JWT containing a user object.
  */
 
-export const createToken = async (
+export const createAccessToken = async (
   user,
   secret,
   expiresIn,
@@ -77,6 +77,11 @@ export default {
       { username, email, password },
       { models, secret, useragent, ip, res }: ContextProps,
     ): Promise<{ token: string }> => {
+      if (process.env.DISABLE_SIGNUP)
+        throw new UserInputError(
+          'Sign up is disabled by administrator.',
+        )
+
       const user = new models.User({
         username,
         email,
@@ -107,7 +112,7 @@ export default {
 
       await session.save()
 
-      return { token: await createToken(user, secret, '15m') }
+      return { token: await createAccessToken(user, secret, '15m') }
     },
 
     signIn: async (
@@ -163,7 +168,7 @@ export default {
         userId: session.userId,
       })
 
-      return { token: await createToken(user, secret, '15m') }
+      return { token: await createAccessToken(user, secret, '15m') }
     },
 
     signOut: async (
@@ -283,7 +288,11 @@ export default {
         res.cookie('sessionId', session.id, cookieProps)
         res.cookie('sessionToken', newSessionToken, cookieProps)
 
-        return await createToken({ id, email, role }, secret, '15m')
+        return await createAccessToken(
+          { id, email, role },
+          secret,
+          '15m',
+        )
       } catch (e) {
         console.error(e)
         return null

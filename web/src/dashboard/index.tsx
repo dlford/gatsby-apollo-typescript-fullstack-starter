@@ -4,7 +4,6 @@ import { Router } from '@reach/router'
 import { UserContext } from '~/context/user'
 import Layout from '~/components/layout'
 import SignIn from '~/dashboard/sign-in'
-import SignUp from '~/dashboard/sign-up'
 import Home from '~/dashboard/home'
 import Sessions from '~/dashboard/sessions'
 import Loader from '~/components/loader'
@@ -23,7 +22,7 @@ const App = ({ location }: DashboardComponentProps) => {
       </Layout>
     )
 
-  if (!user?.id && location.pathname !== '/dashboard/sign-up')
+  if (!user?.id)
     return (
       <Layout location={location}>
         <SignIn />
@@ -33,7 +32,6 @@ const App = ({ location }: DashboardComponentProps) => {
   return (
     <Layout location={location}>
       <Router basepath='/dashboard'>
-        <SignUp path='/sign-up' />
         <Home path='/' />
         <Sessions path='/sessions' />
       </Router>

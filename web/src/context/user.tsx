@@ -2,7 +2,6 @@
  * TODO
  * Debug flash of 'loading' on sessions page when token is refreshed
  * Debug eternal loader when session is removed from DB
- * Merge sign-in and sign-up components, just use state
  * @packageDocumentation
  */
 
@@ -58,7 +57,7 @@ type TokenProps = {
 
 export interface UserProps {
   user: {
-    signUp?: (credentials: UserCredentialProps) => void
+    signUp: (credentials: UserCredentialProps) => void
     signIn: (credentials: UserCredentialProps) => void
     signOut: () => void
     id: string | void
