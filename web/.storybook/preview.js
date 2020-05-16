@@ -1,3 +1,10 @@
+import React from 'react'
+import { addDecorator } from '@storybook/react'
+import { withInfo } from '@storybook/addon-info'
+import '@openfonts/open-sans_latin-ext'
+import 'typeface-montserrat'
+import 'tailwindcss/dist/base.css'
+
 import { configure } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
 
@@ -20,3 +27,9 @@ window.___navigate = (pathname) => {
   action('NavigateTo:')(pathname)
 }
 configure(loadStories, module)
+
+addDecorator(
+  withInfo({
+    inline: true,
+  }),
+)
