@@ -28,15 +28,15 @@ const HEADER_QUERY = graphql`
   }
 `
 
-export const Header = tw.header`mb-16`
-export const Image = tw.div`w-12 sm:w-24 lg:w-32 pt-4 ml-auto mr-auto`
-export const H1 = tw.h1`font-montserrat py-4 px-2 text-center text-gray-900 lg:text-xl font-black leading-tight`
+const Header = tw.header`mb-16`
+const Image = tw.div`w-12 sm:w-24 lg:w-32 pt-4 ml-auto mr-auto`
+const H1 = tw.h1`font-montserrat py-4 px-2 text-center text-gray-900 lg:text-xl font-black leading-tight`
 
 type BGWrapperProps = {
   bright: boolean
 }
 
-export const BGWrapper = styled.div<BGWrapperProps>`
+const BGWrapper = styled.div<BGWrapperProps>`
   z-index: -1;
   overflow: hidden;
   position: absolute;

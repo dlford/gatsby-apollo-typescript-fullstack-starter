@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Form renders correctly 1`] = `
+<DocumentFragment>
+  <form
+    class="css-j0pxcv"
+  >
+    <label
+      for="email"
+    >
+      Email Address
+    </label>
+    <input
+      name="email"
+      type="email"
+    />
+    <label
+      for="password"
+    >
+      Password
+    </label>
+    <input
+      name="password"
+      type="password"
+    />
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;

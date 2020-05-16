@@ -20,7 +20,7 @@ export const users = async (token): Promise<any> =>
     token
       ? {
           headers: {
-            token: token,
+            authorization: `Bearer ${token}`,
           },
         }
       : null,
@@ -44,7 +44,7 @@ export const user = async (variables, token): Promise<any> =>
     token
       ? {
           headers: {
-            token: token,
+            authorization: `Bearer ${token}`,
           },
         }
       : null,
@@ -67,7 +67,7 @@ export const me = async (token: string | void): Promise<any> =>
     token
       ? {
           headers: {
-            token: token,
+            authorization: `Bearer ${token}`,
           },
         }
       : null,
@@ -121,7 +121,7 @@ export const updateUser = async (variables, token): Promise<any> =>
     token
       ? {
           headers: {
-            token: token,
+            authorization: `Bearer ${token}`,
           },
         }
       : null,
@@ -141,7 +141,7 @@ export const deleteUser = async (variables, token): Promise<any> =>
     token
       ? {
           headers: {
-            token: token,
+            authorization: `Bearer ${token}`,
           },
         }
       : null,

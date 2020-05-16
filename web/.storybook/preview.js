@@ -28,8 +28,4 @@ window.___navigate = (pathname) => {
 }
 configure(loadStories, module)
 
-addDecorator(
-  withInfo({
-    inline: true,
-  }),
-)
+addDecorator(withInfo())

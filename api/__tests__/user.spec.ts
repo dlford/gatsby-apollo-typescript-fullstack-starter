@@ -1,7 +1,8 @@
-// import * as mongoose from 'mongoose'
 import models, { connectDb } from '../src/models'
 import * as userApi from './api/user'
 import * as jwt from 'jsonwebtoken'
+
+// TODO : Test refreshToken Mutation
 
 let db
 let adminToken
@@ -13,13 +14,11 @@ const TEST_ADMIN_PASSWORD =
 beforeAll(async () => {
   db = await connectDb()
 
-  /* eslint-disable @typescript-eslint/no-empty-function */
   await models.User.create({
     email: TEST_ADMIN,
     password: TEST_ADMIN_PASSWORD,
     role: 'ADMIN',
-  }).catch(() => {})
-  /* eslint-enable @typescript-eslint/no-empty-function */
+  })
 
   const { id, email, role } = await models.User.findOne({
     email: TEST_ADMIN,
@@ -189,9 +188,10 @@ describe('users', () => {
 
   describe('Mutation: signUp', () => {
     const email = 'testcreate@jest.test'
+    let response
 
     it('returns a valid token', async () => {
-      const response = await userApi
+      response = await userApi
         .signUp({
           email: email,
           password:
@@ -206,6 +206,22 @@ describe('users', () => {
       expect(validated.role).toBe('USER')
       expect(validated.id).toBeDefined()
     })
+    it('sets a sessionId cookie', async () => {
+      const sessionIdCookie = response.headers[
+        'set-cookie'
+      ].find((cookie) => /^sessionId/.test(cookie))
+      expect(sessionIdCookie).toMatch(/Max-Age=2592000/)
+      expect(sessionIdCookie).toMatch(/HttpOnly/)
+      expect(sessionIdCookie).toMatch(/SameSite=Strict/)
+    })
+    it('sets a sessionToken cookie', async () => {
+      const sessionIdCookie = response.headers[
+        'set-cookie'
+      ].find((cookie) => /^sessionToken/.test(cookie))
+      expect(sessionIdCookie).toMatch(/Max-Age=2592000/)
+      expect(sessionIdCookie).toMatch(/HttpOnly/)
+      expect(sessionIdCookie).toMatch(/SameSite=Strict/)
+    })
     it('creates a user in DB', async () => {
       const user = await models.User.findOne({
         email: email,
@@ -218,8 +234,9 @@ describe('users', () => {
   })
 
   describe('Mutation: signIn', () => {
+    let response
     it('returns a valid token', async () => {
-      const response = await userApi
+      response = await userApi
         .signIn({
           email: TEST_ADMIN,
           password: TEST_ADMIN_PASSWORD,
@@ -232,6 +249,22 @@ describe('users', () => {
       expect(validated.email).toBe(TEST_ADMIN)
       expect(validated.role).toBe('ADMIN')
       expect(validated.id).toBeDefined()
+    })
+    it('sets a sessionId cookie', async () => {
+      const sessionIdCookie = response.headers[
+        'set-cookie'
+      ].find((cookie) => /^sessionId/.test(cookie))
+      expect(sessionIdCookie).toMatch(/Max-Age=2592000/)
+      expect(sessionIdCookie).toMatch(/HttpOnly/)
+      expect(sessionIdCookie).toMatch(/SameSite=Strict/)
+    })
+    it('sets a sessionToken cookie', async () => {
+      const sessionIdCookie = response.headers[
+        'set-cookie'
+      ].find((cookie) => /^sessionToken/.test(cookie))
+      expect(sessionIdCookie).toMatch(/Max-Age=2592000/)
+      expect(sessionIdCookie).toMatch(/HttpOnly/)
+      expect(sessionIdCookie).toMatch(/SameSite=Strict/)
     })
   })
 
