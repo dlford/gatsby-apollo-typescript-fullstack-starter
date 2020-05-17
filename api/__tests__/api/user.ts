@@ -103,6 +103,27 @@ export const signIn = async (variables): Promise<any> =>
     variables,
   })
 
+export const refreshToken = async (
+  cookies: string | void,
+): Promise<any> =>
+  await axios.post(
+    API_URL,
+    {
+      query: `
+        mutation {
+          refreshToken
+        }
+      `,
+    },
+    cookies
+      ? {
+          headers: {
+            Cookie: cookies,
+          },
+        }
+      : null,
+  )
+
 export const updateUser = async (variables, token): Promise<any> =>
   axios.post(
     API_URL,

@@ -2,7 +2,13 @@ import models, { connectDb } from '../src/models'
 import * as userApi from './api/user'
 import * as jwt from 'jsonwebtoken'
 
-// TODO : Test refreshToken Mutation
+/* TODO
+ * - test deleted session on sign out
+ * - test deleted session on delete user
+ * - test no cookies when sign in fails
+ * - test no cookies when refreshToken fails
+ * - test sign out all devices
+ */
 
 let db
 let adminToken
@@ -61,7 +67,7 @@ describe('users', () => {
       const response = await userApi
         .users(usersToken)
         .catch((err) =>
-          console.error(err.response.data || err.response || err),
+          console.error(err?.response?.data || err?.response || err),
         )
       const result = response.data.data.users
       const code = response.data.errors.filter(
@@ -76,7 +82,7 @@ describe('users', () => {
       const response = await userApi
         .users(adminToken)
         .catch((err) =>
-          console.error(err.response.data || err.response || err),
+          console.error(err?.response?.data || err?.response || err),
         )
       queryResult = response.data.data.users
       expect(response.data.errors).toBeUndefined()
@@ -118,7 +124,7 @@ describe('users', () => {
       const response = await userApi
         .user({ id: userToList.id }, userToken)
         .catch((err) =>
-          console.error(err.response.data || err.response || err),
+          console.error(err?.response?.data || err?.response || err),
         )
       const result = response.data.data.user
       const code = response.data.errors.filter(
@@ -133,7 +139,7 @@ describe('users', () => {
       const response = await userApi
         .user({ id: userToList.id }, adminToken)
         .catch((err) =>
-          console.error(err.response.data || err.response || err),
+          console.error(err?.response?.data || err?.response || err),
         )
       queryResult = response.data.data.user
       expect(response.data.errors).toBeUndefined()
@@ -152,7 +158,7 @@ describe('users', () => {
       const response = await userApi
         .me()
         .catch((err) =>
-          console.error(err.response.data || err.response || err),
+          console.error(err?.response?.data || err?.response || err),
         )
       const result = response.data.data.me
       expect(result).toBe(null)
@@ -176,7 +182,7 @@ describe('users', () => {
       const response = await userApi
         .me(meToken)
         .catch((err) =>
-          console.error(err.response.data || err.response || err),
+          console.error(err?.response?.data || err?.response || err),
         )
       await userToTestMe.remove()
       const result = response.data.data.me
@@ -198,7 +204,7 @@ describe('users', () => {
             '65h45d4fh6d54g6s54gd64hg4h6gs4gs54dg6s4g646s6gd54s4',
         })
         .catch((err) =>
-          console.error(err.response.data || err.response || err),
+          console.error(err?.response?.data || err?.response || err),
         )
       const token = response.data.data.signUp.token
       const validated = await jwt.verify(token, SECRET)
@@ -215,12 +221,12 @@ describe('users', () => {
       expect(sessionIdCookie).toMatch(/SameSite=Strict/)
     })
     it('sets a sessionToken cookie', async () => {
-      const sessionIdCookie = response.headers[
+      const sessionTokenCookie = response.headers[
         'set-cookie'
       ].find((cookie) => /^sessionToken/.test(cookie))
-      expect(sessionIdCookie).toMatch(/Max-Age=2592000/)
-      expect(sessionIdCookie).toMatch(/HttpOnly/)
-      expect(sessionIdCookie).toMatch(/SameSite=Strict/)
+      expect(sessionTokenCookie).toMatch(/Max-Age=2592000/)
+      expect(sessionTokenCookie).toMatch(/HttpOnly/)
+      expect(sessionTokenCookie).toMatch(/SameSite=Strict/)
     })
     it('creates a user in DB', async () => {
       const user = await models.User.findOne({
@@ -242,7 +248,7 @@ describe('users', () => {
           password: TEST_ADMIN_PASSWORD,
         })
         .catch((err) =>
-          console.error(err.response.data || err.response || err),
+          console.error(err?.response?.data || err?.response || err),
         )
       const token = response.data.data.signIn.token
       const validated = await jwt.verify(token, SECRET)
@@ -259,12 +265,69 @@ describe('users', () => {
       expect(sessionIdCookie).toMatch(/SameSite=Strict/)
     })
     it('sets a sessionToken cookie', async () => {
-      const sessionIdCookie = response.headers[
+      const sessionTokenCookie = response.headers[
         'set-cookie'
       ].find((cookie) => /^sessionToken/.test(cookie))
+      expect(sessionTokenCookie).toMatch(/Max-Age=2592000/)
+      expect(sessionTokenCookie).toMatch(/HttpOnly/)
+      expect(sessionTokenCookie).toMatch(/SameSite=Strict/)
+    })
+  })
+
+  describe('Mutation: refreshToken', () => {
+    let response
+    it('returns null when cookies are not set', async () => {
+      const response = await userApi
+        .refreshToken()
+        .catch((err) =>
+          console.error(err?.response?.data || err?.response || err),
+        )
+
+      const result = response.data.data.refreshToken
+      expect(response.data.errors).toBeUndefined()
+      expect(result).toBe(null)
+    })
+    it('returns a valid token when cookies are set', async () => {
+      const signInResponse = await userApi
+        .signIn({
+          email: TEST_ADMIN,
+          password: TEST_ADMIN_PASSWORD,
+        })
+        .catch((err) =>
+          console.error(err?.response?.data || err?.response || err),
+        )
+      const cookies: string = signInResponse.headers['set-cookie']
+        .map((cookie) => cookie.replace(/; .*/, ''))
+        .join('; ')
+
+      response = await userApi
+        .refreshToken(cookies)
+        .catch((err) =>
+          console.error(err?.response?.data || err?.response || err),
+        )
+
+      const token = response.data.data.refreshToken
+      const validated = await jwt.verify(token, SECRET)
+      expect(response.data.errors).toBeUndefined()
+      expect(validated.email).toBe(TEST_ADMIN)
+      expect(validated.role).toBe('ADMIN')
+      expect(validated.id).toBeDefined()
+    })
+    it('sets a sessionId cookie', async () => {
+      const sessionIdCookie = response.headers[
+        'set-cookie'
+      ].find((cookie) => /^sessionId/.test(cookie))
       expect(sessionIdCookie).toMatch(/Max-Age=2592000/)
       expect(sessionIdCookie).toMatch(/HttpOnly/)
       expect(sessionIdCookie).toMatch(/SameSite=Strict/)
+    })
+    it('sets a sessionToken cookie', async () => {
+      const sessionTokenCookie = response.headers[
+        'set-cookie'
+      ].find((cookie) => /^sessionToken/.test(cookie))
+      expect(sessionTokenCookie).toMatch(/Max-Age=2592000/)
+      expect(sessionTokenCookie).toMatch(/HttpOnly/)
+      expect(sessionTokenCookie).toMatch(/SameSite=Strict/)
     })
   })
 
@@ -280,7 +343,7 @@ describe('users', () => {
           adminToken,
         )
         .catch((err) =>
-          console.error(err.response.data || err.response || err),
+          console.error(err?.response?.data || err?.response || err),
         )
       const user = response.data.data.updateUser
 
@@ -322,7 +385,7 @@ describe('users', () => {
           token,
         )
         .catch((err) =>
-          console.error(err.response.data || err.response || err),
+          console.error(err?.response?.data || err?.response || err),
         )
       const result = response.data
       const code = result.errors.filter(
@@ -342,7 +405,7 @@ describe('users', () => {
           adminToken,
         )
         .catch((err) =>
-          console.error(err.response.data || err.response || err),
+          console.error(err?.response?.data || err?.response || err),
         )
       const result = response.data.data.deleteUser
       expect(result).toBe(true)
