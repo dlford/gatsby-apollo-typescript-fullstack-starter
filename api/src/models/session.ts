@@ -1,14 +1,5 @@
 /**
- * TODO : convert this to session collection with a salt for each session,
- * Make sure JWT actually expires
- * browser/IP metadata with it, add session salt to jwt secret, store session
- * ID and salt in cookies, user can review and de-auth any or all sessions.
- * Cycle salt with each request and return new salt + new access/session tokens.
- * Drop session and start a new one if salt mis-match to de-auth hijacked
- * sessions when the legitimate user signs in. Only send access token on client
- * side, server will send new salt and session token in response.
- * set session ID and session token cookies from Express as httponly!
- *
+ * TODO
  * Fix types for useragent and ip
  *
  * ## Types

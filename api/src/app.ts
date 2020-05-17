@@ -1,8 +1,6 @@
 /**
  * TODO :
  * - Add otplib and TOTP config
- * - Add subscription for user sessions
- * - Document the use of Graphiql-app and Bearer tokens
  * - use node-cron to purge old sessions from db
  * @packageDocumentation
  */
@@ -58,7 +56,7 @@ const SECRET = process.env.SECRET || 'secret-stub'
 const corsOptions = {
   origin: ['http://localhost:8000', 'http://localhost:9000'], // TODO
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization', 'token'], // TODO
+  allowedHeaders: ['Content-Type', 'Authorization'], // TODO
 }
 
 const app = express()
@@ -134,7 +132,6 @@ const server = new ApolloServer({
       }
     }
   },
-  // TODO : Change token to authorization header ?
   subscriptions: {
     onConnect: async ({
       token,

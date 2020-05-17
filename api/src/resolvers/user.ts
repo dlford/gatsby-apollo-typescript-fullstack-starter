@@ -316,6 +316,7 @@ export default {
       } catch (e) {
         console.error(e)
         return null
+        // TODO : delete session
       }
     },
   },

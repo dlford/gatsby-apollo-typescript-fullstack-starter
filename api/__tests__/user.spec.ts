@@ -8,6 +8,7 @@ import * as jwt from 'jsonwebtoken'
  * - test no cookies when sign in fails
  * - test no cookies when refreshToken fails
  * - test sign out all devices
+ * - test session deleted if refreshToken invalid
  */
 
 let db

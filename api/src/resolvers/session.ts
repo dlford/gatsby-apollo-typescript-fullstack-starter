@@ -1,9 +1,3 @@
-/**
- * TODO :
- * - Account for other types of devices in sessionstring
- * @packageDocumentation
- */
-
 import { combineResolvers } from 'graphql-resolvers'
 import * as moment from 'moment'
 import { withFilter, UserInputError } from 'apollo-server'
