@@ -275,6 +275,34 @@ describe('users', () => {
     })
   })
 
+  describe('Mutation: signOut', () => {
+    let response
+    it('removes session from database', async () => {
+      const signInResponse = await userApi
+        .signIn({
+          email: TEST_ADMIN,
+          password: TEST_ADMIN_PASSWORD,
+        })
+        .catch((err) =>
+          console.error(err?.response?.data || err?.response || err),
+        )
+
+      const token = signInResponse.data.data.signIn.token
+      const cookies: string = signInResponse.headers['set-cookie']
+        .map((cookie) => cookie.replace(/; .*/, ''))
+        .join('; ')
+
+      response = await userApi
+        .signOut(token, cookies, {})
+        .catch((err) =>
+          console.error(err?.response?.data || err?.response || err),
+        )
+
+      expect(response.data.errors).toBeUndefined()
+      // TODO : session deleted, cookies cleared, allDevices sessions
+    })
+  })
+
   describe('Mutation: refreshToken', () => {
     let response
     it('returns null when cookies are not set', async () => {

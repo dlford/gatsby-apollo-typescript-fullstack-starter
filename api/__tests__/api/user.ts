@@ -20,7 +20,7 @@ export const users = async (token): Promise<any> =>
     token
       ? {
           headers: {
-            authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       : null,
@@ -44,7 +44,7 @@ export const user = async (variables, token): Promise<any> =>
     token
       ? {
           headers: {
-            authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       : null,
@@ -67,7 +67,7 @@ export const me = async (token: string | void): Promise<any> =>
     token
       ? {
           headers: {
-            authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       : null,
@@ -102,6 +102,29 @@ export const signIn = async (variables): Promise<any> =>
     `,
     variables,
   })
+
+export const signOut = async (
+  token: string | void,
+  cookies: string | void,
+  variables,
+): Promise<any> =>
+  await axios.post(
+    API_URL,
+    {
+      query: `
+      mutation($allDevices: Boolean) {
+        signOut(allDevices: $allDevices)
+      }
+    `,
+      variables,
+    },
+    {
+      headers: {
+        Cookie: cookies || '',
+        Authorization: token ? `Bearer ${token}` : '',
+      },
+    },
+  )
 
 export const refreshToken = async (
   cookies: string | void,
@@ -142,7 +165,7 @@ export const updateUser = async (variables, token): Promise<any> =>
     token
       ? {
           headers: {
-            authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       : null,
@@ -162,7 +185,7 @@ export const deleteUser = async (variables, token): Promise<any> =>
     token
       ? {
           headers: {
-            authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       : null,
