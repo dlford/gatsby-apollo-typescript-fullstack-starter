@@ -3,11 +3,10 @@ import * as userApi from './api/user'
 import * as jwt from 'jsonwebtoken'
 
 /* TODO
- * - test deleted session on sign out
  * - test deleted session on delete user
  * - test no cookies when sign in fails
- * - test no cookies when refreshToken fails
  * - test sign out all devices
+ * - test clear cookies when refreshToken fails
  * - test session deleted if refreshToken invalid
  */
 
@@ -292,6 +291,10 @@ describe('users', () => {
         .map((cookie) => cookie.replace(/; .*/, ''))
         .join('; ')
 
+      const sessionId = /sessionId=([^;]+)/.exec(cookies)[1]
+
+      expect(await models.Session.findById(sessionId)).toBeDefined()
+
       response = await userApi
         .signOut(token, cookies, {})
         .catch((err) =>
@@ -299,8 +302,21 @@ describe('users', () => {
         )
 
       expect(response.data.errors).toBeUndefined()
-      // TODO : session deleted, cookies cleared, allDevices sessions
+      expect(await models.Session.findById(sessionId)).toBe(null)
     })
+    it('clears session ID cookie', () => {
+      const sessionIdCookie = response.headers[
+        'set-cookie'
+      ].find((cookie) => /^sessionId/.test(cookie))
+      expect(sessionIdCookie).toMatch(/Max-Age=0;/)
+    })
+    it('clears session token cookie', () => {
+      const sessionTokenCookie = response.headers[
+        'set-cookie'
+      ].find((cookie) => /^sessionToken/.test(cookie))
+      expect(sessionTokenCookie).toMatch(/Max-Age=0;/)
+    })
+    // TODO : allDevices sessions
   })
 
   describe('Mutation: refreshToken', () => {
