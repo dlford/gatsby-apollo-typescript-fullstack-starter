@@ -1,12 +1,14 @@
 import { ApolloError } from 'apollo-client'
 import { Action } from 'redux'
 
+import { SIGN_UP, SIGN_IN, SIGN_OUT } from './actions'
+
 enum UserRole {
   user = 'USER',
   admin = 'ADMIN',
 }
 
-type UserCredentialProps = {
+export interface UserCredentialProps {
   email: string
   password: string
 }
@@ -57,9 +59,13 @@ export interface UserProps {
   signInLoading: boolean | void
 }
 
+interface PayloadProps extends Action {
+  payload: UserProps
+}
+
 type ReducerProps = {
   state: UserProps
-  action: Action
+  action: PayloadProps
 }
 
 const defaultState = {
@@ -90,6 +96,24 @@ export default function ({
   state = defaultState,
   action,
 }: ReducerProps) {
-  console.log(state)
-  console.log(action)
+  const { type, payload } = action
+  switch (type) {
+    case SIGN_UP:
+      return {
+        ...state,
+        user: payload,
+      }
+    case SIGN_IN:
+      return {
+        ...state,
+        user: payload,
+      }
+    case SIGN_OUT:
+      return {
+        ...state,
+        user: payload,
+      }
+    default:
+      return state
+  }
 }
