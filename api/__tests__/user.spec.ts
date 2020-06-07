@@ -5,7 +5,6 @@ import * as jwt from 'jsonwebtoken'
 /* TODO
  * - test deleted session on delete user
  * - test no cookies when sign in fails
- * - test sign out all devices
  * - test clear cookies when refreshToken fails
  * - test session deleted if refreshToken invalid
  */
@@ -316,7 +315,66 @@ describe('users', () => {
       ].find((cookie) => /^sessionToken/.test(cookie))
       expect(sessionTokenCookie).toMatch(/Max-Age=0;/)
     })
-    // TODO : allDevices sessions
+    it('clears all sessions from DB when signing out all devices', async () => {
+      const email = 'testsignoutall@jest.test'
+      const password =
+        's4g65d4fgser4gs84g6s4g68s4r6gs846dr8g46as84g6as4dg854d654'
+
+      await userApi
+        .signUp({
+          email: email,
+          password: password,
+        })
+        .catch((err) =>
+          console.error(err?.response?.data || err?.response || err),
+        )
+
+      await userApi
+        .signIn({
+          email: email,
+          password: password,
+        })
+        .catch((err) =>
+          console.error(err?.response?.data || err?.response || err),
+        )
+
+      const signInResponse = await userApi
+        .signIn({
+          email: email,
+          password: password,
+        })
+        .catch((err) =>
+          console.error(err?.response?.data || err?.response || err),
+        )
+
+      const token = signInResponse.data.data.signIn.token
+      const cookies: string = signInResponse.headers['set-cookie']
+        .map((cookie) => cookie.replace(/; .*/, ''))
+        .join('; ')
+
+      const user = await models.User.findOne({ email })
+
+      const multiSessions = await models.Session.find({
+        userId: user.id,
+      }).count()
+      console.log(user.id)
+      console.log(multiSessions)
+
+      await userApi
+        .signOut(token, cookies, { allDevices: true })
+        .catch((err) =>
+          console.error(err?.response?.data || err?.response || err),
+        )
+
+      const removedSessions = await models.Session.find({
+        userId: user.id,
+      }).count()
+
+      await user.remove()
+
+      expect(multiSessions).toBe(3)
+      expect(removedSessions).toBe(0)
+    })
   })
 
   describe('Mutation: refreshToken', () => {
