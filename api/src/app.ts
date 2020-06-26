@@ -20,6 +20,7 @@ import {
 import models, { connectDb, ModelTypes, MeProps } from './models'
 import resolvers from './resolvers'
 import schema from './schema'
+import { CronJob } from 'cron'
 
 export interface ContextProps {
   models: ModelTypes
@@ -144,7 +145,7 @@ const server = new ApolloServer({
   // The built-in playground is useless to us because it can't set headers,
   // use https://github.com/skevy/graphiql-app and run the signIn mutation,
   // then add a header called 'authorization' with the token returned from
-  // the signIn mutation in the format of 'Bearer YOUR_TOKEN_HERE'
+  // the signIn mutation in the format of 'Bearer YOUR_TOKEN_HERE', TODO Change app
   playground: false,
 })
 
@@ -157,7 +158,14 @@ server.installSubscriptionHandlers(httpServer)
 const port = +process.env.PORT || 3000
 const address = process.env.ADDRESS || '0.0.0.0'
 
+const sessionScrubber = new CronJob('0 * * * *', () => {
+  // TODO : Set interval from env
+  // TODO : Delete old sessions
+  // TODO : Use Mongoose to purge old sessions ???
+})
+
 connectDb().then(async () => {
+  sessionScrubber.start()
   httpServer.listen(port, address, () => {
     console.log(
       `Apollo Server on http://localhost:${port}${server.graphqlPath}`,
