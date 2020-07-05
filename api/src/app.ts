@@ -1,7 +1,15 @@
 /**
+ * The built-in playground is disabled because it is useless for this app
+ * since it can't set headers, instead use a desktop app such as graphiql-app,
+ * insomnia REST client, or Altair, and run the signIn mutation, then add a
+ * header called 'authorization' with the token returned from the signIn mutation
+ * in the format of 'Bearer YOUR_TOKEN_HERE'
+ *
+ *
  * TODO :
  * - Add otplib and TOTP config
  * - use node-cron to purge old sessions from db
+ *
  * @packageDocumentation
  */
 
@@ -142,10 +150,6 @@ const server = new ApolloServer({
       return { me }
     },
   },
-  // The built-in playground is useless to us because it can't set headers,
-  // use https://github.com/skevy/graphiql-app and run the signIn mutation,
-  // then add a header called 'authorization' with the token returned from
-  // the signIn mutation in the format of 'Bearer YOUR_TOKEN_HERE', TODO Change app
   playground: false,
 })
 
@@ -154,7 +158,7 @@ server.applyMiddleware({ app, path: '/graphql', cors: corsOptions })
 const httpServer = http.createServer(app)
 server.installSubscriptionHandlers(httpServer)
 
-// The + converts a variable to a string
+// The + in front of "process.env..." converts the variable to a number
 const port = +process.env.PORT || 3000
 const address = process.env.ADDRESS || '0.0.0.0'
 
