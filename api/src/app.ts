@@ -9,6 +9,7 @@
  * TODO :
  * - Add otplib and TOTP config
  * - use node-cron to purge old sessions from db
+ * - document env vars
  *
  * @packageDocumentation
  */
@@ -61,11 +62,17 @@ interface SubscriptionConnection {
 }
 
 const SECRET = process.env.SECRET || 'secret-stub'
+const CORS_HOSTS = process.env.CORS_HOSTS
+  ? process.env.CORS_HOSTS.split(',')
+  : ['http://localhost:8000', 'http://localhost:9000']
+const CORS_HEADERS = process.env.CORS_HEADERS
+  ? process.env.CORS_HEADERS.split(',')
+  : ['Content-Type', 'Authorization']
 
 const corsOptions = {
-  origin: ['http://localhost:8000', 'http://localhost:9000'], // TODO
+  origin: CORS_HOSTS,
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization'], // TODO
+  allowedHeaders: CORS_HEADERS,
 }
 
 const app = express()
