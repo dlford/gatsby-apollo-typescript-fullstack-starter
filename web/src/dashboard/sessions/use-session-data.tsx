@@ -4,7 +4,8 @@ import gql from 'graphql-tag'
 
 export interface QueryProps {
   id: string
-  detail?: string
+  detail: string
+  isCurrent: boolean
 }
 
 const SESSIONS_QUERY = gql`
@@ -12,6 +13,7 @@ const SESSIONS_QUERY = gql`
     sessions {
       id
       detail
+      isCurrent
     }
   }
 `
@@ -28,6 +30,7 @@ const SESSION_CREATED_SUBSCRIPTION = gql`
       session {
         id
         detail
+        isCurrent
       }
     }
   }
@@ -39,6 +42,7 @@ const SESSION_UPDATED_SUBSCRIPTION = gql`
       session {
         id
         detail
+        isCurrent
       }
     }
   }

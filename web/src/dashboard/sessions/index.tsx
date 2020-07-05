@@ -18,7 +18,6 @@ const SessionsComponent: React.ElementType<RouteComponentProps> = () => {
 
   // TODO : Loader position absolute
   // TODO : ScrollTo on error
-  // TODO : Label THIS session
 
   return (
     <Article>
@@ -34,6 +33,7 @@ const SessionsComponent: React.ElementType<RouteComponentProps> = () => {
           {sessionData.sessions.map((session: QueryProps) => (
             <li key={session.id}>
               {session.detail}{' '}
+              {session.isCurrent && '[Current Session] '}
               <a
                 role='button'
                 tabIndex={0}

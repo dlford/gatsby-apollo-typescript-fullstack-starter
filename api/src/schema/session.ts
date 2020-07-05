@@ -40,7 +40,8 @@ const sessionSchema = gql`
 
   type Session {
     id: ID!
-    detail: String
+    detail: String!
+    isCurrent: Boolean!
   }
 
   type SessionCreated {

@@ -42,8 +42,10 @@ export default {
       async (
         _parent,
         _args,
-        { models, me }: ContextProps,
+        { models, cookies, me }: ContextProps,
       ): Promise<UserSession[]> => {
+        const { sessionId } = cookies
+
         const sessions: SessionDocument[] = await models.Session.find(
           { userId: me.id },
           {},
@@ -53,6 +55,7 @@ export default {
         return sessions.map((sessionDoc) => ({
           id: sessionDoc.id,
           detail: generateSessionString(sessionDoc),
+          isCurrent: sessionDoc.id === sessionId,
         }))
       },
     ),
