@@ -1,9 +1,9 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import Article from '../'
+import Article from '../article'
 
 describe('Article', () => {
-  it('renders correctly', () => {
+  it('matches snapshot', () => {
     const { asFragment } = render(
       <Article>
         <h1>Test</h1>

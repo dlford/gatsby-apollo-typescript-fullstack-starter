@@ -1,6 +1,5 @@
 .*.swp
 dist/
-storybook-static/
 
 # Logs
 logs

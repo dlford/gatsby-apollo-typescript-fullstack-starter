@@ -1,10 +1,10 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 
-import Loader from '../'
+import Loader from '../loader'
 
 describe('Loader', () => {
-  it('renders correctly', () => {
+  it('matches snapshot', () => {
     const { asFragment } = render(<Loader />)
     expect(asFragment()).toMatchSnapshot()
   })

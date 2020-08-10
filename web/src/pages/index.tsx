@@ -62,7 +62,6 @@ const IndexPage = ({ data, location }: QueryProps) => {
             </a>
             )
           </li>
-          <li>Storybook</li>
           <li>Jest</li>
           <li>Prettier / ESLint</li>
           <li>Emotion</li>

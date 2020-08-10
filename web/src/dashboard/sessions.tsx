@@ -1,7 +1,7 @@
 import React from 'react'
 import { RouteComponentProps } from '@reach/router'
 
-import useSessionData, { QueryProps } from './use-session-data'
+import useSessionData, { QueryProps } from '~/hooks/use-session-data'
 import SEO from '~/components/seo'
 import Article from '~/components/article'
 import Loader from '~/components/loader'

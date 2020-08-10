@@ -1,7 +1,7 @@
 import * as Gatsby from 'gatsby'
 import React from 'react'
 import { render, cleanup } from '@testing-library/react'
-import Layout from '../'
+import Layout from '../layout'
 
 const useStaticQuery = jest.spyOn(Gatsby, 'useStaticQuery')
 useStaticQuery.mockImplementation(() => ({

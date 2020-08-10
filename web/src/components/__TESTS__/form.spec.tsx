@@ -1,10 +1,10 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 
-import Form from '../'
+import Form from '../form'
 
 describe('Form', () => {
-  it('renders correctly', () => {
+  it('matches snapshot', () => {
     const { asFragment } = render(
       <Form>
         <label htmlFor='email'>Email Address</label>

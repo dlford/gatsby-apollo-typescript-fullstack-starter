@@ -2,7 +2,7 @@ import * as Gatsby from 'gatsby'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { render, cleanup } from '@testing-library/react'
-import SEO from '../'
+import SEO from '../seo'
 
 const useStaticQuery = jest.spyOn(Gatsby, 'useStaticQuery')
 
