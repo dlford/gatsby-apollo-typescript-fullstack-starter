@@ -1,6 +1,7 @@
 /**
  * TODO
  * Fix types for useragent and ip
+ * Set session expiry from env
  *
  * ## Types
  *

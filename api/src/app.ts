@@ -8,7 +8,6 @@
  *
  * TODO :
  * - Add otplib and TOTP config
- * - use node-cron to purge old sessions from db
  * - document env vars
  *
  * @packageDocumentation
@@ -26,10 +25,10 @@ import {
   AuthenticationError,
 } from 'apollo-server-express'
 
+import { sessionScrubber } from './cronjobs'
 import models, { connectDb, ModelTypes, MeProps } from './models'
 import resolvers from './resolvers'
 import schema from './schema'
-import { CronJob } from 'cron'
 
 export interface ContextProps {
   models: ModelTypes
@@ -168,12 +167,6 @@ server.installSubscriptionHandlers(httpServer)
 // The + in front of "process.env..." converts the variable to a number
 const port = +process.env.PORT || 3000
 const address = process.env.ADDRESS || '0.0.0.0'
-
-const sessionScrubber = new CronJob('0 * * * *', () => {
-  // TODO : Set interval from env
-  // TODO : Delete old sessions
-  // TODO : Use Mongoose to purge old sessions ???
-})
 
 connectDb().then(async () => {
   sessionScrubber.start()
