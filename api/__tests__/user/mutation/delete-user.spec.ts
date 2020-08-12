@@ -16,15 +16,17 @@ afterAll(async () => {
 
 describe('deleteUser', () => {
   const email = 'testdelete@jest.test'
+  const password = '6df54g6d54g6hs6gfj46df4h6sd5f4g6ds54h6546f54h'
   let userToDelete
 
   it('rejects non-admin usage', async () => {
     userToDelete = await models.User.create({
       email: email,
-      password: '6df54g6d54g6hs6gfj46df4h6sd5f4g6ds54h6546f54h',
+      password,
     }).catch(
       async () => await models.User.findOneAndDelete({ email }),
     )
+
     const { id, email: userEmail, role } = userToDelete
     const token = await jwt.sign(
       { id, email: userEmail, role },
@@ -33,6 +35,18 @@ describe('deleteUser', () => {
         expiresIn: '30m',
       },
     )
+
+    // Add another session for testing if they both
+    // get removed when user is deleted
+    await userApi
+      .signIn({
+        email: email,
+        password: password,
+      })
+      .catch((err) =>
+        console.error(err?.response?.data || err?.response || err),
+      )
+
     const response = await userApi
       .deleteUser(
         {
@@ -43,6 +57,7 @@ describe('deleteUser', () => {
       .catch((err) =>
         console.error(err?.response?.data || err?.response || err),
       )
+
     const result = response.data
     const code = result.errors.filter(
       (error) => !!error?.extensions?.code,
@@ -67,8 +82,14 @@ describe('deleteUser', () => {
     expect(result).toBe(true)
   })
 
-  it('removes user from the db', async () => {
+  it('removes user from database', async () => {
     const query = await models.User.findById(userToDelete.id)
     expect(query).toBe(null)
+  })
+
+  it('removes users sessions from database', async () => {
+    expect(
+      await models.Session.find({ userId: userToDelete.id }),
+    ).toEqual([])
   })
 })
