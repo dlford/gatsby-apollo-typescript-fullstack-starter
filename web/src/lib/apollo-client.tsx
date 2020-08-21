@@ -21,12 +21,12 @@ const useApollo = (token: string | void) => {
 
   const httpLink = createHttpLink({
     uri: apiUrl,
-    credentials: 'include', // TODO
+    credentials: process.env.API_CREDENTIALS || 'include',
   })
 
   const uploadLink = createUploadLink({
     uri: apiUrl,
-    credentials: 'include', // TODO
+    credentials: process.env.API_CREDENTIALS || 'include',
   })
 
   const subscriptionClient = new SubscriptionClient(wsUrl, {

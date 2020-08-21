@@ -15,6 +15,7 @@ afterAll(async () => {
 
 describe('signIn', () => {
   let response
+
   it('returns a valid token', async () => {
     response = await userApi
       .signIn({
@@ -30,6 +31,7 @@ describe('signIn', () => {
     expect(validated.role).toBe('ADMIN')
     expect(validated.id).toBeDefined()
   })
+
   it('sets a sessionId cookie', async () => {
     const sessionIdCookie = response.headers[
       'set-cookie'
@@ -38,6 +40,7 @@ describe('signIn', () => {
     expect(sessionIdCookie).toMatch(/HttpOnly/)
     expect(sessionIdCookie).toMatch(/SameSite=Strict/)
   })
+
   it('sets a sessionToken cookie', async () => {
     const sessionTokenCookie = response.headers[
       'set-cookie'
@@ -45,5 +48,21 @@ describe('signIn', () => {
     expect(sessionTokenCookie).toMatch(/Max-Age=2592000/)
     expect(sessionTokenCookie).toMatch(/HttpOnly/)
     expect(sessionTokenCookie).toMatch(/SameSite=Strict/)
+  })
+
+  it('does not set cookie or return a token if sign in failed', async () => {
+    const failedResponse = await userApi
+      .signIn({
+        email: 'invalidUser@jest.test',
+        password: 'invalidPassword',
+      })
+      .catch((err) =>
+        console.error(err?.response?.data || err?.response || err),
+      )
+    const failedToken = failedResponse?.data?.data?.signIn?.token
+    const failedSessionIdCookie =
+      failedResponse?.headers['set-cookie']
+    expect(failedToken).toBeUndefined()
+    expect(failedSessionIdCookie).toBeUndefined()
   })
 })
