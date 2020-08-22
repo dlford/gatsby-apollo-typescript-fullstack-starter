@@ -14,11 +14,7 @@
     "clean": "gatsby clean",
     "lint": "eslint --ignore-path .gitignore --fix . --ext ts --ext tsx --ext js --ext jsx",
     "deploy:github": "rimraf node_modules/gh-pages/.cache && gatsby build --prefix-paths && gh-pages -d public",
-    "test": "jest --coverage",
-    "storybook": "NODE_ENV=production start-storybook -p 6006",
-    "storybook:win": "set NODE_ENV=production& start-storybook -p 6006",
-    "build-storybook": "NODE_ENV=production build-storybook",
-    "build-storybook:win": "set NODE_ENV=production& build-storybook"
+    "test": "jest --coverage"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
@@ -67,19 +63,10 @@
     "tailwindcss": "^1.3.4",
     "tsconfig-paths-webpack-plugin": "^3.3.0",
     "twin.macro": "^1.0.0-alpha.10",
-    "typeface-montserrat": "0.0.75"
+    "typeface-montserrat": "0.0.75",
+    "webpack": "^4.44.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/preset-env": "^7.9.5",
-    "@babel/preset-react": "^7.9.4",
-    "@storybook/addon-actions": "^5.3.18",
-    "@storybook/addon-info": "^5.3.18",
-    "@storybook/addon-knobs": "^5.3.18",
-    "@storybook/addon-links": "^5.3.18",
-    "@storybook/addons": "^5.3.18",
-    "@storybook/react": "^5.3.18",
     "@testing-library/react": "^10.0.3",
     "@types/apollo-upload-client": "^8.1.3",
     "@types/cors": "^2.8.6",
@@ -90,10 +77,8 @@
     "@typescript-eslint/eslint-plugin": "^2.29.0",
     "@typescript-eslint/parser": "^2.29.0",
     "babel-jest": "^25.4.0",
-    "babel-loader": "^8.1.0",
     "babel-plugin-remove-graphql-queries": "^2.8.5",
     "babel-preset-gatsby": "^0.3.6",
-    "babel-preset-react-app": "^9.1.2",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.1",
     "eslint-plugin-prettier": "^3.1.3",
