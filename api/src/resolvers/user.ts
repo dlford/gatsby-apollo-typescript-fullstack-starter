@@ -248,8 +248,11 @@ export default {
       { models, cookies, res, secret, useragent, ip }: ContextProps,
     ): Promise<string | null> => {
       if (!cookies.sessionId || !cookies.sessionToken) {
+        res.cookie('sessionId', '', { ...cookieProps, maxAge: 0 })
+        res.cookie('sessionToken', '', { ...cookieProps, maxAge: 0 })
         return null
       }
+
       const { sessionId, sessionToken } = cookies
       const session: SessionDocument = await models.Session.findById(
         sessionId,
@@ -315,8 +318,12 @@ export default {
         )
       } catch (e) {
         console.error(e)
+        res.cookie('sessionId', '', { ...cookieProps, maxAge: 0 })
+        res.cookie('sessionToken', '', { ...cookieProps, maxAge: 0 })
+        if (session) {
+          await models.Session.remove({ userId: session.userId })
+        }
         return null
-        // TODO : delete session
       }
     },
   },

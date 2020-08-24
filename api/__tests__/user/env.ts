@@ -12,7 +12,6 @@ import * as userApi from '../api/user'
 import * as jwt from 'jsonwebtoken'
 
 /* TODO
- * - test clear cookies when refreshToken fails
  * - test session deleted if refreshToken invalid
  */
 

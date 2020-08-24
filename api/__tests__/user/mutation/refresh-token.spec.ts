@@ -14,7 +14,6 @@ afterAll(async () => {
 })
 
 describe('refreshToken', () => {
-  let response
   it('returns null when cookies are not set', async () => {
     const response = await userApi
       .refreshToken()
@@ -26,6 +25,27 @@ describe('refreshToken', () => {
     expect(response.data.errors).toBeUndefined()
     expect(result).toBe(null)
   })
+
+  it('clears cookies on failure', async () => {
+    const response = await userApi
+      .refreshToken()
+      .catch((err) =>
+        console.error(err?.response?.data || err?.response || err),
+      )
+
+    const sessionIdCookie = response.headers[
+      'set-cookie'
+    ].find((cookie) => /^sessionId/.test(cookie))
+
+    const sessionTokenCookie = response.headers[
+      'set-cookie'
+    ].find((cookie) => /^sessionToken/.test(cookie))
+
+    expect(sessionIdCookie).toMatch(/Max-Age=0/)
+    expect(sessionTokenCookie).toMatch(/Max-Age=0/)
+  })
+
+  let response
   it('returns a valid token when cookies are set', async () => {
     const signInResponse = await userApi
       .signIn({
@@ -52,6 +72,7 @@ describe('refreshToken', () => {
     expect(validated.role).toBe('ADMIN')
     expect(validated.id).toBeDefined()
   })
+
   it('sets a sessionId cookie', async () => {
     const sessionIdCookie = response.headers[
       'set-cookie'
@@ -60,6 +81,7 @@ describe('refreshToken', () => {
     expect(sessionIdCookie).toMatch(/HttpOnly/)
     expect(sessionIdCookie).toMatch(/SameSite=Strict/)
   })
+
   it('sets a sessionToken cookie', async () => {
     const sessionTokenCookie = response.headers[
       'set-cookie'
