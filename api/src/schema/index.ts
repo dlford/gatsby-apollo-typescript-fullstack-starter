@@ -15,6 +15,7 @@ import sessionSchema from './session'
 
 const baseSchema = gql`
   scalar Date
+  scalar EmailAddress
 
   type Query {
     _: Boolean

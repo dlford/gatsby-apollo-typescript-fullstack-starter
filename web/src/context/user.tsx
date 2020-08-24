@@ -110,7 +110,7 @@ export const UserContext = createContext<UserProps>({
 })
 
 const SIGNUP_MUTATION = gql`
-  mutation signUp($email: String!, $password: String!) {
+  mutation signUp($email: EmailAddress!, $password: String!) {
     signUp(email: $email, password: $password) {
       token
     }
@@ -118,7 +118,7 @@ const SIGNUP_MUTATION = gql`
 `
 
 const SIGNIN_MUTATION = gql`
-  mutation signIn($email: String!, $password: String!) {
+  mutation signIn($email: EmailAddress!, $password: String!) {
     signIn(email: $email, password: $password) {
       token
     }

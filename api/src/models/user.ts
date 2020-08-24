@@ -1,6 +1,4 @@
 /**
- * TODO : Replace email validator with scalar
- *
  * ## Types
  *
  * | Attribute | Type                | Required | Default |
@@ -17,7 +15,6 @@
  * @packageDocumentation
  */
 
-import isEmail from 'validator/lib/isEmail'
 import * as bcrypt from 'bcrypt'
 import * as mongoose from 'mongoose'
 
@@ -48,7 +45,6 @@ const userSchema: mongoose.Schema = new mongoose.Schema(
       type: String,
       unique: true,
       required: true,
-      validate: [isEmail, 'No valid email address provided.'],
     },
     password: {
       type: String,

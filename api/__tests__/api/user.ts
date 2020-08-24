@@ -77,7 +77,7 @@ export const signUp = async (variables): Promise<any> =>
   axios.post(API_URL, {
     query: `
       mutation(
-        $email: String!,
+        $email: EmailAddress!,
         $password: String!
       ) {
         signUp(
@@ -94,7 +94,7 @@ export const signUp = async (variables): Promise<any> =>
 export const signIn = async (variables): Promise<any> =>
   await axios.post(API_URL, {
     query: `
-      mutation ($email: String!, $password: String!) {
+      mutation ($email: EmailAddress!, $password: String!) {
         signIn(email: $email, password: $password) {
           token
         }
@@ -152,7 +152,7 @@ export const updateUser = async (variables, token): Promise<any> =>
     API_URL,
     {
       query: `
-        mutation ($email: String!) {
+        mutation ($email: EmailAddress!) {
           updateUser(email: $email) {
             email
             role

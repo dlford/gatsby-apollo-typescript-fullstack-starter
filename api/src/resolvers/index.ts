@@ -8,9 +8,11 @@ import { GraphQLDateTime } from 'graphql-iso-date'
 
 import userResolvers from './user'
 import sessionResolvers from './session'
+import { GraphQLEmailAddress } from '../scalars/email'
 
 const customScalarResolver = {
   Date: GraphQLDateTime,
+  EmailAddress: GraphQLEmailAddress,
 }
 
 const resolvers = [

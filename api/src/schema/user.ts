@@ -13,10 +13,10 @@
  * ### Mutations
  *
  * ```graphql
- * signUp(email: String!, password: String!): Token!
- * signIn(email: String!, password: String!): Token!
+ * signUp(email: EmailAddress!, password: String!): Token!
+ * signIn(email: EmailAddress!, password: String!): Token!
  * signOut(allDevices: Boolean): Boolean!
- * updateUser(email: String!): User!
+ * updateUser(email: EmailAddress!): User!
  * deleteUser(id: ID!): Boolean!
  * refreshToken: String
  * ```
@@ -53,10 +53,10 @@ const userSchema = gql`
   }
 
   extend type Mutation {
-    signUp(email: String!, password: String!): Token!
-    signIn(email: String!, password: String!): Token!
+    signUp(email: EmailAddress!, password: String!): Token!
+    signIn(email: EmailAddress!, password: String!): Token!
     signOut(allDevices: Boolean): Boolean!
-    updateUser(email: String!): User!
+    updateUser(email: EmailAddress!): User!
     deleteUser(id: ID!): Boolean!
     refreshToken: String
   }
@@ -67,7 +67,7 @@ const userSchema = gql`
 
   type User {
     id: ID!
-    email: String!
+    email: EmailAddress!
     role: UserRole!
   }
 
