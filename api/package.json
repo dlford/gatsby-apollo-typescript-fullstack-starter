@@ -1,10 +1,8 @@
 {
   "name": "gatsby-apollo-typescript-starter_api",
+  "description": "Fullstack Gatsby Apollo TypeScript starter - Back End",
   "version": "0.0.1",
-  "description": "Apollo / GraphQL API",
-  "engines": {
-    "node": ">= 12.13 <13"
-  },
+  "author": "DL Ford <hello@dlford.io>",
   "scripts": {
     "precommit": "lint-staged",
     "start": "node build/app",
@@ -66,6 +64,18 @@
     "typedoc": "^0.17.4",
     "typescript": "~3.8.2"
   },
-  "author": "DL Ford <hello@dlford.io>",
-  "license": "UNLICENCED"
+  "keywords": [
+    "gatsby",
+    "typescript",
+    "apollo",
+    "fullstack"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dlford/gatsby-apollo-typescript-starter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dlford/gatsby-apollo-typescript-starter/issues"
+  }
 }

@@ -1,14 +1,8 @@
 {
   "name": "gatsby-apollo-typescript-starter",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run precommit",
-      "post-install": "npm run postinstall"
-    }
-  },
+  "description": "Fullstack Gatsby Apollo TypeScript starter",
+  "version": "0.0.1",
+  "author": "DL Ford <hello@dlford.io>",
   "scripts": {
     "start": "concurrently \"cd api && npm run dev\" \"cd web && npm start\"",
     "postinstall:web": "cd web && npm install",
@@ -19,13 +13,12 @@
     "postinstall": "npm-run-all postinstall:*",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://gitlab.dlford.io/dlford/gatsby-apollo-typescript-starter.git"
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run precommit",
+      "post-install": "npm run postinstall"
+    }
   },
-  "keywords": [],
-  "author": "",
-  "license": "UNLICENCED",
   "devDependencies": {
     "concurrently": "^5.2.0",
     "husky": "^4.2.5",
@@ -34,5 +27,19 @@
   "dependencies": {
     "@types/cron": "^1.7.2",
     "cron": "^1.8.2"
+  },
+  "keywords": [
+    "gatsby",
+    "typescript",
+    "apollo",
+    "fullstack"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dlford/gatsby-apollo-typescript-starter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dlford/gatsby-apollo-typescript-starter/issues"
   }
 }

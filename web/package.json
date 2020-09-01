@@ -1,7 +1,6 @@
 {
   "name": "gatsby-typescript-starter-kitchen-sink",
-  "private": true,
-  "description": "A Gatsby Typescript starter with all the fixins",
+  "description": "Fullstack Gatsby Apollo TypeScript starter - Front End",
   "version": "0.0.1",
   "author": "DL Ford <hello@dlford.io>",
   "scripts": {
@@ -98,14 +97,16 @@
   },
   "keywords": [
     "gatsby",
-    "typescript"
+    "typescript",
+    "apollo",
+    "fullstack"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dlford/gatsby-typescript-starter-kitchen-sink.git"
+    "url": "https://github.com/dlford/gatsby-apollo-typescript-starter.git"
   },
   "bugs": {
-    "url": "https://github.com/dlford/gatsby-typescript-starter-kitchen-sink/issues"
+    "url": "https://github.com/dlford/gatsby-apollo-typescript-starter/issues"
   }
 }
