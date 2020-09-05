@@ -1,9 +1,9 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { ApolloProvider } from '@apollo/react-hooks'
 import useApollo from './apollo-client'
 
 import { UserProvider } from '~/context/user'
-import { TokenProvider, TokenContext } from '~/context/token'
+import useToken, { TokenProvider } from '~/context/token'
 
 export interface WrapRootProps {
   element: JSX.Element | JSX.Element[]
@@ -18,7 +18,7 @@ export const wrapRootElement = ({ element }: WrapRootProps) => {
 }
 
 const SubRoot = ({ element }: WrapRootProps) => {
-  const { token, setToken } = useContext(TokenContext)
+  const { token, setToken } = useToken()
   const { client } = useApollo(token)
   return (
     <ApolloProvider client={client}>

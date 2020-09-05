@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'gatsby'
 import { RouteComponentProps } from '@reach/router'
-import { UserContext } from '~/context/user'
+import useUser from '~/context/user'
 import tw from 'twin.macro'
 
 import SEO from '~/components/seo'
@@ -12,7 +12,7 @@ const ButtonWrap = tw.div`py-4`
 
 const HomeComponent: React.ElementType<RouteComponentProps> = () => {
   const [allDevices, setAllDevices] = useState(false)
-  const { user } = useContext(UserContext)
+  const { user } = useUser()
 
   return (
     <Article>

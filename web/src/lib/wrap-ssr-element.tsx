@@ -1,10 +1,10 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { renderToString } from 'react-dom/server'
 import useApollo from './apollo-client'
 
 import { UserProvider } from '~/context/user'
-import { TokenProvider, TokenContext } from '~/context/token'
+import useToken, { TokenProvider } from '~/context/token'
 
 interface ReplaceBodyProps {
   bodyComponent: JSX.Element | JSX.Element[]
@@ -29,7 +29,7 @@ export const replaceRenderer = ({
 }
 
 const SubRoot = ({ bodyComponent }: ReplaceBodySubProps) => {
-  const { token, setToken } = useContext(TokenContext)
+  const { token, setToken } = useToken()
   const { client } = useApollo(token)
   return (
     <ApolloProvider client={client}>

@@ -1,8 +1,8 @@
-import React, { useState, useContext, FormEvent } from 'react'
+import React, { useState, FormEvent } from 'react'
 import tw from 'twin.macro'
 
 import Article from '~/components/article'
-import { UserContext } from '~/context/user'
+import useUser from '~/context/user'
 import Form from '~/components/form'
 import Loader from '~/components/loader'
 
@@ -14,7 +14,7 @@ const SignInComponent = () => {
     signInError,
     signUpLoading,
     signUpError,
-  } = useContext(UserContext)
+  } = useUser()
 
   const handleSumbit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()

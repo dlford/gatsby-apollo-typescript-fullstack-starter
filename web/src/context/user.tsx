@@ -10,7 +10,12 @@ import { ApolloError } from 'apollo-client'
 import PropTypes from 'prop-types'
 import { navigate } from 'gatsby'
 import gql from 'graphql-tag'
-import React, { createContext, useEffect, useState } from 'react'
+import React, {
+  createContext,
+  useEffect,
+  useState,
+  useContext,
+} from 'react'
 import jwt from 'jsonwebtoken'
 
 import useApollo from '~/lib/apollo-client'
@@ -279,6 +284,24 @@ export const UserProvider = ({
   )
 }
 
-UserProvider.propTypes = {
-  children: PropTypes.element.isRequired,
+const useUser = () => {
+  const {
+    user,
+    authenticating,
+    signInError,
+    signInLoading,
+    signUpError,
+    signUpLoading,
+  } = useContext(UserContext)
+
+  return {
+    user,
+    authenticating,
+    signInError,
+    signInLoading,
+    signUpError,
+    signUpLoading,
+  }
 }
+
+export default useUser

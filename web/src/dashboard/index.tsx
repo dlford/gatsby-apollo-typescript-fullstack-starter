@@ -1,7 +1,7 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Router } from '@reach/router'
 
-import { UserContext } from '~/context/user'
+import useUser from '~/context/user'
 import Layout from '~/components/layout'
 import SignIn from '~/dashboard/sign-in'
 import Home from '~/dashboard/home'
@@ -13,7 +13,7 @@ export interface DashboardComponentProps {
 }
 
 const App = ({ location }: DashboardComponentProps) => {
-  const { user, authenticating } = useContext(UserContext)
+  const { user, authenticating } = useUser()
 
   if (authenticating)
     return (

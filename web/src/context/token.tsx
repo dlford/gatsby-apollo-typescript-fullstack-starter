@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useState, useContext } from 'react'
 
 export interface TokenConsumerProps {
   token: string | void
@@ -30,3 +30,11 @@ export const TokenProvider = ({ children }: TokenProviderProps) => {
     </TokenContext.Provider>
   )
 }
+
+const useToken = () => {
+  const { token, setToken } = useContext(TokenContext)
+
+  return { token, setToken }
+}
+
+export default useToken
