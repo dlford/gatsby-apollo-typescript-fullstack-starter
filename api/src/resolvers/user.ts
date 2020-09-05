@@ -163,6 +163,9 @@ export default {
           session: {
             id: session.id,
             detail: generateSessionString(session),
+            // No need to check this here,
+            // but isCurrent must be in response.
+            isCurrent: false,
           },
         },
         userId: session.userId,
