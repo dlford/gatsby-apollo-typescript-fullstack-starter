@@ -1,10 +1,11 @@
 import React from 'react'
-import { RouteComponentProps } from '@reach/router'
+import { RouteComponentProps, Link } from '@reach/router'
 
 import useSessionData, { QueryProps } from '~/hooks/use-session-data'
 import SEO from '~/components/seo'
 import Article from '~/components/article'
 import Loader from '~/components/loader'
+import Button from '~/components/button'
 
 const SessionsComponent: React.ElementType<RouteComponentProps> = () => {
   const {
@@ -29,7 +30,7 @@ const SessionsComponent: React.ElementType<RouteComponentProps> = () => {
       )}
       <h1>Sessions</h1>
       {sessionData && (
-        <ul>
+        <ul style={{ marginBottom: '2rem' }}>
           {sessionData.sessions.map((session: QueryProps) => (
             <li key={session.id}>
               {session.detail}{' '}
@@ -53,6 +54,12 @@ const SessionsComponent: React.ElementType<RouteComponentProps> = () => {
           ))}
         </ul>
       )}
+      <Link to='/app'>
+        <Button>Back to App Dashboard</Button>
+      </Link>
+      <div style={{ marginTop: '4rem' }}>
+        <Link to='/'>Back to home page</Link>
+      </div>
     </Article>
   )
 }

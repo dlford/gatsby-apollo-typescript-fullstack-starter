@@ -24,20 +24,28 @@ const DashboardComponent: React.ElementType<RouteComponentProps> = () => {
         <Link to='/app/sessions'>active sessions</Link> for security
         purposes.
       </p>
-      <ButtonWrap>
-        <Button primary onClick={() => user.signOut({ allDevices })}>
-          Sign Out
-        </Button>
-      </ButtonWrap>
-      <input
-        name='allDevices'
-        type='checkbox'
-        checked={allDevices}
-        onChange={(e) => {
-          setAllDevices(e.target.checked)
-        }}
-      />
-      <label htmlFor='allDevices'> Sign out all devices</label>
+      <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>
+        <input
+          name='allDevices'
+          type='checkbox'
+          checked={allDevices}
+          onChange={(e) => {
+            setAllDevices(e.target.checked)
+          }}
+        />
+        <label htmlFor='allDevices'> Sign out all devices</label>
+        <ButtonWrap>
+          <Button
+            primary
+            onClick={() => user.signOut({ allDevices })}
+          >
+            Sign Out
+          </Button>
+        </ButtonWrap>
+      </div>
+      <div style={{ marginTop: '4rem' }}>
+        <Link to='/'>Back to home page</Link>
+      </div>
     </Article>
   )
 }
