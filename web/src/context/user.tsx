@@ -180,7 +180,7 @@ export const UserProvider = ({
       apolloClient.cache.reset()
       checkToken().then((data) => {
         setMe(data)
-        navigate('/dashboard', { replace: true })
+        navigate('/app', { replace: true })
       })
     },
   })

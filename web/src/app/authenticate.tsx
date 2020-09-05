@@ -75,8 +75,18 @@ const SignInComponent = () => {
               {isSignUp ? 'Already' : "Don't"} have an account?{' '}
               <a
                 role='button'
+                aria-label={
+                  isSignUp
+                    ? 'Sign in to an existing account'
+                    : 'Create an account'
+                }
                 tabIndex={0}
                 onClick={() => setIsSignUp((prev) => !prev)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    setIsSignUp((prev) => !prev)
+                  }
+                }}
               >
                 {isSignUp ? 'Sign in' : 'Create one'} here!
               </a>

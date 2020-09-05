@@ -10,19 +10,19 @@ import Button from '~/components/button'
 
 const ButtonWrap = tw.div`py-4`
 
-const HomeComponent: React.ElementType<RouteComponentProps> = () => {
+const DashboardComponent: React.ElementType<RouteComponentProps> = () => {
   const [allDevices, setAllDevices] = useState(false)
   const { user } = useUser()
 
   return (
     <Article>
-      <SEO title='Home' />
+      <SEO title='Dashboard' />
       <h1>Private Route</h1>
       <p>You cannot see this without logging in first.</p>
       <p>
         You should keep an eye on your{' '}
-        <Link to='/dashboard/sessions'>active sessions</Link> for
-        security purposes.
+        <Link to='/app/sessions'>active sessions</Link> for security
+        purposes.
       </p>
       <ButtonWrap>
         <Button primary onClick={() => user.signOut({ allDevices })}>
@@ -42,4 +42,4 @@ const HomeComponent: React.ElementType<RouteComponentProps> = () => {
   )
 }
 
-export default HomeComponent
+export default DashboardComponent

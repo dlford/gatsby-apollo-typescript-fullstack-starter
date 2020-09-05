@@ -3,16 +3,16 @@ import { Router } from '@reach/router'
 
 import useUser from '~/context/user'
 import Layout from '~/components/layout'
-import SignIn from '~/dashboard/sign-in'
-import Home from '~/dashboard/home'
-import Sessions from '~/dashboard/sessions'
+import Authenticate from '~/app/authenticate'
+import Dashboard from '~/app/dashboard'
+import Sessions from '~/app/sessions'
 import Loader from '~/components/loader'
 
-export interface DashboardComponentProps {
+export interface AppPageProps {
   location: Location
 }
 
-const App = ({ location }: DashboardComponentProps) => {
+const AppPage = ({ location }: AppPageProps) => {
   const { user, authenticating } = useUser()
 
   if (authenticating)
@@ -25,18 +25,18 @@ const App = ({ location }: DashboardComponentProps) => {
   if (!user?.id)
     return (
       <Layout location={location}>
-        <SignIn />
+        <Authenticate />
       </Layout>
     )
 
   return (
     <Layout location={location}>
-      <Router basepath='/dashboard'>
-        <Home path='/' />
+      <Router basepath='/app'>
+        <Dashboard path='/' />
         <Sessions path='/sessions' />
       </Router>
     </Layout>
   )
 }
 
-export default App
+export default AppPage

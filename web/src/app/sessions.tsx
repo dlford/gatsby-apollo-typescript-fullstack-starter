@@ -36,10 +36,16 @@ const SessionsComponent: React.ElementType<RouteComponentProps> = () => {
               {session.isCurrent && '[Current Session] '}
               <a
                 role='button'
+                aria-label='Remove session'
                 tabIndex={0}
                 onClick={() =>
                   deleteSession({ variables: { id: session.id } })
                 }
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    deleteSession({ variables: { id: session.id } })
+                  }
+                }}
               >
                 Remove
               </a>

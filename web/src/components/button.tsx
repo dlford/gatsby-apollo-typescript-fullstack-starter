@@ -44,7 +44,16 @@ const Styles = styled('div')<StyleProps>(
 )
 
 const Button = ({ primary, children, onClick }: ButtonProps) => (
-  <Styles onClick={onClick} primary={primary}>
+  <Styles
+    onClick={onClick}
+    primary={primary}
+    tabIndex={0}
+    role='button'
+    onKeyDown={(event) => {
+      if (typeof onClick === 'function' && event.key === 'Enter')
+        onClick()
+    }}
+  >
     {children}
   </Styles>
 )

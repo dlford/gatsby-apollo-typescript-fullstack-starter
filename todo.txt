@@ -1,1 +1,0 @@
-Move "dashboard" to "app" in web

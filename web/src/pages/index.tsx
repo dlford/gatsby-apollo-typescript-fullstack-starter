@@ -40,8 +40,8 @@ const IndexPage = ({ data, location }: QueryProps) => {
     <Layout location={location}>
       <SEO title='Welcome' />
       <ButtonWrapper>
-        <Link to='/dashboard'>
-          <Button primary>Go to the dashboard!</Button>
+        <Link to='/app'>
+          <Button primary>Go to the app!</Button>
         </Link>
       </ButtonWrapper>
       <Article>
