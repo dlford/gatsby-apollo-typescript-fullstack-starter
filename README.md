@@ -45,3 +45,18 @@ docker run -d -p 27017:27017 --name mongo mongo:4.2
       - wrap-ssr-element: Same as `wrap-root-element`, but for Gatsby SSR
     - pages: These routes are open without authentication
       - app: Router for pages behind authentication, returns authentication page if user is not authenticated
+
+## Authentication Methodology
+
+1. A user logs in or signs up
+   1. The API returns an access token that is valid for 15 minutes, this is stored in memory only (token context)
+   2. The API sends back two HTTP only cookies, one for the session, and another for the session ID, these expire in 30 days
+   3. The API stores this session in the database (for future validation, and de-authorizing sessions by user)
+2. The front-end (user's browser) starts a timer to request a new access token before the current one expires
+3. The timer runs out, or page is refreshed, or visited at a later date
+   1. A new access token is requested by the browser
+      1. The API validates the session token by looking up the session ID
+      2. If valid, the API returns a new access token and refreshes the session cookies and database entry
+      3. If not valid, the API deletes the session cookies and database entry, the user is shown the login page
+
+Note: The access token is stored in its own context, because Apollo Client needs the token at setup to pass it along with requests, and the user context needs access to Apollo Client in order to authenticate the user. Therefore, the user context is wrapped in Apollo client, which is wrapped in the token provider.
