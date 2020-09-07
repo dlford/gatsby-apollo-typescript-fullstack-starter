@@ -3,7 +3,7 @@ import { setup, teardown, env } from '../env'
 const adminEmail = 'signinadmin@jest.test'
 const adminPassword =
   'sd65h46s4a65d4gh654dfh6a54df6h54as6d5f4h6sa54fh6adfs6h54'
-const { SECRET, userApi, jwt } = env
+const { secret, userApi, jwt } = env
 
 beforeAll(async () => {
   await setup(adminEmail, adminPassword)
@@ -26,7 +26,7 @@ describe('signIn', () => {
         console.error(err?.response?.data || err?.response || err),
       )
     const token = response.data.data.signIn.token
-    const validated = await jwt.verify(token, SECRET)
+    const validated = await jwt.verify(token, secret)
     expect(validated.email).toBe(adminEmail)
     expect(validated.role).toBe('ADMIN')
     expect(validated.id).toBeDefined()

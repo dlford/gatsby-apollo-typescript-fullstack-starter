@@ -1,6 +1,6 @@
 import { setup, teardown, env } from '../env'
 
-const { SECRET, models, userApi, jwt } = env
+const { secret, models, userApi, jwt } = env
 
 beforeAll(async () => {
   await setup()
@@ -25,7 +25,7 @@ describe('signUp', () => {
         console.error(err?.response?.data || err?.response || err),
       )
     const token = response.data.data.signUp.token
-    const validated = await jwt.verify(token, SECRET)
+    const validated = await jwt.verify(token, secret)
     expect(validated.email).toBe(email)
     expect(validated.role).toBe('USER')
     expect(validated.id).toBeDefined()

@@ -3,7 +3,7 @@ import { setup, teardown, env } from '../env'
 const adminEmail = 'refreshtokenadmin@jest.test'
 const adminPassword =
   '65jk46d54hs6d5f4h6s54hg6s54h65s4h65df4h6s5d4fh6s5d4f'
-const { SECRET, userApi, jwt } = env
+const { secret, userApi, jwt } = env
 
 beforeAll(async () => {
   await setup(adminEmail, adminPassword)
@@ -66,7 +66,7 @@ describe('refreshToken', () => {
       )
 
     const token = response.data.data.refreshToken
-    const validated = await jwt.verify(token, SECRET)
+    const validated = await jwt.verify(token, secret)
     expect(response.data.errors).toBeUndefined()
     expect(validated.email).toBe(adminEmail)
     expect(validated.role).toBe('ADMIN')

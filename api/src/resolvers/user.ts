@@ -8,6 +8,7 @@ import { SessionDocument } from '../models/session'
 import { generateSessionString } from './session'
 import { ContextProps } from '../app'
 import pubsub, { EVENTS } from '../subscription'
+import { isSignUpDisabled } from '../constants'
 
 /**
  * Default values for Set-Cookie headers
@@ -77,7 +78,7 @@ export default {
       { username, email, password },
       { models, secret, useragent, ip, res }: ContextProps,
     ): Promise<{ token: string }> => {
-      if (process.env.DISABLE_SIGNUP)
+      if (isSignUpDisabled)
         throw new UserInputError(
           'Sign up is disabled by administrator',
         )

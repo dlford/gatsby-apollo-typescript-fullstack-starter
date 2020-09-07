@@ -29,6 +29,14 @@ import { sessionScrubber } from './cronjobs'
 import models, { connectDb, ModelTypes, MeProps } from './models'
 import resolvers from './resolvers'
 import schema from './schema'
+import {
+  secret,
+  corsHosts,
+  corsHeaders,
+  isProduction,
+  port,
+  address,
+} from './constants'
 
 export interface ContextProps {
   models: ModelTypes
@@ -60,27 +68,17 @@ interface SubscriptionConnection {
   token: string
 }
 
-const SECRET = process.env.SECRET || 'secret-stub'
-const CORS_HOSTS = process.env.CORS_HOSTS
-  ? process.env.CORS_HOSTS.split(',')
-  : ['http://localhost:8000', 'http://localhost:9000']
-const CORS_HEADERS = process.env.CORS_HEADERS
-  ? process.env.CORS_HEADERS.split(',')
-  : ['Content-Type', 'Authorization']
-
 const corsOptions = {
-  origin: CORS_HOSTS,
+  origin: corsHosts,
   credentials: true,
-  allowedHeaders: CORS_HEADERS,
+  allowedHeaders: corsHeaders,
 }
 
 const app = express()
 app.use(cookieParser())
 app.use(useragent.express())
 app.use(requestIp.mw())
-app.use(
-  morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'),
-)
+app.use(morgan(isProduction ? 'combined' : 'dev'))
 
 /**
  * Returns either a verified user object or null.
@@ -96,7 +94,7 @@ const getMe = async (req): Promise<MeProps | void> => {
   }
   if (!bearer) return null
   try {
-    return await jwt.verify(bearer, SECRET)
+    return await jwt.verify(bearer, secret)
   } catch (e) {
     console.error(e)
     throw new AuthenticationError(
@@ -141,7 +139,7 @@ const server = new ApolloServer({
         cookies: req.cookies,
         useragent: req.useragent,
         ip: req.clientIp,
-        secret: SECRET,
+        secret,
         res,
         me,
       }
@@ -152,7 +150,7 @@ const server = new ApolloServer({
       token,
     }: SubscriptionConnection): Promise<{ me: MeProps } | void> => {
       if (!token) return null
-      const me: MeProps = (await jwt.verify(token, SECRET)) || null
+      const me: MeProps = (await jwt.verify(token, secret)) || null
       return { me }
     },
   },
@@ -163,10 +161,6 @@ server.applyMiddleware({ app, path: '/graphql', cors: corsOptions })
 
 const httpServer = http.createServer(app)
 server.installSubscriptionHandlers(httpServer)
-
-// The + in front of "process.env..." converts the variable to a number
-const port = +process.env.PORT || 3000
-const address = process.env.ADDRESS || '0.0.0.0'
 
 connectDb().then(async () => {
   sessionScrubber.start()

@@ -4,7 +4,7 @@ let adminToken
 const adminEmail = 'deleteuseradmin@jest.test'
 const adminPassword =
   '6454y86er4h6s5er4g65sf4th6s4h6s4h65ad4efh6s54dfh6s5d4h65ed4h'
-const { SECRET, models, userApi, jwt } = env
+const { secret, models, userApi, jwt } = env
 
 beforeAll(async () => {
   adminToken = await setup(adminEmail, adminPassword)
@@ -30,7 +30,7 @@ describe('deleteUser', () => {
     const { id, email: userEmail, role } = userToDelete
     const token = await jwt.sign(
       { id, email: userEmail, role },
-      SECRET,
+      secret,
       {
         expiresIn: '30m',
       },

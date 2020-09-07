@@ -4,7 +4,7 @@ let adminToken
 const adminUser = 'useradmin@jest.test'
 const adminPassword =
   'sdf65h46sd54fh6s5d4h65sd4fh65sd4h654dfhg6s5d4fh6s5d4fh6s54d6f54h'
-const { SECRET, models, userApi, jwt } = env
+const { secret, models, userApi, jwt } = env
 
 beforeAll(async () => {
   adminToken = await setup(adminUser, adminPassword)
@@ -29,7 +29,7 @@ describe('user', () => {
     const { id, email: userEmail, role } = userToList
     const userToken = await jwt.sign(
       { id, email: userEmail, role },
-      SECRET,
+      secret,
       {
         expiresIn: '30m',
       },

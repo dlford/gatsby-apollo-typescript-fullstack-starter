@@ -1,6 +1,6 @@
 import { setup, teardown, env } from '../env'
 
-const { SECRET, models, userApi, jwt } = env
+const { secret, models, userApi, jwt } = env
 
 beforeAll(async () => {
   await setup()
@@ -31,7 +31,7 @@ describe('me', () => {
     const { id, email: meEmail, role } = userToTestMe
     const meToken = await jwt.sign(
       { id, email: meEmail, role },
-      SECRET,
+      secret,
       {
         expiresIn: '30m',
       },

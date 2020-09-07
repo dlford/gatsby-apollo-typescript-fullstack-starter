@@ -9,6 +9,7 @@ import * as mongoose from 'mongoose'
 import User, { UserDocument } from './user'
 export { MeProps } from './user'
 import Session, { SessionDocument } from './session'
+import { databaseUrl } from '../constants'
 export { SessionProps } from './session'
 
 export type ModelTypes = {
@@ -23,15 +24,11 @@ const models = { User, Session }
  */
 
 export const connectDb = (): Promise<typeof import('mongoose')> =>
-  mongoose.connect(
-    process.env.DATABASE_URL ||
-      'mongodb://localhost:27017/development',
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-      useCreateIndex: true,
-    },
-  )
+  mongoose.connect(databaseUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  })
 
 export default models

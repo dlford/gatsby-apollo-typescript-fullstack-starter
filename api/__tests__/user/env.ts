@@ -10,6 +10,7 @@
 import models, { connectDb } from '../../src/models'
 import * as userApi from '../api/user'
 import * as jwt from 'jsonwebtoken'
+import { secret } from '../../src/constants'
 
 /* TODO
  * - test session deleted if refreshToken invalid
@@ -17,7 +18,6 @@ import * as jwt from 'jsonwebtoken'
 
 let db
 let adminUser
-const SECRET = process.env.SECRET || 'secret-stub'
 
 export const setup = async (
   adminEmail: string | void,
@@ -36,7 +36,7 @@ export const setup = async (
       email: adminEmail,
     })
 
-    return await jwt.sign({ id, email, role }, SECRET, {
+    return await jwt.sign({ id, email, role }, secret, {
       expiresIn: '30m',
     })
   }
@@ -52,7 +52,7 @@ export const teardown = async (): Promise<void> => {
 }
 
 export const env = {
-  SECRET,
+  secret,
   models,
   userApi,
   jwt,
