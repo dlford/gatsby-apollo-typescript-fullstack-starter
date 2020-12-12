@@ -12,10 +12,6 @@ import * as userApi from '../api/user'
 import * as jwt from 'jsonwebtoken'
 import { secret } from '../../src/constants'
 
-/* TODO
- * - test session deleted if refreshToken invalid
- */
-
 let db
 let adminUser
 
