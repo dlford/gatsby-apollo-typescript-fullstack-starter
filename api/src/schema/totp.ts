@@ -35,7 +35,7 @@ import { gql } from 'apollo-server-express'
 
 const totpSchema = gql`
   extend type Mutation {
-    setupTotp(): GeneratedTotp!
+    setupTotp: GeneratedTotp!
     enableTotp(token: String!): EnabledTotp!
     validateTotp(token: String!): Boolean!
     disableTotp(password: String!): Boolean!
@@ -49,7 +49,7 @@ const totpSchema = gql`
 
   type EnabledTotp {
     verified: Boolean!
-    recoveryCodes: String[]
+    recoveryCodes: [String!]
   }
 `
 

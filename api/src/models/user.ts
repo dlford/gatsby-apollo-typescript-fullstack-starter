@@ -26,8 +26,8 @@
 
 import * as bcrypt from 'bcrypt'
 import * as mongoose from 'mongoose'
-import speakeasy from 'speakeasy'
-import qrcode from 'qrcode'
+import * as speakeasy from 'speakeasy'
+import * as qrcode from 'qrcode'
 import { base32 } from 'rfc4648'
 import { randomBytes } from 'crypto'
 
@@ -128,6 +128,7 @@ userSchema.methods.generateTotp = async function(): Promise<
     })
 
   this.base32Secret = secret.base32
+  await this.save()
 
   return { ...secret, qr }
 }
@@ -142,15 +143,16 @@ userSchema.methods.validateTotp = function(token: string): boolean {
   return verified
 }
 
-userSchema.methods.validateRecoveryCode = function(
+userSchema.methods.validateRecoveryCode = async function(
   code: string,
-): boolean {
+): Promise<boolean> {
   const availableCodes = this.recoveryCodes
 
   if (availableCodes.includes(code)) {
     this.recoveryCodes = availableCodes.filter(
       (item: string) => item !== code,
     )
+    await this.save()
 
     return true
   }
@@ -158,7 +160,11 @@ userSchema.methods.validateRecoveryCode = function(
   return false
 }
 
-userSchema.methods.enableTotp = function(token: string): EnabledTotp {
+userSchema.methods.enableTotp = async function(
+  token: string,
+): Promise<EnabledTotp> {
+  if (this.totpEnabled) throw new Error('TOTP is already enabled')
+
   const verified = this.validateTotp(token)
 
   if (verified) {
@@ -173,6 +179,7 @@ userSchema.methods.enableTotp = function(token: string): EnabledTotp {
     })()
 
     this.recoveryCodes = recoveryCodes
+    await this.save()
 
     return { verified, recoveryCodes }
   }
@@ -187,6 +194,7 @@ userSchema.methods.disableTotp = async function(
 
   if (authenticated) {
     this.totpEnabled = false
+    await this.save()
     return true
   }
 
@@ -197,7 +205,7 @@ userSchema.pre('save', async function(
   this: UserDocument,
 ): Promise<void> {
   if (this.isNew) {
-    const hash = this.generatePasswordHash()
+    const hash = await this.generatePasswordHash()
     this.password = hash
   }
 })

@@ -15,7 +15,7 @@ export default {
         { models, me }: ContextProps,
       ): Promise<GeneratedTotp> => {
         const user = await models.User.findById(me.id)
-        return user.generateTotp()
+        return await user.generateTotp()
       },
     ),
     enableTotp: combineResolvers(
@@ -26,7 +26,7 @@ export default {
         { models, me }: ContextProps,
       ): Promise<EnabledTotp> => {
         const user = await models.User.findById(me.id)
-        const result = user.enableTotp(token)
+        const result = await user.enableTotp(token)
 
         if (result.verified) {
           return result
@@ -43,7 +43,7 @@ export default {
         { models, me }: ContextProps,
       ): Promise<boolean> => {
         const user = await models.User.findById(me.id)
-        return user.validateTotp(token)
+        return await user.validateTotp(token)
       },
     ),
     validateRecoveryCode: combineResolvers(
@@ -53,8 +53,8 @@ export default {
         { code },
         { models, me }: ContextProps,
       ): Promise<boolean> => {
-        const user = await models.User.findById(me)
-        return user.validateRecoveryCode(code)
+        const user = await models.User.findById(me.id)
+        return await user.validateRecoveryCode(code)
       },
     ),
     disableTotp: combineResolvers(
@@ -64,8 +64,8 @@ export default {
         { password },
         { models, me }: ContextProps,
       ): Promise<boolean> => {
-        const user = await models.User.findById(me)
-        const result = user.disableTotp(password)
+        const user = await models.User.findById(me.id)
+        const result = await user.disableTotp(password)
 
         if (result) return result
 

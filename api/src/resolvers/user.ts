@@ -121,6 +121,8 @@ export default {
       { email, password },
       { models, secret, useragent, ip, res }: ContextProps,
     ): Promise<{ token: string }> => {
+      // TODO : TOTP sign in steps
+
       const user = await models.User.findOne({ email: email })
 
       if (!user) {
