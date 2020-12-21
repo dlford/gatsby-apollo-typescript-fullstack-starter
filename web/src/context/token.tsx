@@ -1,5 +1,7 @@
 import React, { createContext, useState, useContext } from 'react'
 
+// TODO : subscribe to sessionDeleted and drop token if deleted
+
 export interface TokenConsumerProps {
   token: string | void
   setToken(arg0: string | void): void
