@@ -8,7 +8,7 @@
  * | password     | string              | true     | null    |
  * | totpEnabled  | boolean             | true     | false   |
  * | base32Secret | string              | false    | null    |
- * | recoveryCodes| string              | false    | null    |
+ * | recoveryCodes| string[]            | false    | null    |
  * | role         | enum(USER \| ADMIN) | true     | USER    |
  *
  * ## Methods
@@ -17,6 +17,7 @@
  * - `validatePassword(password: string): boolean`: Returns true if supplied password matches hash in DB.
  * - `generateTotp()`: Stores a new TOTP secret to DB, returns the new secret and base64 data string for QR code.
  * - `validateTotp(token: string)`: Checks if a TOTP token is valid.
+ * - `validateRecoveryCode(code: string)`: Returns true if a recovery code is valid (and removes it).
  * - `enableTotp(token: string)`: Checks if first TOTP token is valid, enables TOTP for user if so.
  * - `disableTotp(password: string)`: Disables TOTP for user if password is valid.
  *
@@ -136,7 +137,21 @@ userSchema.methods.validateTotp = function(token: string): boolean {
   return verified
 }
 
-// TODO : userSchema.methods.validateRecoveryCode, remove after validated
+userSchema.methods.validateRecoveryCode = function(
+  code: string,
+): boolean {
+  const availableCodes = this.recoveryCodes
+
+  if (availableCodes.includes(code)) {
+    this.recoveryCodes = availableCodes.filter(
+      (item: string) => item !== code,
+    )
+
+    return true
+  }
+
+  return false
+}
 
 userSchema.methods.enableTotp = function(token: string): EnabledTotp {
   const verified = this.validateTotp(token)
