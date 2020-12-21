@@ -120,9 +120,7 @@ export default {
       _parent,
       { email, password },
       { models, secret, useragent, ip, res }: ContextProps,
-    ): Promise<{ token: string }> => {
-      // TODO : TOTP sign in steps
-
+    ): Promise<{ token: string; totpIntercept: boolean }> => {
       const user = await models.User.findOne({ email: email })
 
       if (!user) {
@@ -137,6 +135,17 @@ export default {
         throw new AuthenticationError(
           'Email address or password incorrect',
         )
+      }
+
+      if (user.totpEnabled) {
+        const totpSignInToken = await jwt.sign(
+          { userId: user.id },
+          secret,
+          {
+            expiresIn: '5m',
+          },
+        )
+        return { token: totpSignInToken, totpIntercept: true }
       }
 
       const session: SessionDocument = await new models.Session({
@@ -174,7 +183,81 @@ export default {
         userId: session.userId,
       })
 
-      return { token: await createAccessToken(user, secret, '15m') }
+      return {
+        token: await createAccessToken(user, secret, '15m'),
+        totpIntercept: false,
+      }
+    },
+
+    totpSignIn: async (
+      _parent,
+      { token, totpSignInToken },
+      { models, secret, useragent, ip, res }: ContextProps,
+    ): Promise<{ token: string; totpIntercept: boolean }> => {
+      let userId: string
+      try {
+        const totpSignInData = await jwt.verify(
+          totpSignInToken,
+          secret,
+        )
+        userId = totpSignInData.userId
+      } catch {
+        throw new AuthenticationError(
+          'Your session has expired, please sign in again',
+        )
+      }
+
+      const user = await models.User.findById(userId)
+
+      if (!user) {
+        throw new UserInputError('Unable to find user')
+      }
+
+      const isValid = await user.validateTotp(token)
+
+      if (!isValid) {
+        throw new AuthenticationError('Invalid TOTP token')
+      }
+
+      const session: SessionDocument = await new models.Session({
+        userId: user.id,
+        useragent,
+        ip,
+      })
+
+      const sessionToken = await jwt.sign(
+        {
+          id: user.id,
+          email: user.email,
+          role: user.role,
+          iat: session.iat,
+          exp: session.exp,
+        },
+        secret + session.salt,
+      )
+
+      res.cookie('sessionId', session.id, cookieProps)
+      res.cookie('sessionToken', sessionToken, cookieProps)
+
+      await session.save()
+
+      pubsub.publish(EVENTS.SESSION.CREATED, {
+        sessionCreated: {
+          session: {
+            id: session.id,
+            detail: generateSessionString(session),
+            // No need to check this here,
+            // but isCurrent must be in response.
+            isCurrent: false,
+          },
+        },
+        userId: session.userId,
+      })
+
+      return {
+        token: await createAccessToken(user, secret, '15m'),
+        totpIntercept: false,
+      }
     },
 
     signOut: async (

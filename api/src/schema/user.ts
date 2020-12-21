@@ -2,6 +2,7 @@
  *
  * TODO : Add password recovery
  * TODO : Move totp to new file
+ * TODO : Add mutation for TOTP recovery code
  *
  * ## User Schema
  *
@@ -29,6 +30,7 @@
  * ```graphql
  * Token {
  *   token: String!
+ *   totpIntercept: Boolean!
  * }
  *
  * User {
@@ -58,6 +60,7 @@ const userSchema = gql`
   extend type Mutation {
     signUp(email: EmailAddress!, password: String!): Token!
     signIn(email: EmailAddress!, password: String!): Token!
+    totpSignIn(token: String!, totpSignInToken: String!): Token!
     signOut(allDevices: Boolean): Boolean!
     updateUser(email: EmailAddress!): User!
     deleteUser(id: ID!): Boolean!
@@ -66,6 +69,7 @@ const userSchema = gql`
 
   type Token {
     token: String!
+    totpIntercept: Boolean!
   }
 
   type User {

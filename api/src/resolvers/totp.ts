@@ -35,28 +35,6 @@ export default {
         throw new UserInputError('Invalid TOTP token')
       },
     ),
-    validateTotp: combineResolvers(
-      isAuthenticated,
-      async (
-        _parent: {},
-        { token },
-        { models, me }: ContextProps,
-      ): Promise<boolean> => {
-        const user = await models.User.findById(me.id)
-        return await user.validateTotp(token)
-      },
-    ),
-    validateRecoveryCode: combineResolvers(
-      isAuthenticated,
-      async (
-        _parent: {},
-        { code },
-        { models, me }: ContextProps,
-      ): Promise<boolean> => {
-        const user = await models.User.findById(me.id)
-        return await user.validateRecoveryCode(code)
-      },
-    ),
     disableTotp: combineResolvers(
       isAuthenticated,
       async (

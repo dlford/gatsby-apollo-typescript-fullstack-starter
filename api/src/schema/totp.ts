@@ -37,9 +37,7 @@ const totpSchema = gql`
   extend type Mutation {
     setupTotp: GeneratedTotp!
     enableTotp(token: String!): EnabledTotp!
-    validateTotp(token: String!): Boolean!
     disableTotp(password: String!): Boolean!
-    validateRecoveryCode(code: String!): Boolean!
   }
 
   type GeneratedTotp {

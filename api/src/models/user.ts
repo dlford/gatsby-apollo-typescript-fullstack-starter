@@ -1,15 +1,15 @@
 /**
  * ## Types
  *
- * | Attribute    | Type                | Required | Default |
- * |--------------|---------------------|----------|---------|
- * | id           | ID                  | *Auto    | *Auto   |
- * | email        | string              | true     | null    |
- * | password     | string              | true     | null    |
- * | totpEnabled  | boolean             | true     | false   |
- * | base32Secret | string              | false    | null    |
- * | recoveryCodes| string[]            | false    | null    |
- * | role         | enum(USER \| ADMIN) | true     | USER    |
+ * | Attribute       | Type                | Required | Default |
+ * |-----------------|---------------------|----------|---------|
+ * | id              | ID                  | *Auto    | *Auto   |
+ * | email           | string              | true     | null    |
+ * | password        | string              | true     | null    |
+ * | totpEnabled     | boolean             | true     | false   |
+ * | base32Secret    | string              | false    | null    |
+ * | recoveryCodes   | string[]            | false    | null    |
+ * | role            | enum(USER \| ADMIN) | true     | USER    |
  *
  * ## Methods
  *
@@ -45,6 +45,7 @@ export interface MeProps {
 export interface UserDocument extends mongoose.Document {
   email: MeProps['email']
   role: MeProps['role']
+  totpEnabled: boolean
   generatePasswordHash(): string
   validatePassword(password: string): boolean
   generateTotp(): GeneratedTotp
