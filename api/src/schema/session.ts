@@ -16,7 +16,7 @@
  * ### Types
  *
  * ```graphql
- * }
+ * ```
  *
  * @packageDocumentation
  */

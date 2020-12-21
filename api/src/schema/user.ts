@@ -1,6 +1,5 @@
 /**
  *
- * TODO : Break out updateUser into individual actions
  * TODO : Add password recovery
  * TODO : Move totp to new file
  *
@@ -20,11 +19,6 @@
  * signUp(email: EmailAddress!, password: String!): Token!
  * signIn(email: EmailAddress!, password: String!): Token!
  * signOut(allDevices: Boolean): Boolean!
- * setupTotp(): GeneratedTotp!
- * enableTotp(token: String!): EnabledTotp!
- * validateTotp(token: String!): Boolean!
- * disableTotp(password: String!): Boolean!
- * validateRecoveryCode(code: String!): Boolean!
  * updateUser(email: EmailAddress!): User!
  * deleteUser(id: ID!): Boolean!
  * refreshToken: String
@@ -41,16 +35,6 @@
  *   id: ID!
  *   email: String!
  *   role: UserRole!
- * }
- *
- * GeneratedTotp {
- *   qr: String!
- *   base32: String!
- * }
- *
- * EnabledTotp {
- *   verified: Boolean!
- *   recoveryCodes: String[]
  * }
  *
  * enum UserRole {
@@ -75,11 +59,6 @@ const userSchema = gql`
     signUp(email: EmailAddress!, password: String!): Token!
     signIn(email: EmailAddress!, password: String!): Token!
     signOut(allDevices: Boolean): Boolean!
-    setupTotp(): GeneratedTotp!
-    enableTotp(token: String!): EnabledTotp!
-    validateTotp(token: String!): Boolean!
-    disableTotp(password: String!): Boolean!
-    validateRecoveryCode(code: String!): Boolean!
     updateUser(email: EmailAddress!): User!
     deleteUser(id: ID!): Boolean!
     refreshToken: String!
@@ -94,16 +73,6 @@ const userSchema = gql`
     email: EmailAddress!
     role: UserRole!
     totpEnabled: Boolean!
-  }
-
-  type GeneratedTotp {
-    qr: String!
-    base32: String!
-  }
-
-  type EnabledTotp {
-    verified: Boolean!
-    recoveryCodes: String[]
   }
 
   enum UserRole {
