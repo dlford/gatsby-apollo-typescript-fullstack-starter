@@ -2,6 +2,7 @@
  *
  * TODO : Break out updateUser into individual actions
  * TODO : Add password recovery
+ * TODO : Move totp to new file
  *
  * ## User Schema
  *

@@ -47,6 +47,11 @@ export interface UserDocument extends mongoose.Document {
   role: MeProps['role']
   generatePasswordHash(): string
   validatePassword(password: string): boolean
+  generateTotp(): GeneratedTotp
+  enableTotp(token: string): EnabledTotp
+  validateTotp(token: string): boolean
+  validateRecoveryCode(code: string): boolean
+  disableTotp(password: string): boolean
   password: string
   createdAt: Date
   updatedAt: Date
