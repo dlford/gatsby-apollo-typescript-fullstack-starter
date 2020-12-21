@@ -69,6 +69,7 @@ const userSchema = gql`
     id: ID!
     email: EmailAddress!
     role: UserRole!
+    totpEnabled: Boolean
   }
 
   enum UserRole {
