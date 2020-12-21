@@ -8,7 +8,7 @@
  * | password     | string              | true     | null    |
  * | totpEnabled  | boolean             | true     | false   |
  * | base32Secret | string              | false    | null    |
- * | recoveryCode | string              | false    | null    |
+ * | recoveryCodes| string              | false    | null    |
  * | role         | enum(USER \| ADMIN) | true     | USER    |
  *
  * ## Methods
@@ -27,6 +27,8 @@ import * as bcrypt from 'bcrypt'
 import * as mongoose from 'mongoose'
 import speakeasy from 'speakeasy'
 import qrcode from 'qrcode'
+import { base32 } from 'rfc4648'
+import { randomBytes } from 'crypto'
 
 export enum UserRole {
   admin = 'ADMIN',
@@ -53,6 +55,11 @@ export interface GeneratedTotp extends speakeasy.GeneratedSecret {
   qr: string
 }
 
+export interface EnabledTotp {
+  recoveryCodes?: string[]
+  verified: boolean
+}
+
 const userSchema: mongoose.Schema = new mongoose.Schema(
   {
     email: {
@@ -72,9 +79,7 @@ const userSchema: mongoose.Schema = new mongoose.Schema(
     base32Secret: {
       type: String,
     },
-    recoveryCode: {
-      type: String,
-    },
+    recoveryCodes: [{ type: String }],
     role: {
       type: String,
       enum: {
@@ -108,8 +113,6 @@ userSchema.methods.generateTotp = async function(): Promise<
   // TODO: handle TOTP already enabled
   if (this.totpEnabled) throw new Error('TOTP is already enabled')
 
-  // TODO: Create recoveryCode
-
   const secret = speakeasy.generateSecret()
   const qr = await qrcode
     .toDataURL(secret.otpauth_url)
@@ -133,12 +136,28 @@ userSchema.methods.validateTotp = function(token: string): boolean {
   return verified
 }
 
-userSchema.methods.enableTotp = function(token: string): boolean {
+// TODO : userSchema.methods.validateRecoveryCode, remove after validated
+
+userSchema.methods.enableTotp = function(token: string): EnabledTotp {
   const verified = this.validateTotp(token)
 
-  if (verified) this.totpEnabled = true
+  if (verified) {
+    this.totpEnabled = true
 
-  return verified
+    const recoveryCodes = ((): string[] => {
+      const result = []
+      for (let iteration = 0; iteration < 10; iteration++) {
+        result.push(base32.stringify(randomBytes(20)))
+      }
+      return result
+    })()
+
+    this.recoveryCodes = recoveryCodes
+
+    return { verified, recoveryCodes }
+  }
+
+  return { verified }
 }
 
 userSchema.methods.disableTotp = async function(
