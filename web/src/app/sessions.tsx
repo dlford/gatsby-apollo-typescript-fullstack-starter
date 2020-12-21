@@ -23,6 +23,7 @@ const SessionsComponent: React.ElementType<RouteComponentProps> = () => {
   return (
     <Article>
       <SEO title='Home' />
+      <Link to='/app'>Back to Dashboard</Link>
       {sessionLoading || (deleteSessionLoading && <Loader />)}
       {sessionError && <p>{sessionError.message || sessionError}</p>}
       {deleteSessionError && (
@@ -54,12 +55,6 @@ const SessionsComponent: React.ElementType<RouteComponentProps> = () => {
           ))}
         </ul>
       )}
-      <Link to='/app'>
-        <Button>Back to App Dashboard</Button>
-      </Link>
-      <div style={{ marginTop: '4rem' }}>
-        <Link to='/'>Back to home page</Link>
-      </div>
     </Article>
   )
 }

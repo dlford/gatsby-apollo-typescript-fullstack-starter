@@ -6,6 +6,10 @@ import useUser from '~/context/user'
 import Form from '~/components/form'
 import Loader from '~/components/loader'
 
+// TODO : TOTP Login
+// TODO : TOTP Recovery code
+// TODO : Password Recovery
+
 const SignInComponent = () => {
   const [isSignUp, setIsSignUp] = useState(false)
   const {

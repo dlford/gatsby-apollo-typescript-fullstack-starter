@@ -17,10 +17,12 @@ const DashboardComponent: React.ElementType<RouteComponentProps> = () => {
   return (
     <Article>
       <SEO title='Dashboard' />
+      <Link to='/'>Back to home page</Link>
       <h1>Private Route</h1>
       <p>You cannot see this without logging in first.</p>
       <p>
-        You should keep an eye on your{' '}
+        You should <Link to='/app/setup-totp'>set up TOTP</Link>, and
+        keep an eye on your{' '}
         <Link to='/app/sessions'>active sessions</Link> for security
         purposes.
       </p>
@@ -42,9 +44,6 @@ const DashboardComponent: React.ElementType<RouteComponentProps> = () => {
             Sign Out
           </Button>
         </ButtonWrap>
-      </div>
-      <div style={{ marginTop: '4rem' }}>
-        <Link to='/'>Back to home page</Link>
       </div>
     </Article>
   )
