@@ -6,7 +6,6 @@ import useUser from '~/context/user'
 import Form from '~/components/form'
 import Loader from '~/components/loader'
 
-// TODO : TOTP Login
 // TODO : TOTP Recovery code
 // TODO : Password Recovery
 
@@ -16,17 +15,27 @@ const SignInComponent = () => {
     user,
     signInLoading,
     signInError,
+    totpEnabled,
+    totpSignInToken,
+    totpSignInLoading,
+    totpSignInError,
     signUpLoading,
     signUpError,
   } = useUser()
 
-  const handleSumbit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSignInSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const email = e.currentTarget.email.value
     const password = e.currentTarget.password.value
     isSignUp
       ? user.signUp({ email, password })
       : user.signIn({ email, password })
+  }
+
+  const handleTotpSignInSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const token = e.currentTarget.token.value
+    user.totpSignIn({ token, totpSignInToken })
   }
 
   const TextWrapper = tw.div`
@@ -42,17 +51,27 @@ const SignInComponent = () => {
     text-red-800
   `
 
+  // TODO : Don't show errors from multiple mutations
+
   return (
     <>
       <TextWrapper>
         <Article>
-          <h1>{isSignUp ? 'Sign Up' : 'Sign In'}</h1>
-          <p>
-            {isSignUp
-              ? 'Please create an account to continue'
-              : 'Please sign in to continue'}
-          </p>
+          {!totpEnabled && (
+            <>
+              <h1>{isSignUp ? 'Sign Up' : 'Sign In'}</h1>
+              <p>
+                {isSignUp
+                  ? 'Please create an account to continue'
+                  : 'Please sign in to continue'}
+              </p>
+            </>
+          )}
+          {!!totpEnabled && <h1>TOTP Authentication</h1>}
           <ErrorText>
+            {totpSignInError
+              ? totpSignInError.message.replace(/GraphQL error: /, '')
+              : ''}
             {signInError
               ? signInError.message.replace(/GraphQL error: /, '')
               : ''}
@@ -62,43 +81,58 @@ const SignInComponent = () => {
           </ErrorText>
         </Article>
       </TextWrapper>
-      <FormWrapper>
-        <Form method='post' onSubmit={handleSumbit}>
-          <label htmlFor='email'>Email Address</label>
-          <input type='email' name='email' />
-          <label htmlFor='password'>Password</label>
-          <input type='password' name='password' />
-          <button
-            disabled={!!signInLoading || !!signUpLoading}
-            type='submit'
-          >
-            Submit
-          </button>
-          {!process.env.DISABLE_SIGNUP && (
-            <Article>
-              {isSignUp ? 'Already' : "Don't"} have an account?{' '}
-              <a
-                role='button'
-                aria-label={
-                  isSignUp
-                    ? 'Sign in to an existing account'
-                    : 'Create an account'
-                }
-                tabIndex={0}
-                onClick={() => setIsSignUp((prev) => !prev)}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter') {
-                    setIsSignUp((prev) => !prev)
+      {!totpEnabled && (
+        <FormWrapper>
+          <Form method='post' onSubmit={handleSignInSubmit}>
+            <label htmlFor='email'>Email Address</label>
+            <input type='email' name='email' />
+            <label htmlFor='password'>Password</label>
+            <input type='password' name='password' />
+            <button
+              disabled={!!signInLoading || !!signUpLoading}
+              type='submit'
+            >
+              Submit
+            </button>
+            {!process.env.DISABLE_SIGNUP && (
+              <Article>
+                {isSignUp ? 'Already' : "Don't"} have an account?{' '}
+                <a
+                  role='button'
+                  aria-label={
+                    isSignUp
+                      ? 'Sign in to an existing account'
+                      : 'Create an account'
                   }
-                }}
-              >
-                {isSignUp ? 'Sign in' : 'Create one'} here!
-              </a>
-            </Article>
-          )}
-        </Form>
-      </FormWrapper>
-      {!!signInLoading || (!!signUpLoading && <Loader />)}
+                  tabIndex={0}
+                  onClick={() => setIsSignUp((prev) => !prev)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      setIsSignUp((prev) => !prev)
+                    }
+                  }}
+                >
+                  {isSignUp ? 'Sign in' : 'Create one'} here!
+                </a>
+              </Article>
+            )}
+          </Form>
+        </FormWrapper>
+      )}
+      {!!totpEnabled && (
+        <FormWrapper>
+          <Form method='post' onSubmit={handleTotpSignInSubmit}>
+            <label htmlFor='token'>TOTP Token</label>
+            <input type='text' name='token' maxLength={6} />
+            <button disabled={!!totpSignInLoading} type='submit'>
+              Submit
+            </button>
+          </Form>
+        </FormWrapper>
+      )}
+      {(!!signInLoading ||
+        !!signUpLoading ||
+        !!totpSignInLoading) && <Loader />}
     </>
   )
 }
