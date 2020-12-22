@@ -18,6 +18,12 @@ const ENABLE_TOTP_MUTATION = gql`
   }
 `
 
+const DISABLE_TOTP_MUTATION = gql`
+  mutation($password: String!) {
+    disableTotp(password: $password)
+  }
+`
+
 export default function useTotpSetup() {
   const [
     setupTotp,
@@ -29,6 +35,15 @@ export default function useTotpSetup() {
     { data: enableData, loading: enableLoading, error: enableError },
   ] = useMutation(ENABLE_TOTP_MUTATION)
 
+  const [
+    disableTotp,
+    {
+      data: disableData,
+      loading: disableLoading,
+      error: disableError,
+    },
+  ] = useMutation(DISABLE_TOTP_MUTATION)
+
   return {
     setupTotp,
     setupData,
@@ -38,5 +53,9 @@ export default function useTotpSetup() {
     enableData,
     enableLoading,
     enableError,
+    disableTotp,
+    disableData,
+    disableLoading,
+    disableError,
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState, FormEvent, ChangeEvent } from 'react'
+import React, { useState, FormEvent } from 'react'
 import { Link } from 'gatsby'
 import { RouteComponentProps } from '@reach/router'
 import tw from 'twin.macro'
@@ -18,12 +18,10 @@ const ErrorText = tw.p`
     text-center
   `
 
-const DashboardComponent: React.ElementType<RouteComponentProps> = () => {
+const SetupTotpComponent: React.ElementType<RouteComponentProps> = () => {
   const [shouldShowBase32, setShouldShowBase32] = useState<boolean>(
     false,
   )
-
-  const [totpToken, setTotpToken] = useState<string>('')
 
   const {
     setupTotp,
@@ -36,12 +34,9 @@ const DashboardComponent: React.ElementType<RouteComponentProps> = () => {
     enableError,
   } = useTotpSetup()
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setTotpToken(event.target?.value)
-  }
-
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault()
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const totpToken = e.currentTarget.token.value
     enableTotp({ variables: { token: totpToken } }).catch(() => {
       return
     })
@@ -84,16 +79,18 @@ const DashboardComponent: React.ElementType<RouteComponentProps> = () => {
               style={{ margin: '0 auto' }}
               src={setupData.setupTotp.qr}
             />
-            {!shouldShowBase32 && (
-              <div>
-                <Button onClick={() => setShouldShowBase32(true)}>
-                  Show Secret
-                </Button>
-              </div>
-            )}
-            {!!shouldShowBase32 && (
-              <p>{setupData.setupTotp.base32}</p>
-            )}
+            <div style={{ minHeight: '3rem' }}>
+              {!shouldShowBase32 && (
+                <div>
+                  <Button onClick={() => setShouldShowBase32(true)}>
+                    Show Secret
+                  </Button>
+                </div>
+              )}
+              {!!shouldShowBase32 && (
+                <p>{setupData.setupTotp.base32}</p>
+              )}
+            </div>
           </div>
           <p style={{ paddingTop: '2rem' }}>
             Scan the code above in your TOTP app, or view the secret
@@ -104,13 +101,8 @@ const DashboardComponent: React.ElementType<RouteComponentProps> = () => {
           <div style={{ textAlign: 'center', marginTop: '2rem' }}>
             <Form onSubmit={handleSubmit} method='post'>
               <label htmlFor='token'>TOTP Token</label>
-              <input
-                onChange={handleChange}
-                name='token'
-                type='text'
-                maxLength={6}
-              />
-              <button type='submit' disabled={totpToken.length !== 6}>
+              <input name='token' type='text' maxLength={6} />
+              <button type='submit' disabled={!!enableLoading}>
                 Submit
               </button>
             </Form>
@@ -157,4 +149,4 @@ const DashboardComponent: React.ElementType<RouteComponentProps> = () => {
   )
 }
 
-export default DashboardComponent
+export default SetupTotpComponent

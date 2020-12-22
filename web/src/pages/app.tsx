@@ -6,6 +6,7 @@ import Layout from '~/components/layout'
 import Authenticate from '~/app/authenticate'
 import Dashboard from '~/app/dashboard'
 import SetupTotp from '~/app/setup-totp'
+import DisableTotp from '~/app/disable-totp'
 import Sessions from '~/app/sessions'
 import Loader from '~/components/loader'
 
@@ -36,6 +37,7 @@ const AppPage = ({ location }: AppPageProps) => {
         <Dashboard path='/' />
         <Sessions path='/sessions' />
         <SetupTotp path='/setup-totp' />
+        <DisableTotp path='/disable-totp' />
       </Router>
     </Layout>
   )

@@ -26,6 +26,10 @@ const DashboardComponent: React.ElementType<RouteComponentProps> = () => {
         <Link to='/app/sessions'>active sessions</Link> for security
         purposes.
       </p>
+      <p>
+        If you should decide TOTP is not for you, you may{' '}
+        <Link to='/app/disable-totp'>disable it here</Link>.
+      </p>
       <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>
         <input
           name='allDevices'

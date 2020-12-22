@@ -81,7 +81,6 @@ const userSchema: mongoose.Schema = new mongoose.Schema(
     totpEnabled: {
       type: Boolean,
       default: false,
-      required: true,
     },
     base32Secret: {
       type: String,
@@ -194,7 +193,9 @@ userSchema.methods.disableTotp = async function(
   const authenticated = await this.validatePassword(password)
 
   if (authenticated) {
-    this.totpEnabled = false
+    this.totpEnabled = undefined
+    this.recoveryCodes = undefined
+    this.base32Secret = undefined
     await this.save()
     return true
   }
