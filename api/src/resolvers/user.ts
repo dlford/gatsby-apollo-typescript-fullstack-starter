@@ -191,7 +191,7 @@ export default {
 
     totpSignIn: async (
       _parent,
-      { token, totpSignInToken },
+      { token, recoveryCode, totpSignInToken },
       { models, secret, useragent, ip, res }: ContextProps,
     ): Promise<{ token: string; totpIntercept: boolean }> => {
       let userId: string
@@ -213,10 +213,22 @@ export default {
         throw new UserInputError('Unable to find user')
       }
 
-      const isValid = await user.validateTotp(token)
+      if (token) {
+        const isValid = await user.validateTotp(token)
 
-      if (!isValid) {
-        throw new AuthenticationError('Invalid TOTP token')
+        if (!isValid) {
+          throw new AuthenticationError('Invalid TOTP token')
+        }
+      } else if (recoveryCode) {
+        const isValid = await user.validateRecoveryCode(recoveryCode)
+
+        if (!isValid) {
+          throw new AuthenticationError('Invalid recovery code')
+        }
+      } else {
+        throw new AuthenticationError(
+          'A TOTP token or recovery code is required',
+        )
       }
 
       const session: SessionDocument = await new models.Session({

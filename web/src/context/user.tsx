@@ -31,7 +31,8 @@ enum UserRole {
 }
 
 type TotpCredentialProps = {
-  token: string
+  token?: string
+  recoveryCode?: string
   totpSignInToken: string
 }
 
@@ -56,7 +57,6 @@ type SignInMutationProps = {
 type TotpSignInMutationProps = {
   totpSignIn: {
     token: string
-    totpSignInToken: string
   }
 }
 
@@ -156,8 +156,16 @@ const SIGNIN_MUTATION = gql`
 `
 
 const TOTP_SIGNIN_MUTATION = gql`
-  mutation totpSignIn($token: String!, $totpSignInToken: String!) {
-    totpSignIn(token: $token, totpSignInToken: $totpSignInToken) {
+  mutation totpSignIn(
+    $token: String
+    $recoveryCode: String
+    $totpSignInToken: String!
+  ) {
+    totpSignIn(
+      token: $token
+      recoveryCode: $recoveryCode
+      totpSignInToken: $totpSignInToken
+    ) {
       token
     }
   }

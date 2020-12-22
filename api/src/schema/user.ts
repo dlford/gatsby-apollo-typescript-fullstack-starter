@@ -60,7 +60,11 @@ const userSchema = gql`
   extend type Mutation {
     signUp(email: EmailAddress!, password: String!): Token!
     signIn(email: EmailAddress!, password: String!): Token!
-    totpSignIn(token: String!, totpSignInToken: String!): Token!
+    totpSignIn(
+      token: String
+      recoveryCode: String
+      totpSignInToken: String!
+    ): Token!
     signOut(allDevices: Boolean): Boolean!
     updateUser(email: EmailAddress!): User!
     deleteUser(id: ID!): Boolean!
