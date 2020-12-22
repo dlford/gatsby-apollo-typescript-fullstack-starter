@@ -11,6 +11,7 @@ import Loader from '~/components/loader'
 
 const SignInComponent = () => {
   const [isSignUp, setIsSignUp] = useState(false)
+  const [isRecovery, setIsRecovery] = useState(false)
   const {
     user,
     signInLoading,
@@ -34,8 +35,9 @@ const SignInComponent = () => {
 
   const handleTotpSignInSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const token = e.currentTarget.token.value
-    user.totpSignIn({ token, totpSignInToken })
+    const token = e.currentTarget?.token?.value
+    const recoveryCode = e.currentTarget?.recoveryCode?.value
+    user.totpSignIn({ token, recoveryCode, totpSignInToken })
   }
 
   const TextWrapper = tw.div`
@@ -122,12 +124,37 @@ const SignInComponent = () => {
       {!!totpEnabled && (
         <FormWrapper>
           <Form method='post' onSubmit={handleTotpSignInSubmit}>
-            <label htmlFor='token'>TOTP Token</label>
-            <input type='text' name='token' maxLength={6} />
+            <label htmlFor={isRecovery ? 'recoveryCode' : 'token'}>
+              {isRecovery ? 'Recovery Code' : 'TOTP Token'}
+            </label>
+            <input
+              type='text'
+              name={isRecovery ? 'recoveryCode' : 'token'}
+              maxLength={isRecovery ? 9999 : 6}
+            />
             <button disabled={!!totpSignInLoading} type='submit'>
               Submit
             </button>
           </Form>
+          <Article style={{ textAlign: 'center' }}>
+            <a
+              role='button'
+              aria-label={
+                isRecovery
+                  ? 'Use a TOTP token'
+                  : 'Use a recovery code'
+              }
+              tabIndex={0}
+              onClick={() => setIsRecovery((prev) => !prev)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  setIsRecovery((prev) => !prev)
+                }
+              }}
+            >
+              {isRecovery ? 'Use TOTP token' : 'Use recovery code'}
+            </a>
+          </Article>
         </FormWrapper>
       )}
       {(!!signInLoading ||
