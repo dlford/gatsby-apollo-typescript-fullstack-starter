@@ -1,9 +1,4 @@
 /**
- *
- * TODO : Add password recovery
- * TODO : Move totp to new file
- * TODO : Add mutation for TOTP recovery code
- *
  * ## User Schema
  *
  * ### Queries

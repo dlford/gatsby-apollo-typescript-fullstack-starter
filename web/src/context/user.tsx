@@ -312,7 +312,6 @@ export const UserProvider = ({
     totpSignIn: (totpCredentials: TotpCredentialProps): void => {
       totpSignInMutation({ variables: totpCredentials }).catch(
         (err) => {
-          // TODO : Count failures and require signing in again
           // If session is expired, go back to the login screen
           if (err.message.includes('expired')) {
             setTotpEnabled(false)

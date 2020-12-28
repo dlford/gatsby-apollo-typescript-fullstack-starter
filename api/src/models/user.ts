@@ -30,6 +30,7 @@ import * as speakeasy from 'speakeasy'
 import * as qrcode from 'qrcode'
 import { base32 } from 'rfc4648'
 import { randomBytes } from 'crypto'
+import { ApolloError, UserInputError } from 'apollo-server'
 
 export enum UserRole {
   admin = 'ADMIN',
@@ -116,15 +117,15 @@ userSchema.methods.validatePassword = async function(
 userSchema.methods.generateTotp = async function(): Promise<
   GeneratedTotp
 > {
-  // TODO: handle TOTP already enabled
-  if (this.totpEnabled) throw new Error('TOTP is already enabled')
+  if (this.totpEnabled)
+    throw new UserInputError('TOTP is already enabled')
 
   const secret = speakeasy.generateSecret()
   const qr = await qrcode
     .toDataURL(secret.otpauth_url)
     .catch((err) => {
       console.error(err)
-      throw new Error('Failed to generate TOTP QR Code')
+      throw new ApolloError('Failed to generate TOTP QR Code')
     })
 
   this.base32Secret = secret.base32
