@@ -7,6 +7,8 @@
  * environment.
  */
 
+// TODO:TOTP : Test new schema items
+
 import models, { connectDb } from '../../src/models'
 import * as userApi from '../api/user'
 import * as jwt from 'jsonwebtoken'
