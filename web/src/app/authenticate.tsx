@@ -50,7 +50,7 @@ const SignInComponent = () => {
     text-red-800
   `
 
-  // TODO:TOTP : Don't show errors from multiple mutations
+  // TODO:TOTP : Reset errors on new actions
 
   return (
     <>
@@ -68,13 +68,13 @@ const SignInComponent = () => {
           )}
           {!!totpEnabled && <h1>TOTP Authentication</h1>}
           <ErrorText>
-            {totpSignInError
+            {totpSignInError && !signInError && !signUpError
               ? totpSignInError.message.replace(/GraphQL error: /, '')
               : ''}
             {signInError
               ? signInError.message.replace(/GraphQL error: /, '')
               : ''}
-            {signUpError
+            {signUpError && !signInError
               ? signUpError.message.replace(/GraphQL error: /, '')
               : ''}
           </ErrorText>
