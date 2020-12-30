@@ -14,16 +14,19 @@ afterAll(async () => {
 })
 
 describe('refreshToken', () => {
-  it('returns null when cookies are not set', async () => {
+  it('returns error when cookies are not set', async () => {
     const response = await userApi
       .refreshToken()
       .catch((err) =>
         console.error(err?.response?.data || err?.response || err),
       )
 
-    const result = response.data.data.refreshToken
-    expect(response.data.errors).toBeUndefined()
-    expect(result).toBe(null)
+    expect(response.data.errors[0]).toEqual(
+      expect.objectContaining({
+        message: 'Your session has expired',
+      }),
+    )
+    expect(response.data.data).toBe(null)
   })
 
   it('clears cookies on invalid requests', async () => {

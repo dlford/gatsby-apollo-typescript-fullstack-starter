@@ -351,7 +351,7 @@ export default {
       if (!cookies.sessionId || !cookies.sessionToken) {
         res.cookie('sessionId', '', { ...cookieProps, maxAge: 0 })
         res.cookie('sessionToken', '', { ...cookieProps, maxAge: 0 })
-        return null
+        throw new AuthenticationError('Your session has expired')
       }
 
       const { sessionId, sessionToken } = cookies
@@ -372,7 +372,7 @@ export default {
         res.cookie('sessionId', '', { ...cookieProps, maxAge: 0 })
         res.cookie('sessionToken', '', { ...cookieProps, maxAge: 0 })
 
-        return null
+        throw new AuthenticationError('Your session has expired')
       }
 
       try {
@@ -424,7 +424,9 @@ export default {
         if (session) {
           await models.Session.remove({ userId: session.userId })
         }
-        return null
+        throw new AuthenticationError(
+          'Failed to verify session token',
+        )
       }
     },
   },
