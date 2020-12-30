@@ -1,4 +1,5 @@
-import React, { useState, FormEvent } from 'react'
+import React, { useState, FormEvent, useEffect } from 'react'
+import { ApolloError } from 'apollo-client'
 import tw from 'twin.macro'
 
 import Article from '~/components/article'
@@ -6,9 +7,15 @@ import useUser from '~/context/user'
 import Form from '~/components/form'
 import Loader from '~/components/loader'
 
+function getErrorMessage(error: ApolloError): string {
+  return error.message.replace(/GraphQL error: /, '')
+}
+
 const SignInComponent = () => {
   const [isSignUp, setIsSignUp] = useState(false)
   const [isRecovery, setIsRecovery] = useState(false)
+  const [mutationError, setMutationError] = useState('')
+
   const {
     user,
     signInLoading,
@@ -23,6 +30,7 @@ const SignInComponent = () => {
 
   const handleSignInSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setMutationError('')
     const email = e.currentTarget.email.value
     const password = e.currentTarget.password.value
     isSignUp
@@ -32,10 +40,24 @@ const SignInComponent = () => {
 
   const handleTotpSignInSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setMutationError('')
     const token = e.currentTarget?.token?.value
     const recoveryCode = e.currentTarget?.recoveryCode?.value
     user.totpSignIn({ token, recoveryCode, totpSignInToken })
   }
+
+  useEffect(() => {
+    !!signInError && setMutationError(getErrorMessage(signInError))
+  }, [signInError])
+
+  useEffect(() => {
+    !!signUpError && setMutationError(getErrorMessage(signUpError))
+  }, [signUpError])
+
+  useEffect(() => {
+    !!totpSignInError &&
+      setMutationError(getErrorMessage(totpSignInError))
+  }, [totpSignInError])
 
   const TextWrapper = tw.div`
     text-center
@@ -49,8 +71,6 @@ const SignInComponent = () => {
     font-bold
     text-red-800
   `
-
-  // TODO:TOTP : Reset errors on new actions
 
   return (
     <>
@@ -67,17 +87,7 @@ const SignInComponent = () => {
             </>
           )}
           {!!totpEnabled && <h1>TOTP Authentication</h1>}
-          <ErrorText>
-            {totpSignInError && !signInError && !signUpError
-              ? totpSignInError.message.replace(/GraphQL error: /, '')
-              : ''}
-            {signInError
-              ? signInError.message.replace(/GraphQL error: /, '')
-              : ''}
-            {signUpError && !signInError
-              ? signUpError.message.replace(/GraphQL error: /, '')
-              : ''}
-          </ErrorText>
+          <ErrorText>{mutationError}</ErrorText>
         </Article>
       </TextWrapper>
       {!totpEnabled && (
