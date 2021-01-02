@@ -64,6 +64,9 @@ const userSchema = gql`
     updateUser(email: EmailAddress!): User!
     deleteUser(id: ID!): Boolean!
     refreshToken: String!
+    setupTotp: GeneratedTotp!
+    enableTotp(token: String!): EnabledTotp!
+    disableTotp(password: String!): Boolean!
   }
 
   type Token {
@@ -81,6 +84,16 @@ const userSchema = gql`
   enum UserRole {
     ADMIN
     USER
+  }
+
+  type GeneratedTotp {
+    qr: String!
+    base32: String!
+  }
+
+  type EnabledTotp {
+    verified: Boolean!
+    recoveryCodes: [String!]
   }
 `
 

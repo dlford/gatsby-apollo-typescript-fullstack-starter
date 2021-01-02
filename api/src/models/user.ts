@@ -21,6 +21,8 @@
  * - `enableTotp(token: string)`: Checks if first TOTP token is valid, enables TOTP for user if so.
  * - `disableTotp(password: string)`: Disables TOTP for user if password is valid.
  *
+ * TODO : Split this model up into separate domains (read: don't store password hashes etc. on user model)
+ *
  * @packageDocumentation
  */
 

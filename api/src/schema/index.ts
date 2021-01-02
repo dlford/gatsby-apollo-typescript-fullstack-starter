@@ -8,7 +8,6 @@ import { gql } from 'apollo-server-express'
 
 import userSchema from './user'
 import sessionSchema from './session'
-import totpSchema from './totp'
 
 /**
  * Dummy types
@@ -31,5 +30,5 @@ const baseSchema = gql`
   }
 `
 
-const schema = [baseSchema, userSchema, sessionSchema, totpSchema]
+const schema = [baseSchema, userSchema, sessionSchema]
 export default schema
