@@ -1,3 +1,5 @@
+import * as speakeasy from 'speakeasy'
+
 import { setup, teardown, env } from '../env'
 
 const adminEmail = 'signinadmin@jest.test'
@@ -48,6 +50,40 @@ describe('signIn', () => {
     expect(sessionTokenCookie).toMatch(/Max-Age=2592000/)
     expect(sessionTokenCookie).toMatch(/HttpOnly/)
     expect(sessionTokenCookie).toMatch(/SameSite=Strict/)
+  })
+
+  it('does not set cookies when TOTP authorization step is required', async () => {
+    const token = response.data.data.signIn.token
+    const setupTotpResult = await userApi.setupTotp(token)
+    const base32 = setupTotpResult.data.data.setupTotp.base32
+    const totpToken = speakeasy.totp({
+      secret: base32,
+      encoding: 'base32',
+    })
+    await userApi
+      .enableTotp({ token: totpToken }, token)
+      .catch((err) =>
+        console.error(err?.response?.data || err?.response || err),
+      )
+
+    const signInResponse = await userApi
+      .signIn({
+        email: adminEmail,
+        password: adminPassword,
+      })
+      .catch((err) =>
+        console.error(err?.response?.data || err?.response || err),
+      )
+
+    const totpSignInToken = await jwt.verify(
+      signInResponse?.data?.data?.signIn?.token,
+      secret,
+    )
+    const totpSessionIdCookie = signInResponse?.headers['set-cookie']
+
+    expect(totpSignInToken.email).toBeUndefined()
+    expect(totpSignInToken.role).toBeUndefined()
+    expect(totpSessionIdCookie).toBeUndefined()
   })
 
   it('does not set cookie or return a token if sign in failed', async () => {
