@@ -1,6 +1,7 @@
 import * as speakeasy from 'speakeasy'
 
 import { setup, teardown, env } from '../env'
+import models from '../../../src/models'
 
 const adminEmail = 'signinadmin@jest.test'
 const adminPassword =
@@ -17,8 +18,11 @@ afterAll(async () => {
 
 describe('signIn', () => {
   let response
+  let totpSignInToken
+  let user
 
   it('returns a valid token', async () => {
+    user = await models.User.findOne({ email: adminEmail })
     response = await userApi
       .signIn({
         email: adminEmail,
@@ -31,7 +35,7 @@ describe('signIn', () => {
     const validated = await jwt.verify(token, secret)
     expect(validated.email).toBe(adminEmail)
     expect(validated.role).toBe('ADMIN')
-    expect(validated.id).toBeDefined()
+    expect(validated.id).toBe(user.id)
   })
 
   it('sets a sessionId cookie', async () => {
@@ -75,15 +79,22 @@ describe('signIn', () => {
         console.error(err?.response?.data || err?.response || err),
       )
 
-    const totpSignInToken = await jwt.verify(
-      signInResponse?.data?.data?.signIn?.token,
-      secret,
-    )
+    totpSignInToken = signInResponse?.data?.data?.signIn?.token
+
     const totpSessionIdCookie = signInResponse?.headers['set-cookie']
 
-    expect(totpSignInToken.email).toBeUndefined()
-    expect(totpSignInToken.role).toBeUndefined()
     expect(totpSessionIdCookie).toBeUndefined()
+  })
+
+  it('returns a valid totpSignInToken if TOTP is enabled', async () => {
+    const { userId, email, role } = await jwt.verify(
+      totpSignInToken,
+      secret,
+    )
+
+    expect(userId).toBe(user.id)
+    expect(email).toBeUndefined()
+    expect(role).toBeUndefined()
   })
 
   it('does not set cookie or return a token if sign in failed', async () => {
@@ -98,6 +109,9 @@ describe('signIn', () => {
     const failedToken = failedResponse?.data?.data?.signIn?.token
     const failedSessionIdCookie =
       failedResponse?.headers['set-cookie']
+    const errorMessage = failedResponse.data.errors[0].message
+
+    expect(errorMessage).toBe('Email address or password incorrect')
     expect(failedToken).toBeUndefined()
     expect(failedSessionIdCookie).toBeUndefined()
   })
