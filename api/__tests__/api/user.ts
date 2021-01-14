@@ -242,7 +242,7 @@ export const disableTotp = async (variables, token): Promise<any> =>
     {
       query: `
         mutation ($password: String!) {
-          disableTotp(token: $token)
+          disableTotp(password: $password)
         }
       `,
       variables,
