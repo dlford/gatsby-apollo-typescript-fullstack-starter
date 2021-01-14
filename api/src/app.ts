@@ -7,7 +7,6 @@
  *
  *
  * TODO :
- * - Add otplib and TOTP config
  * - document env vars
  *
  * @packageDocumentation

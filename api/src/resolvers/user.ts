@@ -3,7 +3,11 @@ import { combineResolvers } from 'graphql-resolvers'
 import * as jwt from 'jsonwebtoken'
 
 import { isAdmin, isAuthenticated } from './authorization'
-import { UserDocument } from '../models/user'
+import {
+  UserDocument,
+  EnabledTotp,
+  GeneratedTotp,
+} from '../models/user'
 import { SessionDocument } from '../models/session'
 import { generateSessionString } from './session'
 import { ContextProps } from '../app'
@@ -120,7 +124,7 @@ export default {
       _parent,
       { email, password },
       { models, secret, useragent, ip, res }: ContextProps,
-    ): Promise<{ token: string }> => {
+    ): Promise<{ token: string; totpIntercept: boolean }> => {
       const user = await models.User.findOne({ email: email })
 
       if (!user) {
@@ -134,6 +138,100 @@ export default {
       if (!isValid) {
         throw new AuthenticationError(
           'Email address or password incorrect',
+        )
+      }
+
+      if (user.totpEnabled) {
+        const totpSignInToken = await jwt.sign(
+          { userId: user.id },
+          secret,
+          {
+            expiresIn: '5m',
+          },
+        )
+        return { token: totpSignInToken, totpIntercept: true }
+      }
+
+      const session: SessionDocument = await new models.Session({
+        userId: user.id,
+        useragent,
+        ip,
+      })
+
+      const sessionToken = await jwt.sign(
+        {
+          id: user.id,
+          email: user.email,
+          role: user.role,
+          iat: session.iat,
+          exp: session.exp,
+        },
+        secret + session.salt,
+      )
+
+      res.cookie('sessionId', session.id, cookieProps)
+      res.cookie('sessionToken', sessionToken, cookieProps)
+
+      await session.save()
+
+      pubsub.publish(EVENTS.SESSION.CREATED, {
+        sessionCreated: {
+          session: {
+            id: session.id,
+            detail: generateSessionString(session),
+            // No need to check this here,
+            // but isCurrent must be in response.
+            isCurrent: false,
+          },
+        },
+        userId: session.userId,
+      })
+
+      return {
+        token: await createAccessToken(user, secret, '15m'),
+        totpIntercept: false,
+      }
+    },
+
+    totpSignIn: async (
+      _parent,
+      { token, recoveryCode, totpSignInToken },
+      { models, secret, useragent, ip, res }: ContextProps,
+    ): Promise<{ token: string; totpIntercept: boolean }> => {
+      let userId: string
+      try {
+        const totpSignInData = await jwt.verify(
+          totpSignInToken,
+          secret,
+        )
+        userId = totpSignInData.userId
+      } catch {
+        throw new AuthenticationError(
+          'Your session has expired, please sign in again',
+        )
+      }
+
+      const user = await models.User.findById(userId)
+
+      if (!user) {
+        throw new UserInputError('Unable to find user')
+      }
+
+      if (token) {
+        const isValid = await user.validateTotp(token)
+
+        if (!isValid) {
+          throw new AuthenticationError('Invalid TOTP token')
+        }
+      } else if (recoveryCode) {
+        const isValid = await user.validateRecoveryCode(recoveryCode)
+
+        if (!isValid) {
+          throw new AuthenticationError('Invalid recovery code')
+        }
+      } else {
+        throw new AuthenticationError(
+          'A TOTP token or recovery code is required',
         )
       }
 
@@ -172,8 +270,57 @@ export default {
         userId: session.userId,
       })
 
-      return { token: await createAccessToken(user, secret, '15m') }
+      return {
+        token: await createAccessToken(user, secret, '15m'),
+        totpIntercept: false,
+      }
     },
+
+    setupTotp: combineResolvers(
+      isAuthenticated,
+      async (
+        _parent: {},
+        _args: {},
+        { models, me }: ContextProps,
+      ): Promise<GeneratedTotp> => {
+        const user = await models.User.findById(me.id)
+        return await user.generateTotp()
+      },
+    ),
+
+    enableTotp: combineResolvers(
+      isAuthenticated,
+      async (
+        _parent: {},
+        { token },
+        { models, me }: ContextProps,
+      ): Promise<EnabledTotp> => {
+        const user = await models.User.findById(me.id)
+        const result = await user.enableTotp(token)
+
+        if (result.verified) {
+          return result
+        }
+
+        throw new UserInputError('Invalid TOTP token')
+      },
+    ),
+
+    disableTotp: combineResolvers(
+      isAuthenticated,
+      async (
+        _parent: {},
+        { password },
+        { models, me }: ContextProps,
+      ): Promise<boolean> => {
+        const user = await models.User.findById(me.id)
+        const result = await user.disableTotp(password)
+
+        if (result) return result
+
+        throw new AuthenticationError('Password incorrect')
+      },
+    ),
 
     signOut: async (
       _parent,
@@ -254,7 +401,7 @@ export default {
       if (!cookies.sessionId || !cookies.sessionToken) {
         res.cookie('sessionId', '', { ...cookieProps, maxAge: 0 })
         res.cookie('sessionToken', '', { ...cookieProps, maxAge: 0 })
-        return null
+        throw new AuthenticationError('Your session has expired')
       }
 
       const { sessionId, sessionToken } = cookies
@@ -275,7 +422,7 @@ export default {
         res.cookie('sessionId', '', { ...cookieProps, maxAge: 0 })
         res.cookie('sessionToken', '', { ...cookieProps, maxAge: 0 })
 
-        return null
+        throw new AuthenticationError('Your session has expired')
       }
 
       try {
@@ -327,7 +474,9 @@ export default {
         if (session) {
           await models.Session.remove({ userId: session.userId })
         }
-        return null
+        throw new AuthenticationError(
+          'Failed to verify session token',
+        )
       }
     },
   },

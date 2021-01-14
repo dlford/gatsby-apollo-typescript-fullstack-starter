@@ -190,3 +190,88 @@ export const deleteUser = async (variables, token): Promise<any> =>
         }
       : null,
   )
+
+export const setupTotp = async (token): Promise<any> =>
+  axios.post(
+    API_URL,
+    {
+      query: `
+        mutation {
+          setupTotp {
+            qr
+            base32
+          }
+        }
+      `,
+    },
+    token
+      ? {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      : null,
+  )
+
+export const enableTotp = async (variables, token): Promise<any> =>
+  axios.post(
+    API_URL,
+    {
+      query: `
+        mutation ($token: String!) {
+          enableTotp(token: $token) {
+            verified
+            recoveryCodes
+          }
+        }
+      `,
+      variables,
+    },
+    token
+      ? {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      : null,
+  )
+
+export const disableTotp = async (variables, token): Promise<any> =>
+  axios.post(
+    API_URL,
+    {
+      query: `
+        mutation ($password: String!) {
+          disableTotp(password: $password)
+        }
+      `,
+      variables,
+    },
+    token
+      ? {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      : null,
+  )
+
+export const totpSignIn = async (variables): Promise<any> =>
+  axios.post(API_URL, {
+    query: `
+        mutation (
+          $token: String
+          $recoveryCode: String
+          $totpSignInToken: String!
+        ) {
+          totpSignIn(
+            token: $token
+            recoveryCode: $recoveryCode
+            totpSignInToken: $totpSignInToken
+          ) {
+            token
+          }
+        }
+      `,
+    variables,
+  })

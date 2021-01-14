@@ -7,7 +7,6 @@
 
 import { useApolloClient, useMutation } from '@apollo/react-hooks'
 import { ApolloError } from 'apollo-client'
-import PropTypes from 'prop-types'
 import { navigate } from 'gatsby'
 import gql from 'graphql-tag'
 import React, {
@@ -31,6 +30,12 @@ enum UserRole {
   admin = 'ADMIN',
 }
 
+type TotpCredentialProps = {
+  token?: string
+  recoveryCode?: string
+  totpSignInToken: string
+}
+
 type UserCredentialProps = {
   email: string
   password: string
@@ -44,6 +49,13 @@ type SignUpMutationProps = {
 
 type SignInMutationProps = {
   signIn: {
+    token: string
+    totpIntercept: boolean
+  }
+}
+
+type TotpSignInMutationProps = {
+  totpSignIn: {
     token: string
   }
 }
@@ -68,6 +80,7 @@ export interface UserProps {
   user: {
     signUp: (credentials: UserCredentialProps) => void
     signIn: (credentials: UserCredentialProps) => void
+    totpSignIn: (totpCredentials: TotpCredentialProps) => void
     signOut: (arg0?: SignOutArgs) => void
     id: string | void
     email: string | void
@@ -80,6 +93,10 @@ export interface UserProps {
   signUpLoading: boolean | void
   signInError: ApolloError | void
   signInLoading: boolean | void
+  totpEnabled: boolean
+  totpSignInToken: string
+  totpSignInError: ApolloError | void
+  totpSignInLoading: boolean | void
 }
 
 const nullToken = {
@@ -98,6 +115,9 @@ export const UserContext = createContext<UserProps>({
     signIn() {
       return
     },
+    totpSignIn() {
+      return
+    },
     signOut() {
       return
     },
@@ -112,6 +132,10 @@ export const UserContext = createContext<UserProps>({
   signUpLoading: undefined,
   signInError: undefined,
   signInLoading: undefined,
+  totpEnabled: false,
+  totpSignInToken: '',
+  totpSignInError: undefined,
+  totpSignInLoading: undefined,
 })
 
 const SIGNUP_MUTATION = gql`
@@ -125,6 +149,23 @@ const SIGNUP_MUTATION = gql`
 const SIGNIN_MUTATION = gql`
   mutation signIn($email: EmailAddress!, $password: String!) {
     signIn(email: $email, password: $password) {
+      token
+      totpIntercept
+    }
+  }
+`
+
+const TOTP_SIGNIN_MUTATION = gql`
+  mutation totpSignIn(
+    $token: String
+    $recoveryCode: String
+    $totpSignInToken: String!
+  ) {
+    totpSignIn(
+      token: $token
+      recoveryCode: $recoveryCode
+      totpSignInToken: $totpSignInToken
+    ) {
       token
     }
   }
@@ -150,8 +191,10 @@ export const UserProvider = ({
   const apolloClient = useApolloClient()
   const { subscriptionClient } = useApollo(token)
 
-  const [me, setMe] = useState(nullToken as TokenProps)
-  const [authenticating, setAuthenticating] = useState(true)
+  const [me, setMe] = useState<TokenProps>(nullToken)
+  const [totpSignInToken, setTotpSignInToken] = useState<string>('')
+  const [totpEnabled, setTotpEnabled] = useState<boolean>(false)
+  const [authenticating, setAuthenticating] = useState<boolean>(true)
 
   const checkToken = async (): Promise<TokenProps> => {
     if (token) {
@@ -171,7 +214,7 @@ export const UserProvider = ({
   }
 
   const [
-    signUp,
+    signUpMutation,
     { loading: signUpLoading, error: signUpError },
   ] = useMutation(SIGNUP_MUTATION, {
     onCompleted: async (data: SignUpMutationProps): Promise<void> => {
@@ -186,15 +229,38 @@ export const UserProvider = ({
   })
 
   const [
-    signIn,
+    signInMutation,
     { loading: signInLoading, error: signInError },
   ] = useMutation(SIGNIN_MUTATION, {
     onCompleted: async (data: SignInMutationProps): Promise<void> => {
-      const { token: newToken } = data.signIn
+      const { token: newToken, totpIntercept } = data.signIn
+      if (totpIntercept) {
+        setTotpSignInToken(newToken)
+        setTotpEnabled(true)
+      } else {
+        setToken(newToken)
+        apolloClient.cache.reset()
+        checkToken().then((data) => {
+          setMe(data)
+        })
+      }
+    },
+  })
+
+  const [
+    totpSignInMutation,
+    { loading: totpSignInLoading, error: totpSignInError },
+  ] = useMutation(TOTP_SIGNIN_MUTATION, {
+    onCompleted: async (
+      data: TotpSignInMutationProps,
+    ): Promise<void> => {
+      const { token: newToken } = data.totpSignIn
       setToken(newToken)
       apolloClient.cache.reset()
       checkToken().then((data) => {
         setMe(data)
+        setTotpSignInToken('')
+        setTotpEnabled(false)
       })
     },
   })
@@ -232,14 +298,28 @@ export const UserProvider = ({
           return
         }
       : (credentials: UserCredentialProps): void => {
-          signUp({ variables: credentials })
+          signUpMutation({ variables: credentials }).catch(() => {
+            return
+          })
         },
 
     signIn: (credentials: UserCredentialProps): void => {
-      signIn({ variables: credentials })
+      signInMutation({ variables: credentials }).catch(() => {
+        return
+      })
     },
 
-    // TODO : Warn user on failure to de-auth sessions
+    totpSignIn: (totpCredentials: TotpCredentialProps): void => {
+      totpSignInMutation({ variables: totpCredentials }).catch(
+        (err) => {
+          // If session is expired, go back to the login screen
+          if (err.message.includes('expired')) {
+            setTotpEnabled(false)
+            setTotpSignInToken('')
+          }
+        },
+      )
+    },
 
     signOut: (
       { allDevices }: SignOutArgs = { allDevices: false },
@@ -247,6 +327,8 @@ export const UserProvider = ({
       setAuthenticating(true)
       signOutMutation({
         variables: { allDevices: allDevices },
+      }).catch(() => {
+        return
       })
     },
   })
@@ -275,6 +357,10 @@ export const UserProvider = ({
         authenticating,
         signInError,
         signInLoading,
+        totpEnabled,
+        totpSignInToken,
+        totpSignInError,
+        totpSignInLoading,
         signUpError,
         signUpLoading,
       }}
@@ -290,6 +376,10 @@ const useUser = () => {
     authenticating,
     signInError,
     signInLoading,
+    totpEnabled,
+    totpSignInToken,
+    totpSignInError,
+    totpSignInLoading,
     signUpError,
     signUpLoading,
   } = useContext(UserContext)
@@ -299,6 +389,10 @@ const useUser = () => {
     authenticating,
     signInError,
     signInLoading,
+    totpEnabled,
+    totpSignInToken,
+    totpSignInError,
+    totpSignInLoading,
     signUpError,
     signUpLoading,
   }

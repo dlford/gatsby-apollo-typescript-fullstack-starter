@@ -1,5 +1,4 @@
 /**
- *
  * ## User Schema
  *
  * ### Queries
@@ -26,6 +25,7 @@
  * ```graphql
  * Token {
  *   token: String!
+ *   totpIntercept: Boolean!
  * }
  *
  * User {
@@ -55,25 +55,45 @@ const userSchema = gql`
   extend type Mutation {
     signUp(email: EmailAddress!, password: String!): Token!
     signIn(email: EmailAddress!, password: String!): Token!
+    totpSignIn(
+      token: String
+      recoveryCode: String
+      totpSignInToken: String!
+    ): Token!
     signOut(allDevices: Boolean): Boolean!
     updateUser(email: EmailAddress!): User!
     deleteUser(id: ID!): Boolean!
-    refreshToken: String
+    refreshToken: String!
+    setupTotp: GeneratedTotp!
+    enableTotp(token: String!): EnabledTotp!
+    disableTotp(password: String!): Boolean!
   }
 
   type Token {
     token: String!
+    totpIntercept: Boolean!
   }
 
   type User {
     id: ID!
     email: EmailAddress!
     role: UserRole!
+    totpEnabled: Boolean!
   }
 
   enum UserRole {
     ADMIN
     USER
+  }
+
+  type GeneratedTotp {
+    qr: String!
+    base32: String!
+  }
+
+  type EnabledTotp {
+    verified: Boolean!
+    recoveryCodes: [String!]
   }
 `
 
