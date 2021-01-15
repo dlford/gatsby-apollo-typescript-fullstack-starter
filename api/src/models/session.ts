@@ -71,6 +71,12 @@ const createUUID = (): string => {
 }
 
 const sessionSchema: mongoose.Schema = new mongoose.Schema({
+  /* eslint-disable-next-line @typescript-eslint/camelcase */
+  schema_version: {
+    type: Number,
+    required: true,
+    default: 1,
+  },
   salt: {
     type: String,
     unique: true,

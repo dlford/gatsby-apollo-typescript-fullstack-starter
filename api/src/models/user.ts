@@ -73,6 +73,12 @@ export interface EnabledTotp {
 
 const userSchema: mongoose.Schema = new mongoose.Schema(
   {
+    /* eslint-disable-next-line @typescript-eslint/camelcase */
+    schema_version: {
+      type: Number,
+      required: true,
+      default: 1,
+    },
     email: {
       type: String,
       unique: true,
