@@ -1,6 +1,5 @@
 import React, { FormEvent } from 'react'
 import { Link } from 'gatsby'
-import { RouteComponentProps } from '@reach/router'
 import tw from 'twin.macro'
 
 import useTotpSetup from '~/hooks/use-totp-setup'
@@ -17,7 +16,7 @@ const ErrorText = tw.p`
     text-center
   `
 
-const DisableTotpComponent: React.ElementType<RouteComponentProps> = () => {
+export default function DisableTotpComponent() {
   const {
     disableTotp,
     disableData,
@@ -72,5 +71,3 @@ const DisableTotpComponent: React.ElementType<RouteComponentProps> = () => {
     </Article>
   )
 }
-
-export default DisableTotpComponent

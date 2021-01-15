@@ -1,6 +1,5 @@
 import React, { MouseEvent } from 'react'
 import tw from 'twin.macro'
-import styled from '@emotion/styled'
 
 export interface ButtonProps {
   primary?: boolean
@@ -8,54 +7,72 @@ export interface ButtonProps {
   onClick?(arg0: MouseEvent | void): void
 }
 
-interface StyleProps {
-  primary?: boolean
+export default function ButtonComponent({
+  primary,
+  children,
+  onClick,
+}: ButtonProps) {
+  return primary ? (
+    <PrimaryButtonStyles
+      onClick={onClick}
+      tabIndex={0}
+      role='button'
+      onKeyDown={(event) => {
+        if (typeof onClick === 'function' && event.key === 'Enter')
+          onClick()
+      }}
+    >
+      {children}
+    </PrimaryButtonStyles>
+  ) : (
+    <ButtonStyles
+      onClick={onClick}
+      tabIndex={0}
+      role='button'
+      onKeyDown={(event) => {
+        if (typeof onClick === 'function' && event.key === 'Enter')
+          onClick()
+      }}
+    >
+      {children}
+    </ButtonStyles>
+  )
 }
 
-const Styles = styled('div')<StyleProps>(
-  tw`
-    cursor-pointer
-    shadow-lg
-    inline-block
-    text-sm
-    px-5
-    py-3
-    rounded-lg
-    uppercase
-    tracking-wider
-    font-semibold
-    focus:outline-none
-    focus:shadow-outline
-  `,
-  ({ primary }) =>
-    primary
-      ? tw`
-        bg-blue-500
-        hover:bg-blue-400
-        active:bg-blue-600
-        text-white
-      `
-      : tw`
-        bg-gray-400
-        hover:bg-gray-300
-        active:bg-gray-500
-        text-gray-900
-      `,
-)
+const ButtonStyles = tw.div`
+  inline-block
+  px-5
+  py-3
+  text-sm
+  font-semibold
+  tracking-wider
+  text-gray-900
+  uppercase
+  bg-gray-400
+  rounded-lg
+  shadow-lg
+  cursor-pointer
+  focus:outline-none
+  focus:shadow-outline
+  hover:bg-gray-300
+  active:bg-gray-500
+`
 
-const Button = ({ primary, children, onClick }: ButtonProps) => (
-  <Styles
-    onClick={onClick}
-    primary={primary}
-    tabIndex={0}
-    role='button'
-    onKeyDown={(event) => {
-      if (typeof onClick === 'function' && event.key === 'Enter')
-        onClick()
-    }}
-  >
-    {children}
-  </Styles>
-)
-
-export default Button
+const PrimaryButtonStyles = tw.div`
+  inline-block
+  px-5
+  py-3
+  text-sm
+  font-semibold
+  tracking-wider
+  text-white
+  uppercase
+  bg-blue-500
+  rounded-lg
+  shadow-lg
+  cursor-pointer
+  focus:outline-none
+  focus:shadow-outline
+  hover:bg-blue-400
+  active:bg-blue-600
+`

@@ -45,9 +45,9 @@ const BGWrapper = styled.div<BGWrapperProps>`
   left: 0;
 `
 
-export const HeaderComponent = ({
+export default function HeaderComponent({
   shouldShowBigHeader,
-}: HeaderProps) => {
+}: HeaderProps) {
   const data = useStaticQuery<QueryProps>(HEADER_QUERY)
   const { title } = data.site.siteMetadata
 
@@ -65,5 +65,3 @@ export const HeaderComponent = ({
     </Header>
   )
 }
-
-export default HeaderComponent

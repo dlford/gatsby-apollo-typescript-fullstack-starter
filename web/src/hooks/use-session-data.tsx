@@ -74,7 +74,7 @@ type SubscriptionProps = {
   }
 }
 
-const useSessionData = () => {
+export default function useSessionData() {
   const {
     subscribeToMore,
     data: sessionData,
@@ -166,5 +166,3 @@ const useSessionData = () => {
     deleteSessionError,
   }
 }
-
-export default useSessionData

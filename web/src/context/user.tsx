@@ -183,11 +183,11 @@ const REFRESH_TOKEN_MUTATION = gql`
   }
 `
 
-export const UserProvider = ({
+export function UserProvider({
   children,
   token,
   setToken,
-}: UserProviderProps) => {
+}: UserProviderProps) {
   const apolloClient = useApolloClient()
   const { subscriptionClient } = useApollo(token)
 
@@ -370,7 +370,7 @@ export const UserProvider = ({
   )
 }
 
-const useUser = () => {
+export default function useUser() {
   const {
     user,
     authenticating,
@@ -397,5 +397,3 @@ const useUser = () => {
     signUpLoading,
   }
 }
-
-export default useUser

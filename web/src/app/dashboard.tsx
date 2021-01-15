@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Link } from 'gatsby'
-import { RouteComponentProps } from '@reach/router'
 import useUser from '~/context/user'
 import tw from 'twin.macro'
 
@@ -10,7 +9,7 @@ import Button from '~/components/button'
 
 const ButtonWrap = tw.div`py-4`
 
-const DashboardComponent: React.ElementType<RouteComponentProps> = () => {
+export default function DashboardComponent() {
   const [allDevices, setAllDevices] = useState(false)
   const { user } = useUser()
 
@@ -52,5 +51,3 @@ const DashboardComponent: React.ElementType<RouteComponentProps> = () => {
     </Article>
   )
 }
-
-export default DashboardComponent

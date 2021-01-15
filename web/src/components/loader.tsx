@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styled from '@emotion/styled'
 
-const LoaderComponent = () => {
+export default function LoaderComponent() {
   const [showLoader, handleShowLoader] = useState(false)
 
   useEffect(() => {
@@ -66,5 +66,3 @@ const Main = styled.div`
     }
   }
 `
-
-export default LoaderComponent

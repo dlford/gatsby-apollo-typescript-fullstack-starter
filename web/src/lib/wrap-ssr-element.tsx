@@ -15,10 +15,10 @@ interface ReplaceBodySubProps {
   bodyComponent: JSX.Element | JSX.Element[]
 }
 
-export const replaceRenderer = ({
+export function replaceRenderer({
   bodyComponent,
   replaceBodyHTMLString,
-}: ReplaceBodyProps) => {
+}: ReplaceBodyProps) {
   const ConnectedBody = () => (
     <TokenProvider>
       <SubRoot bodyComponent={bodyComponent} />
@@ -28,7 +28,7 @@ export const replaceRenderer = ({
   replaceBodyHTMLString(renderToString(<ConnectedBody />))
 }
 
-const SubRoot = ({ bodyComponent }: ReplaceBodySubProps) => {
+function SubRoot({ bodyComponent }: ReplaceBodySubProps) {
   const { token, setToken } = useToken()
   const { client } = useApollo(token)
   return (

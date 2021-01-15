@@ -7,6 +7,10 @@ export interface TokenConsumerProps {
   setToken(arg0: string | void): void
 }
 
+export interface TokenProviderProps {
+  children: JSX.Element | JSX.Element[]
+}
+
 export const TokenContext = createContext<TokenConsumerProps>({
   token: undefined,
   setToken() {
@@ -14,11 +18,7 @@ export const TokenContext = createContext<TokenConsumerProps>({
   },
 })
 
-export interface TokenProviderProps {
-  children: JSX.Element | JSX.Element[]
-}
-
-export const TokenProvider = ({ children }: TokenProviderProps) => {
+export function TokenProvider({ children }: TokenProviderProps) {
   const [token, setToken] = useState<string | void>()
 
   return (
@@ -33,10 +33,8 @@ export const TokenProvider = ({ children }: TokenProviderProps) => {
   )
 }
 
-const useToken = () => {
+export default function useToken() {
   const { token, setToken } = useContext(TokenContext)
 
   return { token, setToken }
 }
-
-export default useToken

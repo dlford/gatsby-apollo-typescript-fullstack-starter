@@ -13,7 +13,7 @@ interface LinkDefinition {
   operation?: string
 }
 
-const useApollo = (token: string | void) => {
+export default function useApollo(token: string | void) {
   const apiUrl =
     process.env.GATSBY_API_URL || 'http://localhost:3000/graphql'
   const wsUrl =
@@ -64,7 +64,7 @@ const useApollo = (token: string | void) => {
     requestLink,
   )
 
-  const authLink = setContext((request, { headers }) => {
+  const authLink = setContext((_request, { headers }) => {
     return token
       ? {
           headers: {
@@ -83,5 +83,3 @@ const useApollo = (token: string | void) => {
     subscriptionClient,
   }
 }
-
-export default useApollo

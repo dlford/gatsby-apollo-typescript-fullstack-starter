@@ -9,7 +9,7 @@ export interface WrapRootProps {
   element: JSX.Element | JSX.Element[]
 }
 
-export const wrapRootElement = ({ element }: WrapRootProps) => {
+export function wrapRootElement({ element }: WrapRootProps) {
   return (
     <TokenProvider>
       <SubRoot element={element} />

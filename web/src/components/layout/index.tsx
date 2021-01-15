@@ -11,18 +11,18 @@ export interface LayoutProps {
 
 const Outer = tw.div`h-full w-full min-h-screen flex flex-col`
 
-const Layout = ({ children, location }: LayoutProps) => (
-  <Outer>
-    <Header
-      shouldShowBigHeader={
-        location.pathname === '/' ||
-        location.pathname ===
-          '/gatsby-typescript-starter-kitchen-sink/'
-      }
-    />
-    <main>{children}</main>
-    <Footer />
-  </Outer>
-)
-
-export default Layout
+export default function Layout({ children, location }: LayoutProps) {
+  return (
+    <Outer>
+      <Header
+        shouldShowBigHeader={
+          location.pathname === '/' ||
+          location.pathname ===
+            '/gatsby-typescript-starter-kitchen-sink/'
+        }
+      />
+      <main>{children}</main>
+      <Footer />
+    </Outer>
+  )
+}

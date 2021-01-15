@@ -1,5 +1,5 @@
 import React from 'react'
-import { Router } from '@reach/router'
+import { Router, RouteComponentProps } from '@reach/router'
 
 import useUser from '~/context/user'
 import Layout from '~/components/layout'
@@ -14,7 +14,15 @@ export interface AppPageProps {
   location: Location
 }
 
-const AppPage = ({ location }: AppPageProps) => {
+export interface RouteProps extends RouteComponentProps {
+  children: JSX.Element | JSX.Element[]
+}
+
+function Route({ children }: RouteProps) {
+  return <>{children}</>
+}
+
+export default function AppPage({ location }: AppPageProps) {
   const { user, authenticating } = useUser()
 
   if (authenticating)
@@ -34,13 +42,19 @@ const AppPage = ({ location }: AppPageProps) => {
   return (
     <Layout location={location}>
       <Router basepath='/app'>
-        <Dashboard path='/' />
-        <Sessions path='/sessions' />
-        <SetupTotp path='/setup-totp' />
-        <DisableTotp path='/disable-totp' />
+        <Route path='/'>
+          <Dashboard />
+        </Route>
+        <Route path='/sessions'>
+          <Sessions />
+        </Route>
+        <Route path='/setup-totp'>
+          <SetupTotp />
+        </Route>
+        <Route path='/disable-totp'>
+          <DisableTotp />
+        </Route>
       </Router>
     </Layout>
   )
 }
-
-export default AppPage

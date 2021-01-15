@@ -11,7 +11,7 @@ function getErrorMessage(error: ApolloError): string {
   return error.message.replace(/GraphQL error: /, '')
 }
 
-const SignInComponent = () => {
+export default function SignInComponent() {
   const [isSignUp, setIsSignUp] = useState(false)
   const [isRecovery, setIsRecovery] = useState(false)
   const [mutationError, setMutationError] = useState('')
@@ -170,5 +170,3 @@ const SignInComponent = () => {
     </>
   )
 }
-
-export default SignInComponent

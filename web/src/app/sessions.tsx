@@ -1,13 +1,12 @@
 import React from 'react'
-import { RouteComponentProps, Link } from '@reach/router'
+import { Link } from 'gatsby'
 
 import useSessionData, { QueryProps } from '~/hooks/use-session-data'
 import SEO from '~/components/seo'
 import Article from '~/components/article'
 import Loader from '~/components/loader'
-import Button from '~/components/button'
 
-const SessionsComponent: React.ElementType<RouteComponentProps> = () => {
+export default function SessionsComponent() {
   const {
     sessionData,
     sessionLoading,
@@ -58,5 +57,3 @@ const SessionsComponent: React.ElementType<RouteComponentProps> = () => {
     </Article>
   )
 }
-
-export default SessionsComponent

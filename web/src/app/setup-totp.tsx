@@ -1,6 +1,5 @@
 import React, { useState, FormEvent } from 'react'
 import { Link } from 'gatsby'
-import { RouteComponentProps } from '@reach/router'
 import tw from 'twin.macro'
 
 import useTotpSetup from '~/hooks/use-totp-setup'
@@ -18,7 +17,7 @@ const ErrorText = tw.p`
     text-center
   `
 
-const SetupTotpComponent: React.ElementType<RouteComponentProps> = () => {
+export default function SetupTotpComponent() {
   const [shouldShowBase32, setShouldShowBase32] = useState<boolean>(
     false,
   )
@@ -148,5 +147,3 @@ const SetupTotpComponent: React.ElementType<RouteComponentProps> = () => {
     </Article>
   )
 }
-
-export default SetupTotpComponent

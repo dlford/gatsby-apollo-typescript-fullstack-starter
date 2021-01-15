@@ -33,7 +33,7 @@ export const pageQuery = graphql`
 
 const ButtonWrapper = tw.div`flex justify-center mb-12`
 
-const IndexPage = ({ data, location }: QueryProps) => {
+export default function IndexPage({ data, location }: QueryProps) {
   const title = data.site.siteMetadata.title
 
   return (
@@ -71,5 +71,3 @@ const IndexPage = ({ data, location }: QueryProps) => {
     </Layout>
   )
 }
-
-export default IndexPage

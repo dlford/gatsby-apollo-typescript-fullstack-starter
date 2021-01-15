@@ -43,7 +43,12 @@ const SEO_QUERY = graphql`
 
 export type MetaTag = MetaPropertyTag | MetaNameTag
 
-const SEO = ({ description, lang, meta, title }: SEOProps) => {
+export default function SEO({
+  description,
+  lang,
+  meta,
+  title,
+}: SEOProps) {
   const { site } = useStaticQuery<QueryProps>(SEO_QUERY)
 
   const metaDescription = description || site.siteMetadata.description
@@ -94,8 +99,6 @@ const SEO = ({ description, lang, meta, title }: SEOProps) => {
     />
   )
 }
-
-export default SEO
 
 SEO.defaultProps = {
   lang: 'en',

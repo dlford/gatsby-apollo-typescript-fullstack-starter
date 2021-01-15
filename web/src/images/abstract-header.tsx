@@ -5,7 +5,7 @@ const Wrapper = styled.div`
   width: 100vw;
 `
 
-const AbstractHeaderComponent = () => {
+export default function AbstractHeaderComponent() {
   return (
     <Wrapper>
       <svg viewBox='0 0 338.415 33.528'>
@@ -26,5 +26,3 @@ const AbstractHeaderComponent = () => {
     </Wrapper>
   )
 }
-
-export default AbstractHeaderComponent
