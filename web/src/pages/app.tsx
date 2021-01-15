@@ -15,11 +15,11 @@ export interface AppPageProps {
 }
 
 export interface RouteProps extends RouteComponentProps {
-  children: JSX.Element | JSX.Element[]
+  component: JSX.Element | JSX.Element[]
 }
 
-function Route({ children }: RouteProps) {
-  return <>{children}</>
+function Route({ component }: RouteProps) {
+  return <>{component}</>
 }
 
 export default function AppPage({ location }: AppPageProps) {
@@ -42,18 +42,10 @@ export default function AppPage({ location }: AppPageProps) {
   return (
     <Layout location={location}>
       <Router basepath='/app'>
-        <Route path='/'>
-          <Dashboard />
-        </Route>
-        <Route path='/sessions'>
-          <Sessions />
-        </Route>
-        <Route path='/setup-totp'>
-          <SetupTotp />
-        </Route>
-        <Route path='/disable-totp'>
-          <DisableTotp />
-        </Route>
+        <Route path='/' component={<Dashboard />} />
+        <Route path='/sessions' component={<Sessions />} />
+        <Route path='/setup-totp' component={<SetupTotp />} />
+        <Route path='/disable-totp' component={<DisableTotp />} />
       </Router>
     </Layout>
   )
