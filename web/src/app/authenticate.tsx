@@ -1,5 +1,5 @@
 import React, { useState, FormEvent, useEffect } from 'react'
-import { ApolloError } from 'apollo-client'
+import { ApolloError } from '@apollo/client'
 import tw from 'twin.macro'
 
 import Article from '~/components/article'

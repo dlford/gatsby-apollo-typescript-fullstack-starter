@@ -1,12 +1,15 @@
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import ApolloClient from 'apollo-client'
-import { split } from 'apollo-link'
-import { setContext } from 'apollo-link-context'
 import { createUploadLink } from 'apollo-upload-client'
-import { createHttpLink } from 'apollo-link-http'
-import { getMainDefinition } from 'apollo-utilities'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
-import { WebSocketLink } from 'apollo-link-ws'
+import { setContext } from '@apollo/client/link/context'
+import { WebSocketLink } from '@apollo/client/link/ws'
+import { getMainDefinition } from '@apollo/client/utilities'
+import {
+  ApolloClient,
+  split,
+  createHttpLink,
+  InMemoryCache,
+  ApolloLink,
+} from '@apollo/client'
 
 interface LinkDefinition {
   kind: string
@@ -77,7 +80,7 @@ export default function useApollo(token: string | void) {
 
   return {
     client: new ApolloClient({
-      link: authLink.concat(terminalLink),
+      link: authLink.concat(terminalLink as ApolloLink),
       cache: new InMemoryCache(),
     }),
     subscriptionClient,

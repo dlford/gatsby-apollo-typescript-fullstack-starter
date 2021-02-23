@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
-import { useQuery, useMutation } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
+import { gql, useQuery, useMutation } from '@apollo/react-hooks'
 
 export interface QueryProps {
   id: string

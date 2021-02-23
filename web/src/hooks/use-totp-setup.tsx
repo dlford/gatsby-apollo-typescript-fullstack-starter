@@ -1,5 +1,4 @@
-import { useMutation } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
+import { gql, useMutation } from '@apollo/react-hooks'
 
 const SETUP_TOTP_MUTATION = gql`
   mutation {

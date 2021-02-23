@@ -5,10 +5,13 @@
  * @packageDocumentation
  */
 
-import { useApolloClient, useMutation } from '@apollo/react-hooks'
-import { ApolloError } from 'apollo-client'
+import {
+  gql,
+  useApolloClient,
+  useMutation,
+} from '@apollo/react-hooks'
+import { ApolloError } from '@apollo/client'
 import { navigate } from 'gatsby'
-import gql from 'graphql-tag'
 import React, {
   createContext,
   useEffect,
